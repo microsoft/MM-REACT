@@ -10,6 +10,15 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env
 
+DEFAULT_IMUN_PROMPT = """This is an image (of size width: {width} height: {height}) with description {description}. 
+The image contains detailed tags, and object descriptions.
+Tags seen in the image:
+{tags}
+
+Description of objects and their location in the image:
+{captions}
+"""
+
 def download_image(url):
     """Download raw image from url
     """
@@ -23,6 +32,33 @@ def resize_image(data):
 
 def _get_box(box):
     return f"x: {box['x']} y: {box['y']} width: {box['w']} height: {box['h']}"
+
+class InvalidRequest(requests.HTTPError):
+    pass
+
+class InvalidImageSize(InvalidRequest):
+    pass
+
+class InvalidImageFormat(InvalidRequest):
+    pass
+
+def _handle_error(response):
+    if response.status_code == 200:
+        return
+    # print(response.content)
+    try:
+        err = response.json()
+        err_code = err.get("code") or (err.get("error") or {}).get("code") or ((err.get("error") or {}).get("innererror") or {}).get('code')
+        err_msg = err.get("message") or (err.get("error") or {}).get("message") or ((err.get("error") or {}).get("innererror") or {}).get('message')
+        if response.status_code == 400 and err_code == "InvalidImageSize":
+            raise InvalidImageSize(f"{err_code}({err_msg})")
+        if response.status_code == 400 and err_code == "InvalidImageFormat":
+            raise InvalidImageFormat(f"{err_code}({err_msg})")
+        if response.status_code == 400 and err_code == "InvalidRequest":
+            raise InvalidRequest(f"{err_code}({err_msg})")
+    except ValueError:
+        pass
+    response.raise_for_status()
 
 class ImunAPIWrapper(BaseModel):
     """Wrapper for Image Understanding API.
@@ -40,7 +76,7 @@ class ImunAPIWrapper(BaseModel):
         extra = Extra.forbid
 
     def _imun_results(self, img_url: str) -> List[dict]:
-        headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key}
+        headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
         params = {
             "api-version": "2023-02-01-preview",
             "features": "denseCaptions,Tags,Read",
@@ -48,9 +84,10 @@ class ImunAPIWrapper(BaseModel):
         response = requests.post(
             self.imun_url, data=resize_image(download_image(img_url)), headers=headers, params=params  # type: ignore
         )
-        response.raise_for_status()
+        _handle_error(response)
+        
         api_results = response.json()
-        results = {"captions": [], "objects": [], "texts": [], "size": api_results["meta_data"]}
+        results = {"captions": [], "tags": [], "texts": [], "size": api_results["metadata"]}
         for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
             if idx == 0:
                 results["description"] = o['text']
@@ -72,7 +109,7 @@ class ImunAPIWrapper(BaseModel):
             values,
             "imun_url",
             "IMUN_URL",
-            # default="https://api.bing.microsoft.com/v7.0/search",
+            # default="https://westus.api.cognitive.microsoft.com/computervision/imageanalysis:analyze",
         )
 
         values["imun_url"] = imun_url
@@ -87,12 +124,9 @@ class ImunAPIWrapper(BaseModel):
         tags = "\n".join(results["tags"])
         width, height = results["size"]["width"], results["size"]["height"]
         if not captions and not tags:
-            return f"A blurry image with size width: {width} height: {height}"
-        
-        result = f"""An image (of size width: {width} height: {height}) with description {description} containing some detailed tags and object descriptions.
-        tags seen in the image: {tags}
-        description of object and their location in the image: {captions}
-        """
+            return f"A blurry image (of size width: {width} height: {height})"
+
+        result = DEFAULT_IMUN_PROMPT.format(width=width, height=height, description=description, tags=tags, captions=captions)
         return result
 
     def results(self, query: str) -> List[Dict]:
