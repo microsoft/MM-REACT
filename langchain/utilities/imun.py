@@ -50,8 +50,11 @@ class ImunAPIWrapper(BaseModel):
         )
         response.raise_for_status()
         api_results = response.json()
-        results = {"captions": [], "objects": [], "texts": []}
-        for o in api_results["denseCaptionsResult"]["values"]:
+        results = {"captions": [], "objects": [], "texts": [], "size": api_results["meta_data"]}
+        for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
+            if idx == 0:
+                results["description"] = o['text']
+                continue
             results["captions"].append(f'{o["text"]} at location {_get_box(o["boundingBox"])}')
         for o in api_results["tagsResult"]["values"]:
             results["tags"].append(f'{o["name"]}')
@@ -79,14 +82,16 @@ class ImunAPIWrapper(BaseModel):
     def run(self, query: str) -> str:
         """Run query through Image Understanding and parse result."""
         results = self._imun_results(query)
+        description = results["description"]
         captions = "\n".join(results["captions"])
         tags = "\n".join(results["tags"])
+        width, height = results["size"]["width"], results["size"]["height"]
         if not captions and not tags:
-            return "A blurry image"
+            return f"A blurry image with size width: {width} height: {height}"
         
-        result = f"""An image containing some tags and objects
+        result = f"""An image (of size width: {width} height: {height}) with description {description} containing some detailed tags and object descriptions.
         tags seen in the image: {tags}
-        objects and their location in the image: {captions}
+        description of object and their location in the image: {captions}
         """
         return result
 
