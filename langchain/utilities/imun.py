@@ -12,19 +12,19 @@ from langchain.utils import get_from_dict_or_env
 
 IMUN_PROMPT_PREFIX = "This is an image (of size width: {width} height: {height})"
 
-IMUN_PROMPT_DESCRIPTION = " with description {description}."
+IMUN_PROMPT_DESCRIPTION = " with description {description}.\n"
 
 IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
 
-IMUN_PROMPT_TAGS_PEFIX = " tags"
+IMUN_PROMPT_TAGS_PEFIX = " object tags"
 
 IMUN_PROMPT_CAPTIONS = """
-List of objects' descriptions, and objects' locations in the image:
+List of object descriptions, and their locations in this image:
 {captions}
 """
 
 IMUN_PROMPT_TAG="""
-List of tags seen in the image:
+List of object tags seen in this image:
 {tags}
 """
 
@@ -163,27 +163,27 @@ class ImunAPIWrapper(BaseModel):
 
         found = False
         if captions:
-            answer += "\nThe image contains"
+            answer += "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
         if objects:
             if found:
                 answer +=","
             else:
-                answer += "\nThe image contains"
+                answer += "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
         if tags:
             if found:
                 answer +=","
             else:
-                answer += "\nThe image contains"
+                answer += "\nThis image contains"
             answer += IMUN_PROMPT_TAGS_PEFIX
             found = True
 
         if not found and not description:
             # did not find anything
-            return answer + "\nThe image is too blurry"
+            return answer + "\nThis image is too blurry"
         
         if captions:
             captions = "\n".join(captions)
