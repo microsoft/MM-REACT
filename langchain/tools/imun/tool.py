@@ -9,7 +9,7 @@ class ImunRun(BaseTool):
 
     name = "Image Understanding"
     description = (
-        "A wrapper around Microsoft Image Understanding. "
+        "A wrapper around Image Understanding. "
         "Useful for when you need to understand what is inside an image (objects, texts, people). "
         "Input should be an image url, or any url to an image file (e.g. .jpg, .png)."
     )
