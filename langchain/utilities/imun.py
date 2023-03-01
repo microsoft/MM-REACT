@@ -32,7 +32,8 @@ List of object tags seen in this image:
 def download_image(url):
     """Download raw image from url
     """
-    r = requests.get(url, stream=True, timeout=2)
+    headers = {'User-Agent': 'langchain imun'}
+    r = requests.get(url, stream=True, headers=headers, timeout=2)
     assert r.status_code == 200, "Invalid URL"
     return r.content
 
