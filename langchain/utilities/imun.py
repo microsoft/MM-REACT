@@ -41,6 +41,7 @@ def resize_image(data):
     return data
 
 def _get_box(rect):
+    rect = rect.get("boundingBox") or rect["rectangle"]
     x, y = rect['x'] if 'x' in rect else rect['left'], rect['y'] if 'y' in rect else rect['top']
     w, h = rect['w'] if 'w' in rect else rect['width'], rect['h'] if 'h' in rect else rect['height']
     return f"x: {x} y: {y} width: {w} height: {h}"
@@ -83,10 +84,7 @@ class ImunAPIWrapper(BaseModel):
 
     imun_subscription_key: str
     imun_url: str
-    params: dict = {
-        "api-version": "2023-02-01-preview",
-        "features": "denseCaptions,Tags",
-    }
+    params: dict  # "api-version=2023-02-01-preview&features=denseCaptions,Tags"
 
     class Config:
         """Configuration for this pydantic object."""
@@ -110,6 +108,8 @@ class ImunAPIWrapper(BaseModel):
                 break
         if "tags" in api_results:
             results["tags"] = [o["name"] for o in api_results["tags"]]
+        if "objects" in api_results:
+            results["objects"] = [f'{o.get("object") or o["name"]} at location {_get_box(o)}' for o in api_results["objects"]]
         if "captionResult" in api_results:
             results["description"] = api_results["captionResult"]['text']
         if "denseCaptionsResult" in api_results:
@@ -118,7 +118,7 @@ class ImunAPIWrapper(BaseModel):
                 if idx == 0:
                     results["description"] = o['text']
                     continue
-                results["captions"].append(f'{o["text"]} at location {_get_box(o["boundingBox"])}')
+                results["captions"].append(f'{o["text"]} at location {_get_box(o)}')
         if "tagsResult" in api_results:
             results["tags"] = [o["name"] for o in api_results["tagsResult"]["values"]]
         return results
@@ -140,6 +140,11 @@ class ImunAPIWrapper(BaseModel):
 
         values["imun_url"] = imun_url
 
+        params = get_from_dict_or_env(values, "params", "IMUN_PARAMS")
+        if not isinstance(params, dict):
+            params = dict([[v.strip() for v in p.split("=")] for p in params.split("&")])
+        values["params"] = params
+
         return values
 
     def run(self, query: str) -> str:
@@ -151,20 +156,28 @@ class ImunAPIWrapper(BaseModel):
         description = results.get("description") or ""
         captions = results.get("captions") or ""
         tags = results.get("tags") or ""
+        objects = results.get("objects") or ""
 
         if description:
-            answer += IMUN_PROMPT_DESCRIPTION.format(description) if description else ""
+            answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
 
         found = False
         if captions:
-            answer += "\nThe image contains "
+            answer += "\nThe image contains"
+            answer += IMUN_PROMPT_CAPTIONS_PEFIX
+            found = True
+        if objects:
+            if found:
+                answer +=","
+            else:
+                answer += "\nThe image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
         if tags:
             if found:
                 answer +=","
             else:
-                answer += "\nThe image contains "
+                answer += "\nThe image contains"
             answer += IMUN_PROMPT_TAGS_PEFIX
             found = True
 
@@ -175,6 +188,9 @@ class ImunAPIWrapper(BaseModel):
         if captions:
             captions = "\n".join(captions)
             answer += IMUN_PROMPT_CAPTIONS.format(captions=captions)
+        if objects:
+            objects = "\n".join(objects)
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=objects)
         if tags:
             tags = "\n".join(tags)
             answer += IMUN_PROMPT_TAG.format(tags=tags)
