@@ -10,14 +10,24 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env
 
-DEFAULT_IMUN_PROMPT = """This is an image (of size width: {width} height: {height}) with description {description}. 
-The image contains detailed tags, and object descriptions.
-Tags seen in the image:
-{tags}
+IMUN_PROMPT_PREFIX = "This is an image (of size width: {width} height: {height})"
 
-Description of objects and their location in the image:
+IMUN_PROMPT_DESCRIPTION = " with description {description}."
+
+IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
+
+IMUN_PROMPT_TAGS_PEFIX = " tags"
+
+IMUN_PROMPT_CAPTIONS = """
+List of objects' descriptions, and objects' locations in the image:
 {captions}
 """
+
+IMUN_PROMPT_TAG="""
+List of tags seen in the image:
+{tags}
+"""
+
 
 def download_image(url):
     """Download raw image from url
@@ -30,8 +40,10 @@ def resize_image(data):
     # TODO: resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4
     return data
 
-def _get_box(box):
-    return f"x: {box['x']} y: {box['y']} width: {box['w']} height: {box['h']}"
+def _get_box(rect):
+    x, y = rect['x'] if 'x' in rect else rect['left'], rect['y'] if 'y' in rect else rect['top']
+    w, h = rect['w'] if 'w' in rect else rect['width'], rect['h'] if 'h' in rect else rect['height']
+    return f"x: {x} y: {y} width: {w} height: {h}"
 
 class InvalidRequest(requests.HTTPError):
     pass
@@ -45,11 +57,13 @@ class InvalidImageFormat(InvalidRequest):
 def _handle_error(response):
     if response.status_code == 200:
         return
-    # print(response.content)
     try:
+        # Handle error messages from various versions
         err = response.json()
-        err_code = err.get("code") or (err.get("error") or {}).get("code") or ((err.get("error") or {}).get("innererror") or {}).get('code')
-        err_msg = err.get("message") or (err.get("error") or {}).get("message") or ((err.get("error") or {}).get("innererror") or {}).get('message')
+        error = err.get("error") or {}
+        innererror = error.get("innererror") or {}
+        err_code = err.get("code") or error.get("code") or innererror.get('code')
+        err_msg = err.get("message") or error.get("message") or innererror.get('message')
         if response.status_code == 400 and err_code == "InvalidImageSize":
             raise InvalidImageSize(f"{err_code}({err_msg})")
         if response.status_code == 400 and err_code == "InvalidImageFormat":
@@ -69,6 +83,10 @@ class ImunAPIWrapper(BaseModel):
 
     imun_subscription_key: str
     imun_url: str
+    params: dict = {
+        "api-version": "2023-02-01-preview",
+        "features": "denseCaptions,Tags",
+    }
 
     class Config:
         """Configuration for this pydantic object."""
@@ -77,24 +95,32 @@ class ImunAPIWrapper(BaseModel):
 
     def _imun_results(self, img_url: str) -> List[dict]:
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
-        params = {
-            "api-version": "2023-02-01-preview",
-            "features": "denseCaptions,Tags,Read",
-        }
         response = requests.post(
-            self.imun_url, data=resize_image(download_image(img_url)), headers=headers, params=params  # type: ignore
+            self.imun_url, data=resize_image(download_image(img_url)), headers=headers, params=self.params  # type: ignore
         )
         _handle_error(response)
         
         api_results = response.json()
-        results = {"captions": [], "tags": [], "texts": [], "size": api_results["metadata"]}
-        for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
-            if idx == 0:
-                results["description"] = o['text']
-                continue
-            results["captions"].append(f'{o["text"]} at location {_get_box(o["boundingBox"])}')
-        for o in api_results["tagsResult"]["values"]:
-            results["tags"].append(f'{o["name"]}')
+        results = {"size": api_results["metadata"]}
+
+        if "description" in api_results:
+            results["tags"] = api_results["description"]["tags"]
+            for o in api_results["description"]["captions"]:
+                results["description"] = o["text"]
+                break
+        if "tags" in api_results:
+            results["tags"] = [o["name"] for o in api_results["tags"]]
+        if "captionResult" in api_results:
+            results["description"] = api_results["captionResult"]['text']
+        if "denseCaptionsResult" in api_results:
+            results["captions"] = []
+            for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
+                if idx == 0:
+                    results["description"] = o['text']
+                    continue
+                results["captions"].append(f'{o["text"]} at location {_get_box(o["boundingBox"])}')
+        if "tagsResult" in api_results:
+            results["tags"] = [o["name"] for o in api_results["tagsResult"]["values"]]
         return results
 
     @root_validator(pre=True)
@@ -119,15 +145,40 @@ class ImunAPIWrapper(BaseModel):
     def run(self, query: str) -> str:
         """Run query through Image Understanding and parse result."""
         results = self._imun_results(query)
-        description = results["description"]
-        captions = "\n".join(results["captions"])
-        tags = "\n".join(results["tags"])
         width, height = results["size"]["width"], results["size"]["height"]
-        if not captions and not tags:
-            return f"A blurry image (of size width: {width} height: {height})"
+        answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
 
-        result = DEFAULT_IMUN_PROMPT.format(width=width, height=height, description=description, tags=tags, captions=captions)
-        return result
+        description = results.get("description") or ""
+        captions = results.get("captions") or ""
+        tags = results.get("tags") or ""
+
+        if description:
+            answer += IMUN_PROMPT_DESCRIPTION.format(description) if description else ""
+
+        found = False
+        if captions:
+            answer += "\nThe image contains "
+            answer += IMUN_PROMPT_CAPTIONS_PEFIX
+            found = True
+        if tags:
+            if found:
+                answer +=","
+            else:
+                answer += "\nThe image contains "
+            answer += IMUN_PROMPT_TAGS_PEFIX
+            found = True
+
+        if not found and not description:
+            # did not find anything
+            return answer + "\nThe image is too blurry"
+        
+        if captions:
+            captions = "\n".join(captions)
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=captions)
+        if tags:
+            tags = "\n".join(tags)
+            answer += IMUN_PROMPT_TAG.format(tags=tags)
+        return answer
 
     def results(self, query: str) -> List[Dict]:
         """Run query through Image Understanding and return metadata.
@@ -138,9 +189,10 @@ class ImunAPIWrapper(BaseModel):
 
         Returns:
             A dictionary of lists, with dictionaries with the following keys:
-                caption - The description of the object.
-                tag - The tag in image.
-                text - The OCR result.
+                size - width and height of the image
+                description - Top level image description.
+                captions - The description of the object.
+                tags - The tags seen in the image.
         """
         results = self._imun_results(query)
         return results
