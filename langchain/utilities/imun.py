@@ -19,14 +19,21 @@ IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
 
 IMUN_PROMPT_TAGS_PEFIX = " object tags"
 
+IMUN_PROMPT_OCR_PEFIX = " text"
+
 IMUN_PROMPT_CAPTIONS = """
 List of object descriptions, and their locations in this image:
 {captions}
 """
 
-IMUN_PROMPT_TAG="""
+IMUN_PROMPT_TAGS="""
 List of object tags seen in this image:
 {tags}
+"""
+
+IMUN_PROMPT_WORDS="""
+List of text (words) seen in this image:
+{words}
 """
 
 
@@ -131,6 +138,10 @@ class ImunAPIWrapper(BaseModel):
             results["description"] = api_results["captionResult"]['text']
         if "tagsResult" in api_results:
             results["tags"] = [o["name"] for o in api_results["tagsResult"]["values"]]
+        if "readResult" in api_results:
+            words = api_results["readResult"]["pages"][0]["words"]
+            words = [f'{o["content"]}' for o in words]
+            results["words"] = words
         return results
 
     @root_validator(pre=True)
@@ -167,6 +178,7 @@ class ImunAPIWrapper(BaseModel):
         captions = results.get("captions") or ""
         tags = results.get("tags") or ""
         objects = results.get("objects") or ""
+        words = results.get("words") or ""
 
         if description:
             answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
@@ -177,18 +189,16 @@ class ImunAPIWrapper(BaseModel):
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
         if objects:
-            if found:
-                answer +=","
-            else:
-                answer += "\nThis image contains"
+            answer += "," if found else "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
         if tags:
-            if found:
-                answer +=","
-            else:
-                answer += "\nThis image contains"
+            answer += "," if found else "\nThis image contains"
             answer += IMUN_PROMPT_TAGS_PEFIX
+            found = True
+        if words:
+            answer += "," if found else "\nThis image contains"
+            answer += IMUN_PROMPT_OCR_PEFIX
             found = True
 
         if not found and not description:
@@ -203,7 +213,10 @@ class ImunAPIWrapper(BaseModel):
             answer += IMUN_PROMPT_CAPTIONS.format(captions=objects)
         if tags:
             tags = "\n".join(tags)
-            answer += IMUN_PROMPT_TAG.format(tags=tags)
+            answer += IMUN_PROMPT_TAGS.format(tags=tags)
+        if words:
+            tags = "\n".join(tags)
+            answer += IMUN_PROMPT_WORDS.format(words=words)
         return answer
 
     def results(self, query: str) -> List[Dict]:
