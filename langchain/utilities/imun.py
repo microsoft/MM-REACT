@@ -32,7 +32,7 @@ List of object tags seen in this image:
 """
 
 IMUN_PROMPT_WORDS="""
-List of text (words) seen in this image:
+List of texts (words) seen in this image:
 {words}
 """
 
