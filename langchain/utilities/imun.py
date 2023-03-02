@@ -3,6 +3,7 @@
 In order to set this up, follow instructions at:
 https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
 """
+import os
 from typing import Dict, List
 
 import requests
@@ -32,10 +33,18 @@ List of object tags seen in this image:
 def download_image(url):
     """Download raw image from url
     """
-    headers = {'User-Agent': 'langchain imun'}
-    r = requests.get(url, stream=True, headers=headers, timeout=2)
-    assert r.status_code == 200, "Invalid URL"
-    return r.content
+    try:
+        headers = {'User-Agent': 'langchain imun'}
+        r = requests.get(url, stream=True, headers=headers, timeout=2)
+        assert r.status_code == 200, "Invalid URL"
+        return r.content
+    except requests.exceptions.MissingSchema as e:
+        # This should be configured because of security
+        ext = os.path.splitext(url)[1].lower()
+        if ext in [".jpg", ".png", ".bmp", ".jpeg"]:
+            with open(url, "rb") as fp:
+                return fp.read()
+        raise e
 
 def resize_image(data):
     # TODO: resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4
@@ -142,7 +151,7 @@ class ImunAPIWrapper(BaseModel):
         values["imun_url"] = imun_url
 
         params = get_from_dict_or_env(values, "params", "IMUN_PARAMS")
-        if not isinstance(params, dict):
+        if isinstance(params, str):
             params = dict([[v.strip() for v in p.split("=")] for p in params.split("&")])
         values["params"] = params
 
