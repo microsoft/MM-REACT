@@ -216,7 +216,7 @@ class ImunAPIWrapper(BaseModel):
             tags = "\n".join(tags)
             answer += IMUN_PROMPT_TAGS.format(tags=tags)
         if words:
-            tags = "\n".join(tags)
+            words = "\n".join(words)
             answer += IMUN_PROMPT_WORDS.format(words=words)
         return answer
 
