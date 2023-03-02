@@ -11,7 +11,7 @@ class ImunRun(BaseTool):
     description = (
         "A wrapper around Image Understanding. "
         "Useful for when you need to understand what is inside an image (objects, texts, people)."
-        "Input should be an image url, or any url to an image file (e.g. .jpg, .png)."
+        "Input should be an image url, or any url path to an image file (e.g. .jpg, .png)."
     )
     api_wrapper: ImunAPIWrapper
 
