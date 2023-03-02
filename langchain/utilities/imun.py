@@ -38,13 +38,13 @@ def download_image(url):
         r = requests.get(url, stream=True, headers=headers, timeout=2)
         assert r.status_code == 200, "Invalid URL"
         return r.content
-    except requests.exceptions.MissingSchema as e:
+    except requests.exceptions.MissingSchema:
         # This should be configured because of security
         ext = os.path.splitext(url)[1].lower()
         if ext in [".jpg", ".png", ".bmp", ".jpeg"]:
             with open(url, "rb") as fp:
                 return fp.read()
-        raise e
+        raise
 
 def resize_image(data):
     # TODO: resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4
