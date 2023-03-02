@@ -120,8 +120,6 @@ class ImunAPIWrapper(BaseModel):
             results["tags"] = [o["name"] for o in api_results["tags"]]
         if "objects" in api_results:
             results["objects"] = [f'{o.get("object") or o["name"]} at location {_get_box(o)}' for o in api_results["objects"]]
-        if "captionResult" in api_results:
-            results["description"] = api_results["captionResult"]['text']
         if "denseCaptionsResult" in api_results:
             results["captions"] = []
             for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
@@ -129,6 +127,8 @@ class ImunAPIWrapper(BaseModel):
                     results["description"] = o['text']
                     continue
                 results["captions"].append(f'{o["text"]} at location {_get_box(o)}')
+        if "captionResult" in api_results:
+            results["description"] = api_results["captionResult"]['text']
         if "tagsResult" in api_results:
             results["tags"] = [o["name"] for o in api_results["tagsResult"]["values"]]
         return results
