@@ -21,6 +21,8 @@ IMUN_PROMPT_TAGS_PEFIX = " object tags"
 
 IMUN_PROMPT_OCR_PEFIX = " text"
 
+IMUN_PROMPT_FACES_PEFIX = " faces"
+
 IMUN_PROMPT_CAPTIONS = """
 List of object descriptions, and their locations in this image:
 {captions}
@@ -34,6 +36,11 @@ List of object tags seen in this image:
 IMUN_PROMPT_WORDS="""
 List of texts (words) seen in this image:
 {words}
+"""
+
+IMUN_PROMPT_FACES="""
+List of faces, and theit location in this image:
+{faces}
 """
 
 
@@ -58,10 +65,26 @@ def resize_image(data):
     return data
 
 def _get_box(rect):
-    rect = rect.get("boundingBox") or rect["rectangle"]
+    rect = rect.get("boundingBox") or rect.get("faceRectangle") or rect["rectangle"]
     x, y = rect['x'] if 'x' in rect else rect['left'], rect['y'] if 'y' in rect else rect['top']
     w, h = rect['w'] if 'w' in rect else rect['width'], rect['h'] if 'h' in rect else rect['height']
-    return f"x: {x} y: {y} width: {w} height: {h}"
+    return f"x:{x} y:{y} width:{w} height:{h}"
+
+def _get_person(o):
+    age = o.get("age") or 25
+    gender = (o.get("gender") or "").lower()
+    if age < 18:
+        if gender == "female":
+            return "girl"
+        if gender == "male":
+            return "boy"
+        return "child"
+    if gender == "female":
+        return "woman"
+    if gender == "male":
+        return "man"
+    return "person"
+
 
 class InvalidRequest(requests.HTTPError):
     pass
@@ -126,14 +149,17 @@ class ImunAPIWrapper(BaseModel):
         if "tags" in api_results:
             results["tags"] = [o["name"] for o in api_results["tags"]]
         if "objects" in api_results:
-            results["objects"] = [f'{o.get("object") or o["name"]} at location {_get_box(o)}' for o in api_results["objects"]]
+            results["objects"] = [f'{o.get("object") or o["name"]} {_get_box(o)}' for o in api_results["objects"]]
+        if "faces" in api_results:
+            results["faces"] = [f'{_get_person(o)} {_get_box(o)}' for o in api_results["faces"]]
+
         if "denseCaptionsResult" in api_results:
             results["captions"] = []
             for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
                 if idx == 0:
                     results["description"] = o['text']
                     continue
-                results["captions"].append(f'{o["text"]} at location {_get_box(o)}')
+                results["captions"].append(f'{o["text"]} {_get_box(o)}')
         if "captionResult" in api_results:
             results["description"] = api_results["captionResult"]['text']
         if "tagsResult" in api_results:
@@ -180,6 +206,7 @@ class ImunAPIWrapper(BaseModel):
         tags = results.get("tags") or ""
         objects = results.get("objects") or ""
         words = results.get("words") or ""
+        faces = results.get("faces") or ""
 
         if description:
             answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
@@ -201,23 +228,27 @@ class ImunAPIWrapper(BaseModel):
             answer += "," if found else "\nThis image contains"
             answer += IMUN_PROMPT_OCR_PEFIX
             found = True
+        if faces:
+            answer += "," if found else "\nThis image contains"
+            answer += IMUN_PROMPT_FACES_PEFIX
+            found = True
+
+        answer += "\n"
 
         if not found and not description:
             # did not find anything
-            return answer + "\nThis image is too blurry"
+            return answer + "This image is too blurry"
         
         if captions:
-            captions = "\n".join(captions)
-            answer += IMUN_PROMPT_CAPTIONS.format(captions=captions)
+            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
         if objects:
-            objects = "\n".join(objects)
-            answer += IMUN_PROMPT_CAPTIONS.format(captions=objects)
+            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
         if tags:
-            tags = "\n".join(tags)
-            answer += IMUN_PROMPT_TAGS.format(tags=tags)
+            answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
         if words:
-            words = "\n".join(words)
-            answer += IMUN_PROMPT_WORDS.format(words=words)
+            answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
+        if faces:
+            answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
         return answer
 
     def results(self, query: str) -> List[Dict]:
