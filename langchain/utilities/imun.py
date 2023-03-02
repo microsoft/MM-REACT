@@ -141,7 +141,8 @@ class ImunAPIWrapper(BaseModel):
         if "readResult" in api_results:
             words = api_results["readResult"]["pages"][0]["words"]
             words = [f'{o["content"]}' for o in words]
-            results["words"] = words
+            if words:
+                results["words"] = words
         return results
 
     @root_validator(pre=True)
