@@ -19,7 +19,7 @@ IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
 
 IMUN_PROMPT_TAGS_PEFIX = " object tags"
 
-IMUN_PROMPT_OCR_PEFIX = " text"
+IMUN_PROMPT_OCR_PEFIX = " {style}text"
 
 IMUN_PROMPT_FACES_PEFIX = " faces"
 
@@ -169,6 +169,15 @@ class ImunAPIWrapper(BaseModel):
             words = [f'{o["content"]}' for o in words]
             if words:
                 results["words"] = words
+            styles = api_results["readResult"]["styles"]
+            handwritten = False
+            for style in styles:
+                if not style["isHandwritten"]:
+                    handwritten = False
+                    break
+                handwritten = True
+            if handwritten:
+                results["words_style"] = "handwritten "
         return results
 
     @root_validator(pre=True)
@@ -206,6 +215,7 @@ class ImunAPIWrapper(BaseModel):
         tags = results.get("tags") or ""
         objects = results.get("objects") or ""
         words = results.get("words") or ""
+        words_style = results.get("words_style") or ""
         faces = results.get("faces") or ""
 
         if description:
@@ -226,7 +236,7 @@ class ImunAPIWrapper(BaseModel):
             found = True
         if words:
             answer += "," if found else "\nThis image contains"
-            answer += IMUN_PROMPT_OCR_PEFIX
+            answer += IMUN_PROMPT_OCR_PEFIX.format(style=words_style)
             found = True
         if faces:
             answer += "," if found else "\nThis image contains"
