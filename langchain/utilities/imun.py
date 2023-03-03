@@ -206,11 +206,18 @@ class ImunAPIWrapper(BaseModel):
             if _is_handwritten(api_results["readResult"]["styles"]):
                 results["words_style"] = "handwritten "
         if "analyzeResult" in api_results:
-            if (api_results.get("documents") or {}).get("fields"):
+            is_document = False
+            for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
+                results["size"] = {"width": page["width"], "height": page["height"]}
+                break
+            for doc in api_results["analyzeResult"].get("documents") or []:
+                if doc.get("fields"):
+                    is_document = True
+                    break
+            if is_document:
                 results["words"] = api_results["analyzeResult"]["content"].split("\n")
             else:
                 for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
-                    results["size"] = {"width": page["width"], "height": page["height"]}
                     lines = [o["content"]  for o in page["lines"]]
                     if lines:
                         results["words"] = lines
