@@ -4,6 +4,7 @@ In order to set this up, follow instructions at:
 https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
 """
 import os
+import time
 from typing import Dict, List
 
 import requests
@@ -154,15 +155,22 @@ class ImunAPIWrapper(BaseModel):
             self.imun_url, data=resize_image(download_image(img_url)), headers=headers, params=self.params  # type: ignore
         )
         _handle_error(response)
+        api_results = None
         delayed_job = response.headers.get("Operation-Location")
         if delayed_job:
             headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key}
-            response = requests.get(
-                delayed_job, headers=headers  # type: ignore
-            )
-            _handle_error(response)
+            running = True
+            while running:
+                time.sleep(0.1)
+                response = requests.get(
+                    delayed_job, headers=headers  # type: ignore
+                )
+                _handle_error(response)
+                api_results = response.json()
+                running = (api_results["status"] or "failed") == "running"
         
-        api_results = response.json()
+        if api_results is None:
+            api_results = response.json()
         results = {}
         if "metadata" in api_results:
             results = {"size": api_results["metadata"]}
@@ -201,12 +209,12 @@ class ImunAPIWrapper(BaseModel):
             for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
                 results["size"] = {"width": page["width"], "height": page["height"]}
                 lines = [o["content"]  for o in page["lines"]]
-                if words:
+                if lines:
                     results["words"] = lines
                 break  # TODO: handle more pages
             if _is_handwritten(api_results["analyzeResult"]["styles"]):
                 results["words_style"] = "handwritten "
-            languages = [l['locale'] for l in api_results["languages"]]
+            languages = [l['locale'] for l in api_results["analyzeResult"]["languages"]]
             if languages:
                 results["languages"] = languages
         return results
