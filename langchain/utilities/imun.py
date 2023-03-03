@@ -206,17 +206,20 @@ class ImunAPIWrapper(BaseModel):
             if _is_handwritten(api_results["readResult"]["styles"]):
                 results["words_style"] = "handwritten "
         if "analyzeResult" in api_results:
-            for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
-                results["size"] = {"width": page["width"], "height": page["height"]}
-                lines = [o["content"]  for o in page["lines"]]
-                if lines:
-                    results["words"] = lines
-                break  # TODO: handle more pages
-            if _is_handwritten(api_results["analyzeResult"]["styles"]):
-                results["words_style"] = "handwritten "
-            languages = [l['locale'] for l in api_results["analyzeResult"]["languages"]]
-            if languages:
-                results["languages"] = languages
+            if (api_results.get("documents") or {}).get("fields"):
+                results["words"] = api_results["analyzeResult"]["content"].split("\n")
+            else:
+                for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
+                    results["size"] = {"width": page["width"], "height": page["height"]}
+                    lines = [o["content"]  for o in page["lines"]]
+                    if lines:
+                        results["words"] = lines
+                    break  # TODO: handle more pages
+                if _is_handwritten(api_results["analyzeResult"]["styles"]):
+                    results["words_style"] = "handwritten "
+                languages = [l['locale'] for l in api_results["analyzeResult"]["languages"]]
+                if languages:
+                    results["languages"] = languages
         return results
 
     @root_validator(pre=True)
