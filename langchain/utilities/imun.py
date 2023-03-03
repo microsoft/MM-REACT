@@ -45,7 +45,7 @@ The above words are in these languages:
 """
 
 IMUN_PROMPT_FACES="""
-List of faces, and theit location in this image:
+List of people faces, and their location in this image:
 {faces}
 """
 
