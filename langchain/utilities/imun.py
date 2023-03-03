@@ -11,7 +11,7 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env
 
-IMUN_PROMPT_PREFIX = "This is an image (of size width: {width} height: {height})"
+IMUN_PROMPT_PREFIX = "This is an image (of size width:{width} height:{height})"
 
 IMUN_PROMPT_DESCRIPTION = " with description {description}.\n"
 
@@ -36,6 +36,11 @@ List of object tags seen in this image:
 IMUN_PROMPT_WORDS="""
 List of texts (words) seen in this image:
 {words}
+"""
+
+IMUN_PROMPT_LANGUAGES="""
+The above words are in these languages:
+{languages}
 """
 
 IMUN_PROMPT_FACES="""
@@ -85,6 +90,18 @@ def _get_person(o):
         return "man"
     return "person"
 
+def _is_handwritten(styles):
+    handwritten = False
+    for style in styles:
+        if not style["isHandwritten"]:
+            return False
+        handwritten = True
+    return handwritten
+
+def _get_lang(lang):
+    if lang == "":
+        return ""
+    return lang
 
 class InvalidRequest(requests.HTTPError):
     pass
@@ -137,9 +154,18 @@ class ImunAPIWrapper(BaseModel):
             self.imun_url, data=resize_image(download_image(img_url)), headers=headers, params=self.params  # type: ignore
         )
         _handle_error(response)
+        delayed_job = response.headers.get("Operation-Location")
+        if delayed_job:
+            headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key}
+            response = requests.get(
+                delayed_job, headers=headers  # type: ignore
+            )
+            _handle_error(response)
         
         api_results = response.json()
-        results = {"size": api_results["metadata"]}
+        results = {}
+        if "metadata" in api_results:
+            results = {"size": api_results["metadata"]}
 
         if "description" in api_results:
             results["tags"] = api_results["description"]["tags"]
@@ -166,18 +192,23 @@ class ImunAPIWrapper(BaseModel):
             results["tags"] = [o["name"] for o in api_results["tagsResult"]["values"]]
         if "readResult" in api_results:
             words = api_results["readResult"]["pages"][0]["words"]
-            words = [f'{o["content"]}' for o in words]
+            words = [o["content"] for o in words]
             if words:
                 results["words"] = words
-            styles = api_results["readResult"]["styles"]
-            handwritten = False
-            for style in styles:
-                if not style["isHandwritten"]:
-                    handwritten = False
-                    break
-                handwritten = True
-            if handwritten:
+            if _is_handwritten(api_results["readResult"]["styles"]):
                 results["words_style"] = "handwritten "
+        if "analyzeResult" in api_results:
+            for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
+                results["size"] = {"width": page["width"], "height": page["height"]}
+                lines = [o["content"]  for o in page["lines"]]
+                if words:
+                    results["words"] = lines
+                break  # TODO: handle more pages
+            if _is_handwritten(api_results["analyzeResult"]["styles"]):
+                results["words_style"] = "handwritten "
+            languages = [l['locale'] for l in api_results["languages"]]
+            if languages:
+                results["languages"] = languages
         return results
 
     @root_validator(pre=True)
@@ -207,8 +238,11 @@ class ImunAPIWrapper(BaseModel):
     def run(self, query: str) -> str:
         """Run query through Image Understanding and parse result."""
         results = self._imun_results(query)
-        width, height = results["size"]["width"], results["size"]["height"]
-        answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
+        if "size" in results:
+            width, height = results["size"]["width"], results["size"]["height"]
+            answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
+        else:
+            answer = "This is an image"
 
         description = results.get("description") or ""
         captions = results.get("captions") or ""
@@ -216,6 +250,7 @@ class ImunAPIWrapper(BaseModel):
         objects = results.get("objects") or ""
         words = results.get("words") or ""
         words_style = results.get("words_style") or ""
+        languages = results.get("languages") or ""
         faces = results.get("faces") or ""
 
         if description:
@@ -257,6 +292,8 @@ class ImunAPIWrapper(BaseModel):
             answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
         if words:
             answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
+            if languages:
+                answer += IMUN_PROMPT_LANGUAGES(languages="\n".join(languages))
         if faces:
             answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
         return answer
