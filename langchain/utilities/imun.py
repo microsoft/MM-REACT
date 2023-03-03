@@ -301,7 +301,7 @@ class ImunAPIWrapper(BaseModel):
         if words:
             answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
             if languages:
-                answer += IMUN_PROMPT_LANGUAGES(languages="\n".join(languages))
+                answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
         if faces:
             answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
         return answer
