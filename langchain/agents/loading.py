@@ -21,7 +21,7 @@ AGENT_TO_CLASS = {
     "react-docstore": ReActDocstoreAgent,
     "self-ask-with-search": SelfAskWithSearchAgent,
     "conversational-react-description": ConversationalAgent,
-    "assistant": AssistantAgent,
+    "conversational-assistant": AssistantAgent,
 }
 
 URL_BASE = "https://raw.githubusercontent.com/hwchase17/langchain-hub/master/agents/"

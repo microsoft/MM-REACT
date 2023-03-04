@@ -15,7 +15,7 @@ This image contains text
 List of texts (words) seen in this image:
 CONTOSO
 Cell: +1 (989) 123-4567
-Tel: +1 (989) 213-5674 Fax: +1 (987) 312-6745 4001 1st Ave NE Redmond, WA 98052
+Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 ---END---
 
@@ -67,11 +67,43 @@ animal
 zoo
 dolphine
 ---END---
+
+For example:
+Human: what do you know about this image? /tmp/path/to/x_d_0(2).jpg
+ChatGPT: ImageAssistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
+
+This image contains objects and their descriptions, object tags
+
+List of object descriptions, and their locations in this image:
+heart x:100 y:201 width:90 height:90
+
+List of object tags seen in this image:
+pills
+text
+prescription instructions
+---END---
+ChatGPT: This is likely a pill bottle with labels. Let me ask for more information.
+ChatGPT: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
+ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
+This image contains text
+
+List of texts (words) seen in this image:
+SPRING VALLEY.
+Co Q-10
+100mg
+Supports
+Cardiovascular Health"
+HEART HEALTH
+75 Rapid Release Softgels
+DIETARY
+SUPPLEMENT
+---END---
+ChatGPT: This is heart medicine supplement softgel pills by SPRING VALLEY
 """
+SUFFIX = """
 
-SUFFIX = """Begin!
-
-Previous conversation history:
+Our Previous conversation history:
 {chat_history}
 
 New input: {input}
