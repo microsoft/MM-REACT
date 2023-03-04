@@ -2,7 +2,7 @@
 PREFIX = """Human: Hey {ai_prefix}!
 My name is Human.
 Let me introduce you to ImageAssistant. He is great at understanding what is going on in any image.
-Any time you want to know about objects, texts, OCR (optical character recognition), people, celebrities inside an image you could ask ImageAssistant by addressing him. 
+Any time you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside an image you could ask ImageAssistant by addressing him. 
 Make sure to provide ImageAssistant with the best information about the type of task that ImageAssistant can handle. 
 
 For example:
@@ -36,14 +36,15 @@ football
 soccer
 ---END---
 
-These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects, people, OCR
+These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, people, OCR
 If the task does not fit any of the above, make sure the question has the word objects in it.
+For example, to ask about an image without any description, make sure the question has the word objects in it.
 For example, to ask about an image that requires OCR, make sure the question has the word OCR in it.
 For example, to ask about an image that is likely from a business card, make sure the question has the word business card in it.
 
 For example:
-Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmhg4/mth1.png
-{ai_prefix}: ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmhg4/mth1.png
+Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
+{ai_prefix}: ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 ImageAssistant: This is an image (of size width:616 height:411)
 This image contains handwritten text
 

@@ -64,10 +64,19 @@ class AssistantAgent(Agent):
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
         cmd_idx = llm_output.find("ImageAssistant,")
         if cmd_idx >= 0:
-            cmd = llm_output[len("ImageAssistant,"):]
-            action = "Image Understanding"
-            action_input = "/mnt/output/gr/DemoTest/math1.png"
-            return action.strip(), action_input.strip(" ").strip('"')
+            cmd = llm_output[len("ImageAssistant,"):].strip()
+            cmd_idx = cmd.rfind(" ")
+            action_input = cmd[cmd_idx + 1:].strip()
+            cmd = cmd[:cmd_idx + 1].lower()
+            if "ocr" in cmd:
+                action = "OCR Understanding"
+            elif "receipt" in cmd:
+                action = "Receipt Understanding"
+            elif "business card" in cmd:
+                action = "Business Card Understanding"
+            else:
+                action = "Image Understanding"
+            return action, action_input
         
         if f"{self.ai_prefix}:" in llm_output:
             return self.ai_prefix, llm_output.split(f"{self.ai_prefix}:")[-1].strip()
