@@ -60,6 +60,8 @@ class Agent(BaseModel):
         return thoughts
 
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
+        with open("/mnt/output/gr/tst.txt", "a+") as fp:
+            print(full_inputs, file=fp)
         full_output = self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         while parsed_output is None:

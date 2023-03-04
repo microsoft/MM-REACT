@@ -16,7 +16,7 @@ from langchain.tools.base import BaseTool
 class AssistantAgent(Agent):
     """An agent designed to hold a conversation in addition to an specialized assistant tool."""
 
-    ai_prefix: str = "ChatGPT"
+    ai_prefix: str = "AI"
 
     @property
     def _agent_type(self) -> str:
@@ -26,18 +26,19 @@ class AssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "Observation: "
+        return "ImageAssistant: "
 
     @property
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
-        return "Human:"
+        return "AI:"
 
     @classmethod
     def create_prompt(
         cls,
         prefix: str = PREFIX,
         suffix: str = SUFFIX,
+        ai_prefix: str = "AI",
         input_variables: Optional[List[str]] = None,
     ) -> PromptTemplate:
         """Create prompt in the style of the zero shot agent.
@@ -50,7 +51,7 @@ class AssistantAgent(Agent):
         Returns:
             A PromptTemplate with the template assembled from the pieces here.
         """
-        template = "\n\n".join([prefix, suffix])
+        template = "\n\n".join([prefix.format(ai_prefix=ai_prefix), suffix])
         if input_variables is None:
             input_variables = ["input", "chat_history", "agent_scratchpad"]
         return PromptTemplate(template=template, input_variables=input_variables)
@@ -61,8 +62,11 @@ class AssistantAgent(Agent):
         return self.ai_prefix
 
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
-        if llm_output.startswith("ImageAssistant,"):
-            
+        cmd_idx = llm_output.find("ImageAssistant,")
+        if cmd_idx >= 0:
+            cmd = llm_output[len("ImageAssistant,"):]
+            action = "Image Understanding"
+            action_input = "/mnt/output/gr/DemoTest/math1.png"
             return action.strip(), action_input.strip(" ").strip('"')
         
         if f"{self.ai_prefix}:" in llm_output:
@@ -80,12 +84,14 @@ class AssistantAgent(Agent):
         callback_manager: Optional[BaseCallbackManager] = None,
         prefix: str = PREFIX,
         suffix: str = SUFFIX,
+        ai_prefix: str = "AI",
         input_variables: Optional[List[str]] = None,
         **kwargs: Any,
     ) -> Agent:
         """Construct an agent from an LLM and tools."""
         cls._validate_tools(tools)
         prompt = cls.create_prompt(
+            ai_prefix=ai_prefix,
             prefix=prefix,
             suffix=suffix,
             input_variables=input_variables,

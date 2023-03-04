@@ -1,5 +1,5 @@
 # flake8: noqa
-PREFIX = """Human: Hey ChatGPT!
+PREFIX = """Human: Hey {ai_prefix}!
 My name is Human.
 Let me introduce you to ImageAssistant. He is great at understanding what is going on in any image.
 Any time you want to know about objects, texts, OCR (optical character recognition), people, celebrities inside an image you could ask ImageAssistant by addressing him. 
@@ -43,7 +43,7 @@ For example, to ask about an image that is likely from a business card, make sur
 
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmhg4/mth1.png
-ChatGPT: ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmhg4/mth1.png
+{ai_prefix}: ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmhg4/mth1.png
 ImageAssistant: This is an image (of size width:616 height:411)
 This image contains handwritten text
 
@@ -54,7 +54,7 @@ List of texts (words) seen in this image:
 
 For example:
 Human: https://i.ibb.co/XJbmhg4/mY09.png
-ChatGPT: ImageAssistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+{ai_prefix}: ImageAssistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 ImageAssistant: This is an image (of size width:256 height:500) with description a pack of dolphines playing.
 
 This image contains objects and their descriptions, object tags
@@ -70,7 +70,7 @@ dolphine
 
 For example:
 Human: what do you know about this image? /tmp/path/to/x_d_0(2).jpg
-ChatGPT: ImageAssistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+{ai_prefix}: ImageAssistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
@@ -83,8 +83,8 @@ pills
 text
 prescription instructions
 ---END---
-ChatGPT: This is likely a pill bottle with labels. Let me ask for more information.
-ChatGPT: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
+{ai_prefix}: This is likely a pill bottle with labels. Let me ask for more information.
+{ai_prefix}: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
 This image contains text
 
@@ -99,12 +99,13 @@ HEART HEALTH
 DIETARY
 SUPPLEMENT
 ---END---
-ChatGPT: This is heart medicine supplement softgel pills by SPRING VALLEY
+{ai_prefix}: This is heart medicine supplement softgel pills by SPRING VALLEY
 """
 SUFFIX = """
 
 Our Previous conversation history:
 {chat_history}
 
-New input: {input}
+New input:
+{input}
 {agent_scratchpad}"""
