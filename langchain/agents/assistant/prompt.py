@@ -92,16 +92,10 @@ This image contains text
 
 List of texts (words) seen in this image:
 SPRING VALLEY.
-Co Q-10
-100mg
-Supports
-Cardiovascular Health"
-HEART HEALTH
-75 Rapid Release Softgels
-DIETARY
+Supports Health
 SUPPLEMENT
 ---END---
-{ai_prefix}: This is heart medicine supplement softgel pills by SPRING VALLEY
+{ai_prefix}: This is medicine supplement pills by SPRING VALLEY
 """
 SUFFIX = """Begin!
 
