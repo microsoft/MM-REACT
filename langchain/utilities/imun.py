@@ -314,7 +314,7 @@ class ImunAPIWrapper(BaseModel):
                 answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
         if faces:
             answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
-        return answer
+        return answer + "---END---\n"
 
     def results(self, query: str) -> List[Dict]:
         """Run query through Image Understanding and return metadata.

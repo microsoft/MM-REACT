@@ -80,7 +80,7 @@ class AssistantAgent(Agent):
         
         if f"{self.ai_prefix}:" in llm_output:
             return self.ai_prefix, llm_output.split(f"{self.ai_prefix}:")[-1].strip()
-        # if the role is assumed!
+        # ChatGPT fix: if the role is assumed!
         if "ImageAssistant:" in llm_output:
             return self.ai_prefix, llm_output.split("ImageAssistant:")[-1].strip()
         return self.ai_prefix, llm_output.strip()

@@ -102,7 +102,7 @@ SUPPLEMENT
 ---END---
 {ai_prefix}: This is heart medicine supplement softgel pills by SPRING VALLEY
 """
-SUFFIX = """
+SUFFIX = """Begin!
 
 Our Previous conversation history:
 {chat_history}
