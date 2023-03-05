@@ -41,6 +41,7 @@ If the task does not fit any of the above, make sure the question has the word o
 For example, to ask about an image without any description, make sure the question has the word objects in it.
 For example, to ask about an image that requires OCR, make sure the question has the word OCR in it.
 For example, to ask about an image that is likely from a business card, make sure the question has the word business card in it.
+For example, to ask about an image that is likely from a receipt, make sure the question has the word receipt in it.
 
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
