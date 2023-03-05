@@ -68,12 +68,12 @@ class AssistantAgent(Agent):
             cmd_idx = cmd.rfind(" ")
             action_input = cmd[cmd_idx + 1:].strip()
             cmd = cmd[:cmd_idx + 1].lower()
-            if "ocr" in cmd:
-                action = "OCR Understanding"
-            elif "receipt" in cmd:
+            if "receipt" in cmd:
                 action = "Receipt Understanding"
             elif "business card" in cmd:
                 action = "Business Card Understanding"
+            elif "ocr" in cmd:
+                action = "OCR Understanding"
             else:
                 action = "Image Understanding"
             return action, action_input
