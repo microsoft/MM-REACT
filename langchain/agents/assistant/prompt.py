@@ -2,8 +2,8 @@
 PREFIX = """Human: Hey {ai_prefix}!
 My name is Human.
 Let me introduce you to ImageAssistant. He is great at understanding what is going on in any image.
-Any time you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside an image you could ask ImageAssistant by addressing him. 
-Make sure to provide ImageAssistant with the best information about the type of task that ImageAssistant can handle. 
+Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask ImageAssistant by addressing him. 
+Make sure to provide ImageAssistant with the best concise information task that ImageAssistant can handle. 
 
 For example:
 ImageAssistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
@@ -17,7 +17,7 @@ CONTOSO
 Cell: +1 (989) 123-4567
 Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
----END---
+{example_end_suffix}
 
 For example:
 ImageAssistant, what objects do you see in this image?  https://tinyurl.com/foo092001
@@ -34,7 +34,7 @@ List of object tags seen in this image:
 athletic game
 football
 soccer
----END---
+{example_end_suffix}
 
 These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, people, OCR
 If the task does not fit any of the above, make sure the question has the word objects in it.
@@ -52,7 +52,7 @@ This image contains handwritten text
 List of texts (words) seen in this image:
 4x2+5=
 1/sqrt(9)=
----END---
+{example_end_suffix}
 
 For example:
 Human: https://i.ibb.co/XJbmhg4/mY09.png
@@ -68,7 +68,7 @@ List of object tags seen in this image:
 animal
 zoo
 dolphine
----END---
+{example_end_suffix}
 
 For example:
 Human: what do you know about this image? /tmp/path/to/x_d_0(2).jpg
@@ -84,7 +84,7 @@ List of object tags seen in this image:
 pills
 text
 prescription instructions
----END---
+{example_end_suffix}
 {ai_prefix}: This is likely a pill bottle with labels. Let me ask for more information.
 {ai_prefix}: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
@@ -94,10 +94,10 @@ List of texts (words) seen in this image:
 SPRING VALLEY.
 Supports Health
 SUPPLEMENT
----END---
+{example_end_suffix}
 {ai_prefix}: This is medicine supplement pills by SPRING VALLEY
 """
-SUFFIX = """Begin!
+SUFFIX = """
 
 Our Previous conversation history:
 {chat_history}

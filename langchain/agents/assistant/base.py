@@ -51,7 +51,7 @@ class AssistantAgent(Agent):
         Returns:
             A PromptTemplate with the template assembled from the pieces here.
         """
-        template = "\n\n".join([prefix.format(ai_prefix=ai_prefix), suffix])
+        template = "\n\n".join([prefix.format(ai_prefix=ai_prefix, example_end_suffix=""), suffix])
         if input_variables is None:
             input_variables = ["input", "chat_history", "agent_scratchpad"]
         return PromptTemplate(template=template, input_variables=input_variables)

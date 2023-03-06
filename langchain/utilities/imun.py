@@ -140,6 +140,7 @@ class ImunAPIWrapper(BaseModel):
     https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
     """
 
+    cache: dict  #: :meta private:
     imun_subscription_key: str
     imun_url: str
     params: dict  # "api-version=2023-02-01-preview&features=denseCaptions,Tags"
@@ -149,10 +150,18 @@ class ImunAPIWrapper(BaseModel):
 
         extra = Extra.forbid
 
-    def _imun_results(self, img_url: str) -> List[dict]:
+    def _imun_results(self, img_url: str) -> dict:
+        param_str = '&'.join([f'{k}={v}' for k,v in self.params.items()])
+        key = f"{self.imun_url}?{param_str}&data={img_url}"
+        if key in self.cache:
+            return self.cache[key]
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
+        try:
+            data = resize_image(download_image(img_url))
+        except (requests.exceptions.InvalidURL, requests.exceptions.MissingSchema, FileNotFoundError):
+            return
         response = requests.post(
-            self.imun_url, data=resize_image(download_image(img_url)), headers=headers, params=self.params  # type: ignore
+            self.imun_url, data=data, headers=headers, params=self.params  # type: ignore
         )
         _handle_error(response)
         api_results = None
@@ -227,6 +236,7 @@ class ImunAPIWrapper(BaseModel):
                 languages = [l['locale'] for l in api_results["analyzeResult"]["languages"]]
                 if languages:
                     results["languages"] = languages
+        self.cache[key] = results
         return results
 
     @root_validator(pre=True)
@@ -245,6 +255,7 @@ class ImunAPIWrapper(BaseModel):
         )
 
         values["imun_url"] = imun_url
+        values["cache"] = {}
 
         params = get_from_dict_or_env(values, "params", "IMUN_PARAMS")
         if isinstance(params, str):
@@ -256,6 +267,8 @@ class ImunAPIWrapper(BaseModel):
     def run(self, query: str) -> str:
         """Run query through Image Understanding and parse result."""
         results = self._imun_results(query)
+        if results is None:
+            return "This is an invalid url"
         if "size" in results:
             width, height = results["size"]["width"], results["size"]["height"]
             answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
