@@ -33,6 +33,10 @@ class AssistantAgent(Agent):
         """Prefix to append the llm call with."""
         return "AI:"
 
+    # @property
+    # def _stop(self) -> List[str]:
+    #     return ""
+
     @classmethod
     def create_prompt(
         cls,
@@ -61,10 +65,17 @@ class AssistantAgent(Agent):
         """Name of the tool to use to finish the chain."""
         return self.ai_prefix
 
+    def _fix_text(self, text: str) -> str:
+        return f"{text}\nAI:"
+
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
-        cmd_idx = llm_output.find("ImageAssistant,")
+        # ChatGPT fix: if the role is assumed!
+        # prev_action_idx = llm_output.rfind("\nImageAssistant: ")
+        # assert prev_action_idx < 0
+        # llm_output = llm_output[prev_action_idx:]
+        cmd_idx = llm_output.rfind("\nAI: ImageAssistant,")
         if cmd_idx >= 0:
-            cmd = llm_output[len("ImageAssistant,"):].strip()
+            cmd = llm_output[len("\nAI: ImageAssistant,"):].strip()
             cmd_idx = cmd.rfind(" ")
             action_input = cmd[cmd_idx + 1:].strip()
             cmd = cmd[:cmd_idx + 1].lower()
@@ -80,9 +91,6 @@ class AssistantAgent(Agent):
         
         if f"{self.ai_prefix}:" in llm_output:
             return self.ai_prefix, llm_output.split(f"{self.ai_prefix}:")[-1].strip()
-        # ChatGPT fix: if the role is assumed!
-        if "ImageAssistant:" in llm_output:
-            return self.ai_prefix, llm_output.split("ImageAssistant:")[-1].strip()
         return self.ai_prefix, llm_output.strip()
 
     @classmethod

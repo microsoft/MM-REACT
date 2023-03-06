@@ -99,11 +99,6 @@ def _is_handwritten(styles):
         handwritten = True
     return handwritten
 
-def _get_lang(lang):
-    if lang == "":
-        return ""
-    return lang
-
 class InvalidRequest(requests.HTTPError):
     pass
 

@@ -36,12 +36,12 @@ football
 soccer
 {example_end_suffix}
 
-These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, people, OCR
+These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, OCR
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example, to ask about an image without any description, make sure the question has the word objects in it.
-For example, to ask about an image that requires OCR, make sure the question has the word OCR in it.
 For example, to ask about an image of a business card, make sure the question has the word business card in it.
-For example, to ask about an image of a receipt or ticket, make sure the question has the word receipt in it.
+For example, to ask about an image of a receipt, make sure the question has the word receipt in it.
+For example, to ask about an image that requires OCR, make sure the question has the word OCR in it.
 
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png

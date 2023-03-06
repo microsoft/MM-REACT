@@ -227,6 +227,31 @@ class Chain(BaseModel, ABC):
 
     def run(self, *args: str, **kwargs: str) -> str:
         """Run the chain as text in, text out or multiple variables, text out."""
+        if len(self.output_keys) == 2:
+            assert "output" in self.output_keys and "intermediate_steps" in self.output_keys
+            outputs = {}
+            if args and not kwargs:
+                if len(args) != 1:
+                    raise ValueError("`run` supports only one positional argument.")
+                outputs = self(args[0])
+            if kwargs and not args:
+                outputs = self(kwargs)
+            intermediate = outputs.get("intermediate_steps") or []
+            assistant = ""
+            for action, action_output in intermediate:
+                action: str = action.log.strip()
+                if not action.startswith(f"AI:"):
+                    action = f"AI: {action}"
+                action_output = f"ImageAssistant: {action_output}"
+                assistant += "\n" + action + "\n" + action_output
+            return assistant + "\n" + outputs["output"]
+            
+        if len(self.output_keys) != 1:
+            raise ValueError(
+                f"`run` not supported when there is not exactly "
+                f"one output key. Got {self.output_keys}."
+            )
+
         if len(self.output_keys) != 1:
             raise ValueError(
                 f"`run` not supported when there is not exactly "
