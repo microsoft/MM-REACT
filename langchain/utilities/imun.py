@@ -160,8 +160,8 @@ def _handle_error(response):
         err = response.json()
         error = err.get("error") or {}
         innererror = error.get("innererror") or {}
-        err_code = err.get("code") or error.get("code") or innererror.get('code')
-        err_msg = err.get("message") or error.get("message") or innererror.get('message')
+        err_code = innererror.get('code') or error.get("code") or err.get("code")
+        err_msg = innererror.get('message') or error.get("message") or err.get("message")
         if response.status_code == 400 and err_code == "InvalidImageSize":
             raise InvalidImageSize(f"{err_code}({err_msg})")
         if response.status_code == 400 and err_code == "InvalidImageFormat":
