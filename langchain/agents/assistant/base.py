@@ -35,7 +35,7 @@ class AssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return [f"\n{self.observation_prefix}", "\nHuman:"]
+        return [f"\n{self.observation_prefix}", "\nFor example:", "\nNew input:"]
 
     @classmethod
     def create_prompt(
@@ -65,17 +65,30 @@ class AssistantAgent(Agent):
         """Name of the tool to use to finish the chain."""
         return self.ai_prefix
 
+    @staticmethod
+    def _fix_chatgpt( text: str) -> str:
+        # text = text.replace("\nHumman:", "\nAI:")
+        # for term in ["\nOutput:\n"]:
+        #     prev_action_idx = text.find(term)
+        #     if prev_action_idx >= 0:
+        #         text = text[prev_action_idx + 8:]
+        # ChatGPT fix: if the Human role is assumed by smart bot!
+        # for term in ["\nNew input:", "\nFor example:"]:
+        #     prev_action_idx = text.find(term)
+        #     if prev_action_idx >= 0:
+        #         text = text[:prev_action_idx + 1]
+        return text
+    
     def _fix_text(self, text: str) -> str:
+        text = self._fix_chatgpt(text)
         return f"{text}\nAI:"
 
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
-        # ChatGPT fix: if the role is assumed!
-        # prev_action_idx = llm_output.rfind("\nImageAssistant: ")
-        # assert prev_action_idx < 0
-        # llm_output = llm_output[prev_action_idx:]
-        cmd_idx = llm_output.rfind("\nAI: ImageAssistant,")
+        print(f"bbbbbbbbbbbbbbbbbbbbbbbbbb {llm_output}")
+        llm_output = self._fix_chatgpt(llm_output)
+        cmd_idx = llm_output.rfind("ImageAssistant,")
         if cmd_idx >= 0:
-            cmd = llm_output[len("\nAI: ImageAssistant,"):].strip()
+            cmd = llm_output[cmd_idx + len("ImageAssistant,"):].strip()
             cmd_idx = cmd.rfind(" ")
             action_input = cmd[cmd_idx + 1:].strip()
             cmd = cmd[:cmd_idx + 1].lower()
