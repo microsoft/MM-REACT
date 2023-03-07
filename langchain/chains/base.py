@@ -225,6 +225,47 @@ class Chain(BaseModel, ABC):
         """Call the chain on all inputs in the list."""
         return [self(inputs) for inputs in input_list]
 
+    def conversation(self, *args: str, **kwargs: str) -> list[str]:
+        """Run the chain as text in, text out or multiple variables, text out."""
+        if len(self.output_keys) == 2:
+            assert "output" in self.output_keys and "intermediate_steps" in self.output_keys
+            outputs = {}
+            if args and not kwargs:
+                if len(args) != 1:
+                    raise ValueError("`run` supports only one positional argument.")
+                outputs = self(args[0])
+            if kwargs and not args:
+                outputs = self(kwargs)
+            intermediate = outputs.get("intermediate_steps") or []
+            conversation = []
+            for action, action_output in intermediate:
+                action: str = action.log.strip()
+                if not action.startswith(f"AI:"):
+                    action = f"AI: {action}"
+                conversation.append(action)
+                conversation.append(f"ImageAssistant: {action_output}")
+            conversation.append("AI: " + outputs["output"])
+            return conversation
+
+        if len(self.output_keys) != 1:
+            raise ValueError(
+                f"`run` not supported when there is not exactly "
+                f"one output key. Got {self.output_keys}."
+            )
+
+        if args and not kwargs:
+            if len(args) != 1:
+                raise ValueError("`run` supports only one positional argument.")
+            return ["AI: " + self(args[0])[self.output_keys[0]]]
+
+        if kwargs and not args:
+            return ["AI: " + self(kwargs)[self.output_keys[0]]]
+
+        raise ValueError(
+            f"`run` supported with either positional arguments or keyword arguments"
+            f" but not both. Got args: {args} and kwargs: {kwargs}."
+        )
+
     def run(self, *args: str, **kwargs: str) -> str:
         """Run the chain as text in, text out or multiple variables, text out."""
         if len(self.output_keys) == 2:
@@ -246,12 +287,6 @@ class Chain(BaseModel, ABC):
                 assistant += "\n" + action + "\n" + action_output
             return assistant + "\n" + "AI: " + outputs["output"]
             
-        if len(self.output_keys) != 1:
-            raise ValueError(
-                f"`run` not supported when there is not exactly "
-                f"one output key. Got {self.output_keys}."
-            )
-
         if len(self.output_keys) != 1:
             raise ValueError(
                 f"`run` not supported when there is not exactly "
