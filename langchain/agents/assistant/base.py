@@ -33,9 +33,9 @@ class AssistantAgent(Agent):
         """Prefix to append the llm call with."""
         return "AI:"
 
-    # @property
-    # def _stop(self) -> List[str]:
-    #     return ""
+    @property
+    def _stop(self) -> List[str]:
+        return [f"\n{self.observation_prefix}", "\nHuman:"]
 
     @classmethod
     def create_prompt(
