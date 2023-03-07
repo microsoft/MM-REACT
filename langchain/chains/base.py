@@ -244,7 +244,7 @@ class Chain(BaseModel, ABC):
                     action = f"AI: {action}"
                 action_output = f"ImageAssistant: {action_output}"
                 assistant += "\n" + action + "\n" + action_output
-            return assistant + "\n" + outputs["output"]
+            return assistant + "\n" + "AI: " + outputs["output"]
             
         if len(self.output_keys) != 1:
             raise ValueError(
