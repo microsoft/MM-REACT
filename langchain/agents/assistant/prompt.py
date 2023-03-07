@@ -39,9 +39,10 @@ soccer
 These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, OCR
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example, to ask about an image without any description, make sure the question has the word objects in it.
-For example, to ask about an image of a business card, make sure the question has the word business card in it.
-For example, to ask about an image of a receipt, make sure the question has the word receipt in it.
+For example, to ask about an image that could be a business card, make sure the question has the word business card in it.
+For example, to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example, to ask about an image that requires OCR, make sure the question has the word OCR in it.
+For example, to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
@@ -57,17 +58,24 @@ List of texts (words) seen in this image:
 For example:
 Human: https://i.ibb.co/XJbmhg4/mY09.png
 {ai_prefix}: ImageAssistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
-ImageAssistant: This is an image (of size width:256 height:500) with description a pack of dolphines playing.
+ImageAssistant: This is an image (of size width:656 height:500) with description a dog playing with a man.
 
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their locations in this image:
-dolphine x:11 y:99 width:50 height:100
+dog x:11 y:99 width:50 height:100
+person x:60 y:99 width:150 height:230
 
 List of object tags seen in this image:
 animal
 zoo
 dolphine
+person
+
+List of people faces, and their location in this image:
+man x:12 y:100 width:50 height:102
+{ai_prefix}: There is a face detected in this image, let me find if I know the person.
+{ai_prefix}: ImageAssistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 {example_end_suffix}
 
 For example:
@@ -84,7 +92,7 @@ List of object tags seen in this image:
 pills
 text
 prescription instructions
-{example_end_suffix}
+
 {ai_prefix}: This is likely a pill bottle with labels. Let me ask for more information.
 {ai_prefix}: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
@@ -96,6 +104,18 @@ Supports Health
 SUPPLEMENT
 {example_end_suffix}
 {ai_prefix}: This is medicine supplement pills by SPRING VALLEY
+
+For example:
+Human: /a/c0%5/XX99096.jpg
+{ai_prefix}: ImageAssistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+ImageAssistant: This is an image (of size width:1100 height:800) with description black and white text on a receipt
+
+This image contains object tags
+
+List of object tags seen in this image:
+text
+{ai_prefix}: This is likely a receipt or ticket. Let me ask for more information.
+{ai_prefix}: ImageAssistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 """
 SUFFIX = """
 

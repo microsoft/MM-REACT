@@ -98,6 +98,8 @@ class AssistantAgent(Agent):
                 action = "Business Card Understanding"
             elif "ocr" in cmd:
                 action = "OCR Understanding"
+            elif "celebrit" in cmd:
+                action = "Celebrity Understanding"
             else:
                 action = "Image Understanding"
             return action, action_input
