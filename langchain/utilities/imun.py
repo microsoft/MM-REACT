@@ -150,6 +150,13 @@ class ImunAPIWrapper(BaseModel):
         key = f"{self.imun_url}?{param_str}&data={img_url}"
         if key in self.cache:
             return self.cache[key]
+        results = {}
+        if "Read" in "param_str":
+            results["task"] = "OCR"
+        else:
+            for task in ['prebuilt-read', 'prebuilt-receipt', 'prebuilt-businessCard']:
+                if task in self.imun_url:
+                    results["task"] = "OCR"
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
         try:
             data = resize_image(download_image(img_url))
@@ -175,7 +182,6 @@ class ImunAPIWrapper(BaseModel):
         
         if api_results is None:
             api_results = response.json()
-        results = {}
         if "metadata" in api_results:
             results = {"size": api_results["metadata"]}
 
@@ -308,7 +314,8 @@ class ImunAPIWrapper(BaseModel):
 
         if not found and not description:
             # did not find anything
-            return answer + "This image is too blurry"
+            task = results.get("task") or ""
+            return answer + "This image is too blurry" + " for OCR text extraction" if task == "OCR" else ""
         
         if captions:
             answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
