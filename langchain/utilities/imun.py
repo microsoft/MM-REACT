@@ -6,6 +6,9 @@ https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
 import os
 import time
 from typing import Dict, List
+import io
+import imagesize
+from PIL import Image
 
 import requests
 from pydantic import BaseModel, Extra, root_validator
@@ -66,9 +69,43 @@ def download_image(url):
                 return fp.read()
         raise
 
+def im_downscale(data, target_size):
+    im = Image.open(io.BytesIO(data))
+    w, h = im.size
+    im_size_max = max(w, h)
+    im_scale = float(target_size) / float(im_size_max)
+    im = im.resize((int(w * im_scale), int(h * im_scale)))
+    data = io.BytesIO()
+    im.save(data, format="JPEG")
+    return data.getvalue()
+
+def im_upscale(data, target_size):
+    im = Image.open(io.BytesIO(data))
+    w, h = im.size
+    im_size_min = min(w, h)
+    im_scale = float(target_size) / float(im_size_min)
+    im = im.resize((int(w * im_scale), int(h * im_scale)))
+    data = io.BytesIO()
+    im.save(data, format="JPEG")
+    return data.getvalue()
+
+
 def resize_image(data):
-    # TODO: resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4
+    """resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4"""
+    try:
+        # Using imagesize to avoid decoding when not needed
+        w, h = imagesize.get(io.BytesIO(data))
+    except:
+        return data
+    data_len = len(data)
+    if data_len > 1024 * 1024 * 4:
+        # too large
+        data = im_downscale(data, 2048)
+    if w < 60 or h < 60:
+        # too small
+        data = im_upscale(data, 60)
     return data
+
 
 def _get_box(rect):
     rect = rect.get("boundingBox") or rect.get("faceRectangle") or rect["rectangle"]
