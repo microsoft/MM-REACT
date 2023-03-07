@@ -84,7 +84,7 @@ class AssistantAgent(Agent):
         return f"{text}\nAI:"
 
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
-        print(f"bbbbbbbbbbbbbbbbbbbbbbbbbb {llm_output}")
+        # print(f"bbbbbbbbbbbbbbbbbbbbbbbbbb {llm_output}")
         llm_output = self._fix_chatgpt(llm_output)
         cmd_idx = llm_output.rfind("ImageAssistant,")
         if cmd_idx >= 0:
