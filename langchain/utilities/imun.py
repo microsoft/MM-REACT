@@ -27,6 +27,8 @@ IMUN_PROMPT_OCR_PEFIX = " {style}text"
 
 IMUN_PROMPT_FACES_PEFIX = " faces"
 
+IMUN_PROMPT_CELEB_PEFIX = " celebrities"
+
 IMUN_PROMPT_CAPTIONS = """
 List of object descriptions, and their locations in this image:
 {captions}
@@ -50,6 +52,11 @@ The above words are in these languages:
 IMUN_PROMPT_FACES="""
 List of people faces, and their location in this image:
 {faces}
+"""
+
+IMUN_PROMPT_CELEBS="""
+List of celebrity names, and their location in this image:
+{celebs}
 """
 
 
@@ -188,7 +195,9 @@ class ImunAPIWrapper(BaseModel):
         if key in self.cache:
             return self.cache[key]
         results = {}
-        if "Read" in "param_str":
+        if "celebrities" in self.imun_url:
+            results["celebrities"] = "celebrities"
+        elif "Read" in "param_str":
             results["task"] = "OCR"
         else:
             for task in ['prebuilt-read', 'prebuilt-receipt', 'prebuilt-businessCard']:
@@ -233,6 +242,8 @@ class ImunAPIWrapper(BaseModel):
             results["objects"] = [f'{o.get("object") or o["name"]} {_get_box(o)}' for o in api_results["objects"]]
         if "faces" in api_results:
             results["faces"] = [f'{_get_person(o)} {_get_box(o)}' for o in api_results["faces"]]
+        if "result" in api_results:
+            results["celebrities"] = [f'{o["name"]} {_get_box(o)}' for o in api_results["result"]["celebrities"]]
 
         if "denseCaptionsResult" in api_results:
             results["captions"] = []
@@ -321,6 +332,7 @@ class ImunAPIWrapper(BaseModel):
         words_style = results.get("words_style") or ""
         languages = results.get("languages") or ""
         faces = results.get("faces") or ""
+        celebrities = results.get("celebrities") or ""
 
         if description:
             answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
@@ -346,13 +358,21 @@ class ImunAPIWrapper(BaseModel):
             answer += "," if found else "\nThis image contains"
             answer += IMUN_PROMPT_FACES_PEFIX
             found = True
+        if celebrities:
+            answer += "," if found else "\nThis image contains"
+            answer += IMUN_PROMPT_CELEB_PEFIX
+            found = True
 
         answer += "\n"
 
         if not found and not description:
             # did not find anything
             task = results.get("task") or ""
-            return answer + "This image is too blurry" + " for OCR text extraction" if task == "OCR" else ""
+            if task == "OCR":
+                return answer + "This image is too blurry for OCR text extraction"
+            if task == "celebrities":
+                return answer + "Did not find any celebrities in this image"
+            return answer + "This image is too blurry"
         
         if captions:
             answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
@@ -366,7 +386,8 @@ class ImunAPIWrapper(BaseModel):
                 answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
         if faces:
             answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
-        # answer += "---END---\n"
+        if celebrities:
+            answer += IMUN_PROMPT_CELEBS.format(celebs="\n".join(celebrities))
         return answer
 
     def results(self, query: str) -> List[Dict]:
