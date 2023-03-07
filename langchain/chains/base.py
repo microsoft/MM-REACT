@@ -225,7 +225,7 @@ class Chain(BaseModel, ABC):
         """Call the chain on all inputs in the list."""
         return [self(inputs) for inputs in input_list]
 
-    def conversation(self, *args: str, **kwargs: str) -> list[str]:
+    def conversation(self, *args: str, **kwargs: str) -> List[str]:
         """Run the chain as text in, text out or multiple variables, text out."""
         if len(self.output_keys) == 2:
             assert "output" in self.output_keys and "intermediate_steps" in self.output_keys
