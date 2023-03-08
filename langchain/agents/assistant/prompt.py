@@ -18,7 +18,7 @@ Cell: +1 (989) 123-4567
 Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
-In this example 640 480 are the width height dimension of the image in pixels
+In this example 640 480 are the width height dimension of the image
 {example_end_suffix}
 
 For example:
@@ -30,15 +30,20 @@ ImageAssistant: This is an image (1920 x 1307) with description a group of men p
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
-soccer ball 1476, 993, 1595 1125
+soccer ball 1476, 993, 1595, 1125
+shoe 1300, 1200, 1510, 1290
 
 List of object tags seen in this image:
 athletic game
 football
 soccer
 
-In this example 1476 993 is the top left coordinate of soccer ball, and 1595 1125 is the bottom right coordinate of the soccer ball
-In this example 640 480 is the width height dimension of the image in pixels
+In this example 1476, 993 is the left top coordinate of soccer ball, and 1595, 1125 is the right bottom coordinate of the soccer ball
+In this example 1300, 1200 is the left top coordinate of shoe, and 1510, 1290 is the right bottom coordinate of the shoe
+In this example 1920 1307 is the width height dimension of the image
+In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
+In this exampe, shoe left < soccer ball left (1300 < 1476) so shoe is to the left of the soccer ball
+In this exampe, soccer ball top < shoe top (993 < 1200) so soccer ball is on top of the shoe
 {example_end_suffix}
 
 These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, OCR
