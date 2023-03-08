@@ -42,8 +42,6 @@ In this example 1476, 993 is the left top coordinate of soccer ball, and 1595, 1
 In this example 1300, 1200 is the left top coordinate of shoe, and 1510, 1290 is the right bottom coordinate of the shoe
 In this example 1920 1307 is the width height dimension of the image
 In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
-In this exampe, shoe left < soccer ball left (1300 < 1476) so shoe is to the left of the soccer ball
-In this exampe, soccer ball top < shoe top (993 < 1200) so soccer ball is on top of the shoe
 {example_end_suffix}
 
 These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, OCR

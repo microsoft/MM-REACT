@@ -81,20 +81,22 @@ def im_downscale(data, target_size):
     w, h = im.size
     im_size_max = max(w, h)
     im_scale = float(target_size) / float(im_size_max)
-    im = im.resize((int(w * im_scale), int(h * im_scale)))
+    w, h = int(w * im_scale), int(h * im_scale)
+    im = im.resize((w, h))
     data = io.BytesIO()
     im.save(data, format="JPEG")
-    return data.getvalue()
+    return data.getvalue(), (w, h)
 
 def im_upscale(data, target_size):
     im = Image.open(io.BytesIO(data))
     w, h = im.size
     im_size_min = min(w, h)
     im_scale = float(target_size) / float(im_size_min)
-    im = im.resize((int(w * im_scale), int(h * im_scale)))
+    w, h = int(w * im_scale), int(h * im_scale)
+    im = im.resize((w, h))
     data = io.BytesIO()
     im.save(data, format="JPEG")
-    return data.getvalue()
+    return data.getvalue(), (w, h)
 
 
 def resize_image(data):
@@ -103,15 +105,15 @@ def resize_image(data):
         # Using imagesize to avoid decoding when not needed
         w, h = imagesize.get(io.BytesIO(data))
     except:
-        return data
+        return data, (None, None)
     data_len = len(data)
     if data_len > 1024 * 1024 * 4:
         # too large
-        data = im_downscale(data, 2048)
+        data, (w, h) = im_downscale(data, 2048)
     if w < 60 or h < 60:
         # too small
-        data = im_upscale(data, 60)
-    return data
+        data, (w, h) = im_upscale(data, 60)
+    return data, (w, h)
 
 
 def _get_box(rect):
@@ -203,11 +205,14 @@ class ImunAPIWrapper(BaseModel):
             for task in ['prebuilt-read', 'prebuilt-receipt', 'prebuilt-businessCard']:
                 if task in self.imun_url:
                     results["task"] = "OCR"
+        w, h = None, None
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
         try:
-            data = resize_image(download_image(img_url))
+            data, (w, h) = resize_image(download_image(img_url))
         except (requests.exceptions.InvalidURL, requests.exceptions.MissingSchema, FileNotFoundError):
             return
+        if w is not None and h is not None:
+            results["size"] = {"width": w, "height": h}
         response = requests.post(
             self.imun_url, data=data, headers=headers, params=self.params  # type: ignore
         )
@@ -265,9 +270,10 @@ class ImunAPIWrapper(BaseModel):
                 results["words_style"] = "handwritten "
         if "analyzeResult" in api_results:
             is_document = False
-            for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
-                results["size"] = {"width": page["width"], "height": page["height"]}
-                break
+            if "size" not in results:
+                for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
+                    results["size"] = {"width": page["width"], "height": page["height"]}
+                    break
             for doc in api_results["analyzeResult"].get("documents") or []:
                 if doc.get("fields"):
                     is_document = True
