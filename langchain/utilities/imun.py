@@ -198,7 +198,7 @@ class ImunAPIWrapper(BaseModel):
             return self.cache[key]
         results = {}
         if "celebrities" in self.imun_url:
-            results["celebrities"] = "celebrities"
+            results["task"] = "celebrities"
         elif "Read" in "param_str":
             results["task"] = "OCR"
         else:
