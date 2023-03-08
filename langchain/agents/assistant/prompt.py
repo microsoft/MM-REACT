@@ -9,7 +9,7 @@ For example:
 ImageAssistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 And ImageAssistant will reply with:
 
-ImageAssistant: This is an image (of size width:640 height:480)
+ImageAssistant: This is an image (640 x 480)
 This image contains text
 
 List of texts (words) seen in this image:
@@ -17,23 +17,28 @@ CONTOSO
 Cell: +1 (989) 123-4567
 Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
+
+In this example 640 480 are the width height dimension of the image in pixels
 {example_end_suffix}
 
 For example:
 ImageAssistant, what objects do you see in this image?  https://tinyurl.com/foo092001
 And ImageAssistant will reply with:
 
-ImageAssistant: This is an image (of size width:1920 height:1307) with description a group of men playing football.
+ImageAssistant: This is an image (1920 x 1307) with description a group of men playing football.
 
 This image contains objects and their descriptions, object tags
 
-List of object descriptions, and their locations in this image:
-soccer ball x:1476 y:993 width:119 height:132
+List of object descriptions, and their location in this image:
+soccer ball 1476, 993, 1595 1125
 
 List of object tags seen in this image:
 athletic game
 football
 soccer
+
+In this example 1476 993 is the top left coordinate of soccer ball, and 1595 1125 is the bottom right coordinate of the soccer ball
+In this example 640 480 is the width height dimension of the image in pixels
 {example_end_suffix}
 
 These are the tasks that ImageAssistant can handle: celebrities, landmarks, business card, receipt, objects description, OCR
@@ -47,7 +52,7 @@ For example, to ask about the identity of people (celebrities) in an image, make
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 {ai_prefix}: ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
-ImageAssistant: This is an image (of size width:616 height:411)
+ImageAssistant: This is an image (616 x 411)
 This image contains handwritten text
 
 List of texts (words) seen in this image:
@@ -58,13 +63,13 @@ List of texts (words) seen in this image:
 For example:
 Human: https://i.ibb.co/XJbmhg4/mY09.png
 {ai_prefix}: ImageAssistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
-ImageAssistant: This is an image (of size width:656 height:500) with description a dog playing with a man.
+ImageAssistant: This is an image (656 x 500) with description a dog playing with a man.
 
 This image contains objects and their descriptions, object tags
 
-List of object descriptions, and their locations in this image:
-dog x:11 y:99 width:50 height:100
-person x:60 y:99 width:150 height:230
+List of object descriptions, and their location in this image:
+dog 11, 99, 61, 199
+person 60, 99, 210, 329
 
 List of object tags seen in this image:
 animal
@@ -73,7 +78,7 @@ dolphine
 person
 
 List of people faces, and their location in this image:
-man x:12 y:100 width:50 height:102
+man 12, 100, 62, 202
 {ai_prefix}: There is a face detected in this image, let me find if I know the person.
 {ai_prefix}: ImageAssistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 {example_end_suffix}
@@ -81,12 +86,12 @@ man x:12 y:100 width:50 height:102
 For example:
 Human: what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 {ai_prefix}: ImageAssistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
-ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
+ImageAssistant: This is an image (1100 x 800) with description a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
 
-List of object descriptions, and their locations in this image:
-heart x:100 y:201 width:90 height:90
+List of object descriptions, and their location in this image:
+heart 100, 201, 190, 291
 
 List of object tags seen in this image:
 pills
@@ -95,7 +100,7 @@ prescription instructions
 
 {ai_prefix}: This is likely a pill bottle with labels. Let me ask for more information.
 {ai_prefix}: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
-ImageAssistant: This is an image (of size width:1100 height:800) with description a bottle of medicine.
+ImageAssistant: This is an image (1100 x 800) with description a bottle of medicine.
 This image contains text
 
 List of texts (words) seen in this image:
@@ -108,7 +113,7 @@ SUPPLEMENT
 For example:
 Human: /a/c0%5/XX99096.jpg
 {ai_prefix}: ImageAssistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
-ImageAssistant: This is an image (of size width:1100 height:800) with description black and white text on a receipt
+ImageAssistant: This is an image (480 x 1200) with description black and white text on a receipt
 
 This image contains object tags
 

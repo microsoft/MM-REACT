@@ -15,7 +15,7 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env
 
-IMUN_PROMPT_PREFIX = "This is an image (of size width:{width} height:{height})"
+IMUN_PROMPT_PREFIX = "This is an image ({width} x {height})"
 
 IMUN_PROMPT_DESCRIPTION = " with description {description}.\n"
 
@@ -118,7 +118,7 @@ def _get_box(rect):
     rect = rect.get("boundingBox") or rect.get("faceRectangle") or rect["rectangle"]
     x, y = rect['x'] if 'x' in rect else rect['left'], rect['y'] if 'y' in rect else rect['top']
     w, h = rect['w'] if 'w' in rect else rect['width'], rect['h'] if 'h' in rect else rect['height']
-    return f"x:{x} y:{y} width:{w} height:{h}"
+    return f"{x}, {y}, {x + w}, {y + h}"
 
 def _get_person(o):
     age = o.get("age") or 25
