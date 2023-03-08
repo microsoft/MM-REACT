@@ -234,7 +234,7 @@ class ImunAPIWrapper(BaseModel):
         if api_results is None:
             api_results = response.json()
         if "metadata" in api_results:
-            results = {"size": api_results["metadata"]}
+            results["size"] = api_results["metadata"]
 
         if "description" in api_results:
             results["tags"] = api_results["description"]["tags"]
