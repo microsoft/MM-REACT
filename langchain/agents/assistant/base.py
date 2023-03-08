@@ -91,6 +91,8 @@ class AssistantAgent(Agent):
             cmd = llm_output[cmd_idx + len("ImageAssistant,"):].strip()
             cmd_idx = cmd.rfind(" ")
             action_input = cmd[cmd_idx + 1:].strip()
+            if "/" not in action_input and "http" not in action_input:
+                return "Final Answer", ""
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"
