@@ -55,7 +55,7 @@ List of people faces, and their location in this image:
 """
 
 IMUN_PROMPT_CELEBS="""
-List of celebrity names, and their location in this image:
+List of celebrities, and their location in this image:
 {celebs}
 """
 
@@ -125,12 +125,12 @@ def _get_box(rect):
 def _get_person(o):
     age = o.get("age") or 25
     gender = (o.get("gender") or "").lower()
-    if age < 18:
+    if age < 20:
         if gender == "female":
-            return "girl"
+            return "young woman"
         if gender == "male":
-            return "boy"
-        return "child"
+            return "young man"
+        return "young person"
     if gender == "female":
         return "woman"
     if gender == "male":

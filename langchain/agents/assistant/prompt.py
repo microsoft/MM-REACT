@@ -49,7 +49,7 @@ If the task does not fit any of the above, make sure the question has the word o
 For example, to ask about an image without any description, make sure the question has the word objects in it.
 For example, to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example, to ask about an image that could be a receipt, make sure the question has the word receipt in it.
-For example, to ask about an image that requires OCR, make sure the question has the word OCR in it.
+For example, to ask about an image that requires OCR (e.g. text, stamp, currency, money, dollar, paper, banknote in the tags), make sure the question has the word OCR in it.
 For example, to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 
 For example:
