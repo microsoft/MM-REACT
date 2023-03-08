@@ -1,15 +1,15 @@
 # flake8: noqa
 PREFIX = """Human: Hey {ai_prefix}!
 My name is Human.
-Let me introduce you to ImageAssistant. He is great at understanding what is going on in any image.
-Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask ImageAssistant by addressing him. 
-Make sure to provide ImageAssistant with the best concise information task that ImageAssistant can handle. 
+Now let me introduce you to Assistant. He is great at understanding what is going on in any image.
+Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
+Make sure to provide Assistant with the best concise task that Assistant can handle. 
 
 For example:
-{ai_prefix}: This is a business card image. ImageAssistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
-And ImageAssistant will reply with:
+{ai_prefix}: This is a business card image. Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
+And Assistant will reply with:
 
-ImageAssistant: This is an image (640 x 480)
+Assistant: This is an image (640 x 480)
 This image contains text
 
 List of texts (words) seen in this image:
@@ -22,8 +22,8 @@ In this example 640 480 are the width height dimension of the image
 {example_end_suffix}
 
 For example:
-{ai_prefix}: This is an image. ImageAssistant, what objects do you see in this image?  https://tinyurl.com/foo092001
-ImageAssistant: This is an image (1920 x 1307) with description a group of men playing football.
+{ai_prefix}: This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
+Assistant: This is an image (1920 x 1307) with description a group of men playing football.
 
 This image contains objects and their descriptions, object tags
 
@@ -42,7 +42,7 @@ In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
 In this example 1920 1307 is the width height dimension of the image
 {example_end_suffix}
 
-These are the tasks that ImageAssistant can handle for an image: celebrities, landmarks, business card, receipt, objects description, OCR
+These are the tasks that Assistant can handle for an image: celebrities, landmarks, business card, receipt, objects description, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example, to ask about an image without any description, make sure the question has the word objects in it.
 For example, to ask about an image that could be a business card, make sure the question has the word business card in it.
@@ -52,8 +52,8 @@ For example, to ask about the identity of people (celebrities) in an image, make
 
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
-{ai_prefix}: This is an image with text. ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
-ImageAssistant: This is an image (616 x 411)
+{ai_prefix}: This is an image with text. Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
+Assistant: This is an image (616 x 411)
 This image contains handwritten text
 
 List of texts (words) seen in this image:
@@ -63,8 +63,8 @@ List of texts (words) seen in this image:
 
 For example:
 Human: https://i.ibb.co/XJbmhg4/mY09.png
-{ai_prefix}: This is an image. ImageAssistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
-ImageAssistant: This is an image (656 x 500) with description a dog playing with a man.
+{ai_prefix}: This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+Assistant: This is an image (656 x 500) with description a dog playing with a man.
 
 This image contains objects and their descriptions, object tags
 
@@ -81,13 +81,13 @@ person
 List of people faces, and their location in this image:
 man 12, 100, 62, 202
 {ai_prefix}: There is a face detected in this image, let me find if I know the person.
-{ai_prefix}: ImageAssistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+{ai_prefix}: Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 {example_end_suffix}
 
 For example:
 Human: what do you know about this image? /tmp/path/to/x_d_0(2).jpg
-{ai_prefix}: This is an image. ImageAssistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
-ImageAssistant: This is an image (1100 x 800) with description a bottle of medicine.
+{ai_prefix}: This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+Assistant: This is an image (1100 x 800) with description a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
 
@@ -100,8 +100,8 @@ text
 prescription instructions
 
 {ai_prefix}: This image is likely a pill bottle with labels. Let me ask for more information.
-{ai_prefix}: ImageAssistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
-ImageAssistant: This is an image (1100 x 800) with description a bottle of medicine.
+{ai_prefix}: Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
+Assistant: This is an image (1100 x 800) with description a bottle of medicine.
 This image contains text
 
 List of texts (words) seen in this image:
@@ -110,18 +110,21 @@ Supports Health
 SUPPLEMENT
 {example_end_suffix}
 {ai_prefix}: This is medicine supplement pills by SPRING VALLEY
+Human: where can I buy this medicine? and how much is the price in Euros?
+{ai_prefix}: this question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+
 
 For example:
 Human: /a/c0%5/XX99096.jpg
-{ai_prefix}: This is an image. ImageAssistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
-ImageAssistant: This is an image (480 x 1200) with description black and white text on a receipt
+{ai_prefix}: This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+Assistant: This is an image (480 x 1200) with description black and white text on a receipt
 
 This image contains object tags
 
 List of object tags seen in this image:
 text
 {ai_prefix}: This image is likely a receipt or ticket. Let me ask for more information.
-{ai_prefix}: ImageAssistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
+{ai_prefix}: Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 """
 SUFFIX = """
 

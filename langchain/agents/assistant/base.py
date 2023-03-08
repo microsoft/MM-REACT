@@ -26,7 +26,7 @@ class AssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "ImageAssistant: "
+        return "Assistant: "
 
     @property
     def llm_prefix(self) -> str:
@@ -99,9 +99,13 @@ class AssistantAgent(Agent):
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
         # print(f"bbbbbbbbbbbbbbbbbbbbbbbbbb {llm_output}")
         llm_output = self._fix_chatgpt(llm_output)
-        cmd_idx = llm_output.rfind("ImageAssistant,")
+        cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx >= 0:
-            cmd = llm_output[cmd_idx + len("ImageAssistant,"):].strip()
+            cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
+            search_idx = cmd.lower().find("bing search")
+            if search_idx >= 0:
+                 action_input = cmd[search_idx + len("bing serach") + 1:]
+                 return "Bing Search", action_input
             cmd_idx = cmd.rfind(" ")
             action_input = cmd[cmd_idx + 1:].strip()
             if "/" not in action_input and "http" not in action_input:

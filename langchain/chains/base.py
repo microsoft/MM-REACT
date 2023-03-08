@@ -243,7 +243,7 @@ class Chain(BaseModel, ABC):
                 if not action.startswith(f"AI:"):
                     action = f"AI: {action}"
                 conversation.append(action)
-                conversation.append(f"ImageAssistant: {action_output}")
+                conversation.append(f"Assistant: {action_output}")
             conversation.append("AI: " + outputs["output"])
             return conversation
 
@@ -283,7 +283,7 @@ class Chain(BaseModel, ABC):
                 action: str = action.log.strip()
                 if not action.startswith(f"AI:"):
                     action = f"AI: {action}"
-                action_output = f"ImageAssistant: {action_output}"
+                action_output = f"Assistant: {action_output}"
                 assistant += "\n" + action + "\n" + action_output
             return assistant + "\n" + "AI: " + outputs["output"]
             
