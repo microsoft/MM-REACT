@@ -6,7 +6,7 @@ Any time there is an image in our conversation that you want to know about objec
 Make sure to provide ImageAssistant with the best concise information task that ImageAssistant can handle. 
 
 For example:
-{ai_prefix}: This is an image. ImageAssistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
+{ai_prefix}: This is a business card image. ImageAssistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 And ImageAssistant will reply with:
 
 ImageAssistant: This is an image (640 x 480)
@@ -52,7 +52,7 @@ For example, to ask about the identity of people (celebrities) in an image, make
 
 For example:
 Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
-{ai_prefix}: This is an image. ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
+{ai_prefix}: This is an image with text. ImageAssistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 ImageAssistant: This is an image (616 x 411)
 This image contains handwritten text
 
