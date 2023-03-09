@@ -229,6 +229,9 @@ class Chain(BaseModel, ABC):
         """Run the chain as text in, text out or multiple variables, text out."""
         if len(self.output_keys) == 2:
             assert "output" in self.output_keys and "intermediate_steps" in self.output_keys
+            keep_short = False
+            if "keep_short" in kwargs:
+                keep_short = kwargs.pop("keep_short")
             outputs = {}
             if args and not kwargs:
                 if len(args) != 1:
@@ -242,8 +245,24 @@ class Chain(BaseModel, ABC):
                 action: str = action.log.strip()
                 if not action.startswith(f"AI:"):
                     action = f"AI: {action}"
+                if keep_short:
+                    # Hide the internal conversation
+                    lines = action.split("\n")
+                    new_lines = []
+                    for l in lines:
+                        for term in [" Let me ask for ", " Assistant,"]:
+                            idx = l.lower().find(term.lower())
+                            if idx >= 0:
+                                l = l[:idx]
+                                if l.lower().strip() == "ai:":
+                                    l = ""
+                        if not l:
+                            continue
+                        new_lines.append(l)
+                    action = "\n".join(new_lines)
                 conversation.append(action)
-                conversation.append(f"Assistant: {action_output}")
+                if not keep_short:
+                    conversation.append(f"Assistant: {action_output}")
             conversation.append("AI: " + outputs["output"])
             return conversation
 

@@ -68,9 +68,11 @@ class BingSearchAPIWrapper(BaseModel):
         if len(results) == 0:
             return "No good Bing Search Result was found"
         for result in results:
-            snippets.append(result["snippet"])
+            snippet = result["snippet"]
+            snippet = snippet.replace("<b>", "").replace("</b>", "")  # remove bold
+            snippets.append(snippet)
 
-        return " ".join(snippets)
+        return "\n".join(snippets)
 
     def results(self, query: str, num_results: int) -> List[Dict]:
         """Run query through BingSearch and return metadata.
