@@ -145,6 +145,25 @@ def _is_handwritten(styles):
         handwritten = True
     return handwritten
 
+def _parse_document(analyzeResult):
+    content = analyzeResult["content"]
+    new_total = False
+    total = 0.0
+    # remove extra newlines in the items
+    for doc in analyzeResult["documents"]:
+        fields = doc.get("fields") or {}
+        for item in (fields.get("Items") or {}).get("valueArray") or []:
+            subitem = item.get("content") or ""
+            if "\n" in subitem:
+                content = content.replace(subitem, subitem.replace("\n", " "))
+            price = ((item.get("valueObject") or {}).get("TotalPrice") or {}).get("valueNumber")
+            if price:
+                new_total = True
+                total += price
+    if new_total:
+        content += f"\nTotal amount {total}" 
+    return content.split("\n")    
+
 class InvalidRequest(requests.HTTPError):
     pass
 
@@ -279,7 +298,7 @@ class ImunAPIWrapper(BaseModel):
                     is_document = True
                     break
             if is_document:
-                results["words"] = api_results["analyzeResult"]["content"].split("\n")
+                results["words"] = _parse_document(api_results["analyzeResult"])
             else:
                 for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
                     lines = [o["content"]  for o in page["lines"]]
