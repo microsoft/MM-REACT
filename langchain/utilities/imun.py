@@ -307,7 +307,7 @@ class ImunAPIWrapper(BaseModel):
                     break  # TODO: handle more pages
                 if _is_handwritten(api_results["analyzeResult"]["styles"]):
                     results["words_style"] = "handwritten "
-                languages = [l['locale'] for l in api_results["analyzeResult"]["languages"]]
+                languages = [l['locale'] for l in api_results["analyzeResult"].get("languages") or []]
                 if languages:
                     results["languages"] = languages
         self.cache[key] = results
