@@ -66,21 +66,27 @@ class AssistantAgent(Agent):
         return self.ai_prefix
 
     @staticmethod
-    def _keep_line(line: str) -> bool:
+    def _remove_after(line: str) -> bool:
         if "anything else I can help" in line:
-            return False
+            return True
         if "anything else you would like" in line:
-            return False
+            return True
         if "Our Previous conversation history" in line:
-            return False
+            return True
 
-        return True
+        return False
     
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
         # Remove redundant questions, to keep history shorter
         lines = text.split("\n")
-        text = "\n".join([l for l in lines if __class__._keep_line(l)])
+        new_lines = []
+        for l in lines:
+            # do not keep anthing afterwards
+            if __class__._remove_after(l):
+                break
+            new_lines.append(l)
+        text = "\n".join(new_lines)
 
         # text = text.replace("\nHumman:", "\nAI:")
         # for term in ["\nOutput:\n"]:
