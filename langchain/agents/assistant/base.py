@@ -71,6 +71,8 @@ class AssistantAgent(Agent):
             return False
         if "anything else you would like" in line:
             return False
+        if "Our Previous conversation history" in line:
+            return False
 
         return True
     
