@@ -80,8 +80,7 @@ person
 
 List of people faces, and their location in this image:
 man 12, 100, 62, 202
-{ai_prefix}: There is a face detected in this image, let me find if I know the person.
-{ai_prefix}: Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+{ai_prefix}: There is a face detected in this image. Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 {example_end_suffix}
 
 For example:
@@ -99,7 +98,7 @@ pills
 text
 prescription instructions
 
-{ai_prefix}: This image is likely a pill bottle with labels. Let me ask for more information.
+{ai_prefix}: This image is likely a pill bottle with labels.
 {ai_prefix}: Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 Assistant: This is an image (1100 x 800) with description a bottle of medicine.
 This image contains text
