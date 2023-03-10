@@ -35,7 +35,7 @@ class AssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return [f"\n{self.observation_prefix}", "\nHuman:", "\nEXAMPLE", "\nNew input:"]
+        return [f"\n{self.observation_prefix}", "\nHuman:", "\nEXAMPLE", "\nINPUT"]
 
     @classmethod
     def create_prompt(
@@ -71,8 +71,8 @@ class AssistantAgent(Agent):
             return True
         if "anything else you would like" in line:
             return True
-        if "Our Previous conversation history" in line:
-            return True
+        # if "Previous conversation history" in line:
+        #     return True
 
         return False
     
