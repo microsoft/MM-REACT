@@ -35,7 +35,7 @@ class AssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return [f"\n{self.observation_prefix}", "\nHuman:", "\nFor example:", "\nNew input:"]
+        return [f"\n{self.observation_prefix}", "\nHuman:", "\nEXAMPLE", "\nNew input:"]
 
     @classmethod
     def create_prompt(
@@ -55,7 +55,7 @@ class AssistantAgent(Agent):
         Returns:
             A PromptTemplate with the template assembled from the pieces here.
         """
-        template = "\n\n".join([prefix.format(ai_prefix=ai_prefix, example_end_suffix=""), suffix])
+        template = "\n\n".join([prefix.format(ai_prefix=ai_prefix), suffix])
         if input_variables is None:
             input_variables = ["input", "chat_history", "agent_scratchpad"]
         return PromptTemplate(template=template, input_variables=input_variables)
