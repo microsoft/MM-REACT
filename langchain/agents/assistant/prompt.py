@@ -128,9 +128,9 @@ text
 """
 SUFFIX = """
 
-Human: This is our previous history before INPUT NEW 
+Human: Previous conversation history up to NEW INPUT
 {chat_history}
 
-INPUT NEW
+NEW INPUT:
 {input}
 {agent_scratchpad}"""
