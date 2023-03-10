@@ -123,7 +123,7 @@ This image contains object tags
 
 List of object tags seen in this image:
 text
-{ai_prefix}: This image is likely a receipt or ticket. Let me ask for more information.
+{ai_prefix}: This image is likely a receipt or ticket. Let me ask for more information about the text.
 {ai_prefix}: Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 """
 SUFFIX = """
