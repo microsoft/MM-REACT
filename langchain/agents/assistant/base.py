@@ -78,6 +78,9 @@ class AssistantAgent(Agent):
     
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
+        idx = text.find("\n\nNote: ")
+        if idx >= 0:
+            text = text[:idx + 1]
         # Remove redundant questions, to keep history shorter
         lines = text.split("\n")
         new_lines = []
