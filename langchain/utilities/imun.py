@@ -50,7 +50,7 @@ The above words are in these languages:
 """
 
 IMUN_PROMPT_FACES="""
-List of people faces, and their location in this image:
+Detected faces, and their location in this image:
 {faces}
 """
 

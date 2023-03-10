@@ -78,8 +78,9 @@ zoo
 dolphine
 person
 
-List of people faces, and their location in this image:
+Detected faces, and their location in this image:
 man 12, 100, 62, 202
+
 {ai_prefix}: There is a face detected in this image. Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 {example_end_suffix}
 
