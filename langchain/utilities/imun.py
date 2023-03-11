@@ -3,7 +3,6 @@
 In order to set this up, follow instructions at:
 https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
 """
-import os
 import time
 from typing import Dict, List
 import io
@@ -13,7 +12,7 @@ from PIL import Image
 import requests
 from pydantic import BaseModel, Extra, root_validator
 
-from langchain.utils import get_from_dict_or_env
+from langchain.utils import get_from_dict_or_env, download_image
 
 IMUN_PROMPT_PREFIX = "This is an image ({width} x {height})"
 
@@ -59,22 +58,6 @@ List of celebrities, and their location in this image:
 {celebs}
 """
 
-
-def download_image(url):
-    """Download raw image from url
-    """
-    try:
-        headers = {'User-Agent': 'langchain imun'}
-        r = requests.get(url, stream=True, headers=headers, timeout=2)
-        assert r.status_code == 200, "Invalid URL"
-        return r.content
-    except requests.exceptions.MissingSchema:
-        # This should be configured because of security
-        ext = os.path.splitext(url)[1].lower()
-        if ext in [".jpg", ".png", ".bmp", ".jpeg"]:
-            with open(url, "rb") as fp:
-                return fp.read()
-        raise
 
 def im_downscale(data, target_size):
     im = Image.open(io.BytesIO(data))
@@ -367,7 +350,7 @@ class ImunAPIWrapper(BaseModel):
             answer += "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
-        if objects:
+        if objects and not captions:
             answer += "," if found else "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
@@ -399,10 +382,14 @@ class ImunAPIWrapper(BaseModel):
                 return answer + "Did not find any celebrities in this image"
             return answer + "This image is too blurry"
         
-        if captions:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
-        if objects:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
+        if objects and captions:
+            # TODO: do NMS here to remove some objects
+            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects + captions))
+        else:
+            if captions:
+                answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
+            if objects:
+                answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
         if tags:
             answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
         if words:
