@@ -95,8 +95,8 @@ class BaseOpenAI(BaseLLM, BaseModel):
     presence_penalty: float = 0
     """Penalizes repeated tokens."""
     n: int = 1
-    """How many completions to generate for each prompt."""
-    best_of: int = 1
+    # """How many completions to generate for each prompt."""
+    # best_of: int = 1
     """Generates best_of completions server-side and returns the "best"."""
     model_kwargs: Dict[str, Any] = Field(default_factory=dict)
     """Holds any model parameters valid for `create` call not explicitly specified."""
@@ -154,8 +154,8 @@ class BaseOpenAI(BaseLLM, BaseModel):
             )
         if values["streaming"] and values["n"] > 1:
             raise ValueError("Cannot stream results when n > 1.")
-        if values["streaming"] and values["best_of"] > 1:
-            raise ValueError("Cannot stream results when best_of > 1.")
+        # if values["streaming"] and values["best_of"] > 1:
+        #     raise ValueError("Cannot stream results when best_of > 1.")
         return values
 
     @property
@@ -168,7 +168,7 @@ class BaseOpenAI(BaseLLM, BaseModel):
             "frequency_penalty": self.frequency_penalty,
             "presence_penalty": self.presence_penalty,
             "n": self.n,
-            "best_of": self.best_of,
+            # "best_of": self.best_of,
             "request_timeout": self.request_timeout,
             "logit_bias": self.logit_bias,
         }
@@ -381,8 +381,8 @@ class BaseOpenAI(BaseLLM, BaseModel):
     def prep_streaming_params(self, stop: Optional[List[str]] = None) -> Dict[str, Any]:
         """Prepare the params for streaming."""
         params = self._invocation_params
-        if params["best_of"] != 1:
-            raise ValueError("OpenAI only supports best_of == 1 for streaming")
+        # if params["best_of"] != 1:
+        #     raise ValueError("OpenAI only supports best_of == 1 for streaming")
         if stop is not None:
             if "stop" in params:
                 raise ValueError("`stop` found in both the input and default params.")
