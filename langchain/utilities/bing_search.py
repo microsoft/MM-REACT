@@ -110,14 +110,14 @@ class BingSearchAPIWrapper(BaseModel):
         result = search_term
         if news:
             result += f"\n{news}"
-        if related:
-            result += f"\nRelated search terms: {related}"
         if products:
             result += f"\nRelated products in the image: {products}"
         other_tags = [t for t in other_tags if t]
         if other_tags:
             other_tags = ",".join(set(other_tags))
             result += f"\nRelated tags in the image: {other_tags}"
+        if related and not products and not other_tags:
+            result += f"\Related search terms: {related}"
         result = {
             "snippet": result
         }
