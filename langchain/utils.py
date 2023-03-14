@@ -40,17 +40,22 @@ def download_image(url):
         raise
 
 def im_downscale(data, target_size):
+    output = io.BytesIO()
     im = Image.open(io.BytesIO(data))
     w, h = im.size
+    if target_size is None:
+        if im.mode in ("RGBA", "P"):
+            im = im.convert("RGB")
+        im.save(output, format="JPEG")
+        return output.getvalue(), (w, h)
     im_size_max = max(w, h)
     im_scale = float(target_size) / float(im_size_max)
     w, h = int(w * im_scale), int(h * im_scale)
     im = im.resize((w, h))
-    data = io.BytesIO()
     if im.mode in ("RGBA", "P"):
         im = im.convert("RGB")
-    im.save(data, format="JPEG")
-    return data.getvalue(), (w, h)
+    im.save(output, format="JPEG")
+    return output.getvalue(), (w, h)
 
 
 def im_upscale(data, target_size):
@@ -60,8 +65,8 @@ def im_upscale(data, target_size):
     im_scale = float(target_size) / float(im_size_min)
     w, h = int(w * im_scale), int(h * im_scale)
     im = im.resize((w, h))
-    data = io.BytesIO()
+    output = io.BytesIO()
     if im.mode in ("RGBA", "P"):
         im = im.convert("RGB")
-    im.save(data, format="JPEG")
-    return data.getvalue(), (w, h)
+    im.save(output, format="JPEG")
+    return output.getvalue(), (w, h)

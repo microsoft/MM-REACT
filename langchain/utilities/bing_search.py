@@ -44,6 +44,11 @@ class BingSearchAPIWrapper(BaseModel):
         try:
             data = download_image(img_url)
             if len(data) > 1024 * 1024:
+                if not img_url.endswith((".jpg", ".jpeg")):
+                    # first try just compression
+                    data, _ = im_downscale(data, None)
+                    if len(data) <= 1024 * 1024:
+                        return data
                 data, _ = im_downscale(data, 1500)
             return data
         except (requests.exceptions.InvalidURL, requests.exceptions.MissingSchema, FileNotFoundError):
@@ -51,6 +56,9 @@ class BingSearchAPIWrapper(BaseModel):
 
     @staticmethod
     def _get_visual_results(response: dict) -> Tuple[List[Dict], str]:
+        with open("/mnt/output/gr/gg.json", "w") as fp:
+            print(json.dumps(response, indent=2), file=fp)
+
         other_tags = []
         products = ""
         related = ""
@@ -59,7 +67,7 @@ class BingSearchAPIWrapper(BaseModel):
         tags = response.get("tags") or []
         for tag in tags:
             for action in tag.get("actions") or []:
-                values = (action.get("data") or {}).get("values") or []
+                values = (action.get("data") or {}).get("value") or []
                 action_type = action.get("actionType") or ""
                 if action_type == "PagesIncluding":
                     for v in values:
@@ -70,13 +78,13 @@ class BingSearchAPIWrapper(BaseModel):
                             now = datetime.now()
                             delta = now.year - date.year
                             if delta < 1:
-                                datePublished = f"Article published this year at {datePublished}:\n"
+                                datePublished = f"Article published this year in {datePublished} with title "
                             elif 2 > delta > 1:
-                                datePublished = f"Article published last year at {datePublished}:\n"
+                                datePublished = f"Article published last year in {datePublished} with title "
                             elif 5 > delta > 2:
-                                datePublished = f"Article published few years ago at {datePublished}:\n"
+                                datePublished = f"Article published few years ago in {datePublished} with title"
                             else:
-                                datePublished = f"Old article published at {datePublished}:\n"
+                                datePublished = f"Old article published in {datePublished} with title"
                             news = datePublished + name
                             break
                 if action_type == "RelatedSearches":
@@ -90,16 +98,15 @@ class BingSearchAPIWrapper(BaseModel):
                             search_term = service_url[idx+2]
                 if action_type == "ProductVisualSearch":
                     names = action.get("displayName") or ""
-                    products = ",".join([p.strip() for p in names.split("|")])
-                    break
+                    products = [p.strip() for p in names.split("|")]
+                    products = [p for p in products if p]
+                    products = ",".join(products)
                 if action_type == "VisualSearch":
                     names = action.get("displayName") or ""
                     other_tags += [p.strip() for p in names.split("|")]
-                    break
                 if action_type == "TextResults":
                     names = action.get("displayName") or ""
                     other_tags += [p.strip() for p in names.split("|")]
-                    break
         result = search_term
         if news:
             result += f"\n{news}"
@@ -107,13 +114,13 @@ class BingSearchAPIWrapper(BaseModel):
             result += f"\nRelated search terms: {related}"
         if products:
             result += f"\nRelated products in the image: {products}"
+        other_tags = [t for t in other_tags if t]
         if other_tags:
             other_tags = ",".join(set(other_tags))
             result += f"\nRelated tags in the image: {other_tags}"
         result = {
             "snippet": result
         }
-        print(result, search_term)
         return [result], search_term
 
     def _bing_search_results(self, search_term: str, count: int) -> List[dict]:
@@ -157,7 +164,7 @@ class BingSearchAPIWrapper(BaseModel):
         )
         response.raise_for_status()
         search_results = response.json()
-        return search_results["webPages"]["value"] + visual_results
+        return visual_results + search_results["webPages"]["value"]
 
     @root_validator(pre=True)
     def validate_environment(cls, values: Dict) -> Dict:

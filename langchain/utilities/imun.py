@@ -58,7 +58,7 @@ List of celebrities, and their location in this image:
 """
 
 
-def resize_image(data):
+def resize_image(data, img_url):
     """resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4"""
     try:
         # Using imagesize to avoid decoding when not needed
@@ -67,6 +67,12 @@ def resize_image(data):
         return data, (None, None)
     data_len = len(data)
     if data_len > 1024 * 1024 * 4:
+        if not img_url.endswith((".jpg", ".jpeg")):
+            # first try just compression
+            data, (w, h) = im_downscale(data, None)
+            data_len = len(data)
+            if data_len <= 1024 * 1024 * 4:
+                return data, (w, h)
         # too large
         data, (w, h) = im_downscale(data, 2048)
     if w < 60 or h < 60:
@@ -186,7 +192,7 @@ class ImunAPIWrapper(BaseModel):
         w, h = None, None
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
         try:
-            data, (w, h) = resize_image(download_image(img_url))
+            data, (w, h) = resize_image(download_image(img_url), img_url)
         except (requests.exceptions.InvalidURL, requests.exceptions.MissingSchema, FileNotFoundError):
             return
         if w is not None and h is not None:
