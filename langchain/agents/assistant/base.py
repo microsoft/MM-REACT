@@ -134,7 +134,7 @@ class AssistantAgent(Agent):
                 action = "Celebrity Understanding"
             elif "landmark" in cmd:
                 action = "Bing Search"
-            elif "product" in cmd:
+            elif "brand" in cmd:
                 action = "Bing Search"
             else:
                 action = "Image Understanding"

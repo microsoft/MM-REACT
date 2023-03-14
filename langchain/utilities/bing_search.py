@@ -39,6 +39,8 @@ class BingSearchAPIWrapper(BaseModel):
         search_term = search_term.strip()
         url_idx = search_term.rfind(" ")
         img_url = search_term[url_idx + 1:].strip()
+        if img_url.endswith((".", "?")):
+            img_url = img_url[:-1]
         if not img_url.startswith(("http://", "https://", "/")):
             return
         try:
@@ -116,7 +118,7 @@ class BingSearchAPIWrapper(BaseModel):
         if other_tags:
             other_tags = ",".join(set(other_tags))
             result += f"\nRelated tags in the image: {other_tags}"
-        if related and not products and not other_tags:
+        if related and not result:
             result += f"\Related search terms: {related}"
         result = {
             "snippet": result

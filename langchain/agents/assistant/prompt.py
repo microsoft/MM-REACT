@@ -42,7 +42,7 @@ In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
 In this example 1920 1307 is the width height dimension of the image
 
 
-These are the tasks that Assistant can handle for an image: celebrities, landmarks, products, business card, receipt, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: celebrities, landmarks, brands, business card, receipt, objects, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example, to ask about an image without any description, make sure the question has the word objects in it.
 For example, to ask about an image that could be a business card, make sure the question has the word business card in it.
