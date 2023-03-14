@@ -3,17 +3,15 @@
 In order to set this up, follow instructions at:
 https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
 """
-import os
 import time
 from typing import Dict, List
 import io
 import imagesize
-from PIL import Image
 
 import requests
 from pydantic import BaseModel, Extra, root_validator
 
-from langchain.utils import get_from_dict_or_env
+from langchain.utils import get_from_dict_or_env, download_image, im_downscale, im_upscale
 
 IMUN_PROMPT_PREFIX = "This is an image ({width} x {height})"
 
@@ -60,46 +58,7 @@ List of celebrities, and their location in this image:
 """
 
 
-def download_image(url):
-    """Download raw image from url
-    """
-    try:
-        headers = {'User-Agent': 'langchain imun'}
-        r = requests.get(url, stream=True, headers=headers, timeout=2)
-        assert r.status_code == 200, "Invalid URL"
-        return r.content
-    except requests.exceptions.MissingSchema:
-        # This should be configured because of security
-        ext = os.path.splitext(url)[1].lower()
-        if ext in [".jpg", ".png", ".bmp", ".jpeg"]:
-            with open(url, "rb") as fp:
-                return fp.read()
-        raise
-
-def im_downscale(data, target_size):
-    im = Image.open(io.BytesIO(data))
-    w, h = im.size
-    im_size_max = max(w, h)
-    im_scale = float(target_size) / float(im_size_max)
-    w, h = int(w * im_scale), int(h * im_scale)
-    im = im.resize((w, h))
-    data = io.BytesIO()
-    im.save(data, format="JPEG")
-    return data.getvalue(), (w, h)
-
-def im_upscale(data, target_size):
-    im = Image.open(io.BytesIO(data))
-    w, h = im.size
-    im_size_min = min(w, h)
-    im_scale = float(target_size) / float(im_size_min)
-    w, h = int(w * im_scale), int(h * im_scale)
-    im = im.resize((w, h))
-    data = io.BytesIO()
-    im.save(data, format="JPEG")
-    return data.getvalue(), (w, h)
-
-
-def resize_image(data):
+def resize_image(data, img_url):
     """resize if h < 60 or w < 60 or data_len > 1024 * 1024 * 4"""
     try:
         # Using imagesize to avoid decoding when not needed
@@ -108,6 +67,12 @@ def resize_image(data):
         return data, (None, None)
     data_len = len(data)
     if data_len > 1024 * 1024 * 4:
+        if not img_url.endswith((".jpg", ".jpeg")):
+            # first try just compression
+            data, (w, h) = im_downscale(data, None)
+            data_len = len(data)
+            if data_len <= 1024 * 1024 * 4:
+                return data, (w, h)
         # too large
         data, (w, h) = im_downscale(data, 2048)
     if w < 60 or h < 60:
@@ -227,7 +192,7 @@ class ImunAPIWrapper(BaseModel):
         w, h = None, None
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
         try:
-            data, (w, h) = resize_image(download_image(img_url))
+            data, (w, h) = resize_image(download_image(img_url), img_url)
         except (requests.exceptions.InvalidURL, requests.exceptions.MissingSchema, FileNotFoundError):
             return
         if w is not None and h is not None:
@@ -367,7 +332,7 @@ class ImunAPIWrapper(BaseModel):
             answer += "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
-        if objects:
+        if objects and not captions:
             answer += "," if found else "\nThis image contains"
             answer += IMUN_PROMPT_CAPTIONS_PEFIX
             found = True
@@ -399,10 +364,14 @@ class ImunAPIWrapper(BaseModel):
                 return answer + "Did not find any celebrities in this image"
             return answer + "This image is too blurry"
         
-        if captions:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
-        if objects:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
+        if objects and captions:
+            # TODO: do NMS here to remove some objects
+            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects + captions))
+        else:
+            if captions:
+                answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
+            if objects:
+                answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
         if tags:
             answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
         if words:
