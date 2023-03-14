@@ -2,6 +2,8 @@
 import os
 from typing import Any, Dict, Optional
 import requests
+import io
+from PIL import Image
 
 
 def get_from_dict_or_env(
@@ -36,3 +38,30 @@ def download_image(url):
             with open(url, "rb") as fp:
                 return fp.read()
         raise
+
+def im_downscale(data, target_size):
+    im = Image.open(io.BytesIO(data))
+    w, h = im.size
+    im_size_max = max(w, h)
+    im_scale = float(target_size) / float(im_size_max)
+    w, h = int(w * im_scale), int(h * im_scale)
+    im = im.resize((w, h))
+    data = io.BytesIO()
+    if im.mode in ("RGBA", "P"):
+        im = im.convert("RGB")
+    im.save(data, format="JPEG")
+    return data.getvalue(), (w, h)
+
+
+def im_upscale(data, target_size):
+    im = Image.open(io.BytesIO(data))
+    w, h = im.size
+    im_size_min = min(w, h)
+    im_scale = float(target_size) / float(im_size_min)
+    w, h = int(w * im_scale), int(h * im_scale)
+    im = im.resize((w, h))
+    data = io.BytesIO()
+    if im.mode in ("RGBA", "P"):
+        im = im.convert("RGB")
+    im.save(data, format="JPEG")
+    return data.getvalue(), (w, h)

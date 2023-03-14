@@ -7,12 +7,11 @@ import time
 from typing import Dict, List
 import io
 import imagesize
-from PIL import Image
 
 import requests
 from pydantic import BaseModel, Extra, root_validator
 
-from langchain.utils import get_from_dict_or_env, download_image
+from langchain.utils import get_from_dict_or_env, download_image, im_downscale, im_upscale
 
 IMUN_PROMPT_PREFIX = "This is an image ({width} x {height})"
 
@@ -57,29 +56,6 @@ IMUN_PROMPT_CELEBS="""
 List of celebrities, and their location in this image:
 {celebs}
 """
-
-
-def im_downscale(data, target_size):
-    im = Image.open(io.BytesIO(data))
-    w, h = im.size
-    im_size_max = max(w, h)
-    im_scale = float(target_size) / float(im_size_max)
-    w, h = int(w * im_scale), int(h * im_scale)
-    im = im.resize((w, h))
-    data = io.BytesIO()
-    im.save(data, format="JPEG")
-    return data.getvalue(), (w, h)
-
-def im_upscale(data, target_size):
-    im = Image.open(io.BytesIO(data))
-    w, h = im.size
-    im_size_min = min(w, h)
-    im_scale = float(target_size) / float(im_size_min)
-    w, h = int(w * im_scale), int(h * im_scale)
-    im = im.resize((w, h))
-    data = io.BytesIO()
-    im.save(data, format="JPEG")
-    return data.getvalue(), (w, h)
 
 
 def resize_image(data):
