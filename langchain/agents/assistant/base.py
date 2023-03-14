@@ -130,6 +130,8 @@ class AssistantAgent(Agent):
                 action = "OCR Understanding"
             elif "celebrit" in cmd:
                 action = "Celebrity Understanding"
+            elif "landmark" in cmd:
+                action = "Bing Search"
             else:
                 action = "Image Understanding"
             return action, action_input
