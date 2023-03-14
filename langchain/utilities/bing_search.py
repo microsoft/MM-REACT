@@ -56,8 +56,8 @@ class BingSearchAPIWrapper(BaseModel):
 
     @staticmethod
     def _get_visual_results(response: dict) -> Tuple[List[Dict], str]:
-        with open("/mnt/output/gr/gg.json", "w") as fp:
-            print(json.dumps(response, indent=2), file=fp)
+        # with open("/mnt/output/gr/gg.json", "w") as fp:
+        #     print(json.dumps(response, indent=2), file=fp)
 
         other_tags = []
         products = ""
