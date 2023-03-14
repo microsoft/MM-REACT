@@ -158,6 +158,81 @@ def _handle_error(response):
         pass
     response.raise_for_status()
 
+def create_prompt(results: Dict) -> str:
+    """Create the final prompt output"""
+    if "size" in results:
+        width, height = results["size"]["width"], results["size"]["height"]
+        answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
+    else:
+        answer = "This is an image"
+
+    description = results.get("description") or ""
+    captions = results.get("captions") or ""
+    tags = results.get("tags") or ""
+    objects = results.get("objects") or ""
+    words = results.get("words") or ""
+    words_style = results.get("words_style") or ""
+    languages = results.get("languages") or ""
+    faces = results.get("faces") or ""
+    celebrities = results.get("celebrities") or ""
+
+    if description:
+        answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
+
+    found = False
+    if captions or objects:
+        answer += "\nThis image contains"
+        answer += IMUN_PROMPT_CAPTIONS_PEFIX
+        found = True
+    if tags:
+        answer += "," if found else "\nThis image contains"
+        answer += IMUN_PROMPT_TAGS_PEFIX
+        found = True
+    if words:
+        answer += "," if found else "\nThis image contains"
+        answer += IMUN_PROMPT_OCR_PEFIX.format(style=words_style)
+        found = True
+    if faces:
+        answer += "," if found else "\nThis image contains"
+        answer += IMUN_PROMPT_FACES_PEFIX
+        found = True
+    if celebrities:
+        answer += "," if found else "\nThis image contains"
+        answer += IMUN_PROMPT_CELEB_PEFIX
+        found = True
+
+    answer += "\n"
+
+    if not found and not description:
+        # did not find anything
+        task = results.get("task") or ""
+        if task == "OCR":
+            return answer + "This image is too blurry for OCR text extraction"
+        if task == "celebrities":
+            return answer + "Did not find any celebrities in this image"
+        return answer + "This image is too blurry"
+    
+    if objects and captions:
+        # TODO: do NMS here to remove some objects
+        answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects + captions))
+    else:
+        if captions:
+            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
+        if objects:
+            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
+    if tags:
+        answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
+    if words:
+        answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
+        if languages:
+            answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
+    if faces:
+        answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
+    if celebrities:
+        answer += IMUN_PROMPT_CELEBS.format(celebs="\n".join(celebrities))
+    return answer
+
+
 class ImunAPIWrapper(BaseModel):
     """Wrapper for Image Understanding API.
 
@@ -312,81 +387,7 @@ class ImunAPIWrapper(BaseModel):
         results = self._imun_results(query)
         if results is None:
             return "This is an invalid url"
-        if "size" in results:
-            width, height = results["size"]["width"], results["size"]["height"]
-            answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
-        else:
-            answer = "This is an image"
-
-        description = results.get("description") or ""
-        captions = results.get("captions") or ""
-        tags = results.get("tags") or ""
-        objects = results.get("objects") or ""
-        words = results.get("words") or ""
-        words_style = results.get("words_style") or ""
-        languages = results.get("languages") or ""
-        faces = results.get("faces") or ""
-        celebrities = results.get("celebrities") or ""
-
-        if description:
-            answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
-
-        found = False
-        if captions:
-            answer += "\nThis image contains"
-            answer += IMUN_PROMPT_CAPTIONS_PEFIX
-            found = True
-        if objects and not captions:
-            answer += "," if found else "\nThis image contains"
-            answer += IMUN_PROMPT_CAPTIONS_PEFIX
-            found = True
-        if tags:
-            answer += "," if found else "\nThis image contains"
-            answer += IMUN_PROMPT_TAGS_PEFIX
-            found = True
-        if words:
-            answer += "," if found else "\nThis image contains"
-            answer += IMUN_PROMPT_OCR_PEFIX.format(style=words_style)
-            found = True
-        if faces:
-            answer += "," if found else "\nThis image contains"
-            answer += IMUN_PROMPT_FACES_PEFIX
-            found = True
-        if celebrities:
-            answer += "," if found else "\nThis image contains"
-            answer += IMUN_PROMPT_CELEB_PEFIX
-            found = True
-
-        answer += "\n"
-
-        if not found and not description:
-            # did not find anything
-            task = results.get("task") or ""
-            if task == "OCR":
-                return answer + "This image is too blurry for OCR text extraction"
-            if task == "celebrities":
-                return answer + "Did not find any celebrities in this image"
-            return answer + "This image is too blurry"
-        
-        if objects and captions:
-            # TODO: do NMS here to remove some objects
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects + captions))
-        else:
-            if captions:
-                answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
-            if objects:
-                answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
-        if tags:
-            answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
-        if words:
-            answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
-            if languages:
-                answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
-        if faces:
-            answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
-        if celebrities:
-            answer += IMUN_PROMPT_CELEBS.format(celebs="\n".join(celebrities))
-        return answer
+        return create_prompt(results)
 
     def results(self, query: str) -> List[Dict]:
         """Run query through Image Understanding and return metadata.
@@ -403,4 +404,39 @@ class ImunAPIWrapper(BaseModel):
                 tags - The tags seen in the image.
         """
         results = self._imun_results(query)
+        return results
+
+class ImunMultiAPIWrapper(BaseModel):
+    """Wrapper for Multi Image Understanding API.
+    """
+    imuns: List[ImunAPIWrapper]
+
+    class Config:
+        """Configuration for this pydantic object."""
+
+        extra = Extra.forbid
+
+    def run(self, query: str) -> str:
+        """Run query through Multiple Image Understanding and parse the aggregate result."""
+        results = self.results(query)
+        if results is None:
+            return "This is an invalid url"
+        return create_prompt(results)
+        
+    def results(self, query: str) -> List[Dict]:
+        """Run query through All Image Understanding tools and aggregate the metadata.
+
+        Args:
+            query: The query to search for.
+
+        Returns:
+            A dictionary of lists
+        """
+        results = {}
+        for imun in self.imuns:
+            result = imun.results(query)
+            if result is None:
+                return None
+            for k,v in result.items():
+                results[k] = v
         return results
