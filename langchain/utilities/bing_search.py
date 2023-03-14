@@ -79,9 +79,9 @@ class BingSearchAPIWrapper(BaseModel):
                             delta = now.year - date.year
                             if delta < 1:
                                 datePublished = f"Article published this year in {datePublished} with title "
-                            elif 2 > delta > 1:
+                            elif 2 >= delta > 1:
                                 datePublished = f"Article published last year in {datePublished} with title "
-                            elif 5 > delta > 2:
+                            elif 5 >= delta > 2:
                                 datePublished = f"Article published few years ago in {datePublished} with title"
                             else:
                                 datePublished = f"Old article published in {datePublished} with title"
