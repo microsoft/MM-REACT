@@ -62,7 +62,6 @@ class BingSearchAPIWrapper(BaseModel):
         #     print(json.dumps(response, indent=2), file=fp)
 
         other_tags = []
-        products = ""
         related = ""
         news = ""
         search_term = ""
@@ -80,13 +79,13 @@ class BingSearchAPIWrapper(BaseModel):
                             now = datetime.now()
                             delta = now.year - date.year
                             if delta < 1:
-                                datePublished = f"Article published this year in {datePublished} with title "
+                                datePublished = f"Published this year in {datePublished} with title "
                             elif 2 >= delta > 1:
-                                datePublished = f"Article published last year in {datePublished} with title "
+                                datePublished = f"Published last year in {datePublished} with title "
                             elif 5 >= delta > 2:
-                                datePublished = f"Article published few years ago in {datePublished} with title"
+                                datePublished = f"Published few years ago in {datePublished} with title"
                             else:
-                                datePublished = f"Old article published in {datePublished} with title"
+                                datePublished = f"Published in {datePublished} with title"
                             news = datePublished + name
                             break
                 if action_type == "RelatedSearches":
@@ -98,22 +97,12 @@ class BingSearchAPIWrapper(BaseModel):
                         idx = service_url.find("q=")
                         if idx >= 0:
                             search_term = service_url[idx+2]
-                if action_type == "ProductVisualSearch":
-                    names = action.get("displayName") or ""
-                    products = [p.strip() for p in names.split("|")]
-                    products = [p for p in products if p]
-                    products = ",".join(products)
-                if action_type == "VisualSearch":
-                    names = action.get("displayName") or ""
-                    other_tags += [p.strip() for p in names.split("|")]
                 if action_type == "TextResults":
-                    names = action.get("displayName") or ""
+                    names = tag.get("displayName") or ""
                     other_tags += [p.strip() for p in names.split("|")]
         result = search_term
         if news:
             result += f"\n{news}"
-        if products:
-            result += f"\nRelated products in the image: {products}"
         other_tags = [t for t in other_tags if t]
         if other_tags:
             other_tags = ",".join(set(other_tags))
