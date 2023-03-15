@@ -129,6 +129,26 @@ def _parse_document(analyzeResult):
         content += f"\nTotal amount {total}" 
     return content.split("\n")    
 
+def _parse_table(analyzeResult):
+    content = []
+    for table in analyzeResult["tables"]:
+        row_count = table["rowCount"]
+        col_count = table["columnCount"]
+        for row in range(row_count):
+            cols = [""] * col_count
+            is_header = False
+            for cell in table.get("cells") or []:
+                if cell.get("rowIndex") != row:
+                    continue
+                cols[cell["columnIndex"]] = cell["content"]
+                is_header = cell.get("kind") == "columnHeader"
+            line = "|" + "|".join(cols) + "|\n"
+            content.append(line)
+            if is_header:
+                line = "|" + "|".join(["-"] * col_count) + "|"
+                content.append(line)
+    return content
+
 class InvalidRequest(requests.HTTPError):
     pass
 
@@ -376,6 +396,7 @@ class ImunAPIWrapper(BaseModel):
             if _is_handwritten(api_results["readResult"]["styles"]):
                 results["words_style"] = "handwritten "
         if "analyzeResult" in api_results:
+            is_table = False
             is_document = False
             if "size" not in results:
                 for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
@@ -385,7 +406,13 @@ class ImunAPIWrapper(BaseModel):
                 if doc.get("fields"):
                     is_document = True
                     break
-            if is_document:
+            for doc in api_results["analyzeResult"].get("tables") or []:
+                if doc.get("cells") and doc.get("rowCount"):
+                    is_table = True
+                    break
+            if is_table:
+                results["words"] = _parse_table(api_results["analyzeResult"])
+            elif is_document:
                 results["words"] = _parse_document(api_results["analyzeResult"])
             else:
                 for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
