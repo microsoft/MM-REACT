@@ -85,7 +85,7 @@ def _get_box(rect):
     rect = rect.get("boundingBox") or rect.get("faceRectangle") or rect["rectangle"]
     x, y = rect['x'] if 'x' in rect else rect['left'], rect['y'] if 'y' in rect else rect['top']
     w, h = rect['w'] if 'w' in rect else rect['width'], rect['h'] if 'h' in rect else rect['height']
-    return f"{x}, {y}, {x + w}, {y + h}"
+    return [x, y, x+w, y+h]
 
 def _get_person(o):
     age = o.get("age") or 25
@@ -158,6 +158,53 @@ def _handle_error(response):
         pass
     response.raise_for_status()
 
+def _concat_objects(objects: List) -> str:
+    objects = [f'{n} {v[0]} {v[1]} {v[2]} {v[3]}' for (n, v) in objects]
+    return "\n".join(objects)
+
+def intersection(o:List[float], c:List[float]) -> float:
+    ox1, oy1, ox2, oy2 = o
+    cx1, cy1, cx2, cy2 = c
+
+    # height and width
+    o_h = oy2 - oy1
+    o_w = ox2 - ox1
+    c_h = cy2 - cy1
+    c_w = cx2 - cx1
+
+    o_area = o_w * o_h
+    c_area = c_w * c_h
+  
+    max_x1 = max(ox1, cx1)
+    max_y1 = max(oy1, cy1)
+    min_x2 = min(ox2, cx2)
+    min_y2 = min(oy2, cy2)
+    inter = (min_x2 > max_x1) * (min_y2 > max_y1)
+    inter = inter * (min_x2 - max_x1) * (min_y2 - max_y1)
+
+    return inter, o_area, c_area
+
+def _merge_objects(objects: List, captions: List) -> List:
+    """Merge objects into captions
+    If no overallping this would be equivalent to objects + captions
+    """
+    if not captions:
+        return objects
+    new_objects = []
+    for ob in objects:
+        o = ob[1]
+        max_ioa = 0
+        for ca in captions:
+            c = ca[1]
+            inter, o_area, c_area = intersection(o, c)
+            ioa = inter / c_area
+            if ioa > max_ioa:
+                max_ioa = ioa
+        if max_ioa < 0.3:
+            new_objects.append(ob)
+
+    return captions + new_objects
+
 def create_prompt(results: Dict) -> str:
     """Create the final prompt output"""
     if "size" in results:
@@ -167,14 +214,14 @@ def create_prompt(results: Dict) -> str:
         answer = "This is an image"
 
     description = results.get("description") or ""
-    captions = results.get("captions") or ""
+    captions: List = results.get("captions") or []
     tags = results.get("tags") or ""
-    objects = results.get("objects") or ""
+    objects: List = results.get("objects") or []
     words = results.get("words") or ""
     words_style = results.get("words_style") or ""
     languages = results.get("languages") or ""
-    faces = results.get("faces") or ""
-    celebrities = results.get("celebrities") or ""
+    faces: List = results.get("faces") or []
+    celebrities: List = results.get("celebrities") or []
 
     if description:
         answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
@@ -214,12 +261,12 @@ def create_prompt(results: Dict) -> str:
     
     if objects and captions:
         # TODO: do NMS here to remove some objects
-        answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects + captions))
+        answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(_merge_objects(objects, captions)))
     else:
         if captions:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(captions))
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(captions))
         if objects:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions="\n".join(objects))
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(objects))
     if tags:
         answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
     if words:
@@ -227,9 +274,9 @@ def create_prompt(results: Dict) -> str:
         if languages:
             answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
     if faces:
-        answer += IMUN_PROMPT_FACES.format(faces="\n".join(faces))
+        answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces))
     if celebrities:
-        answer += IMUN_PROMPT_CELEBS.format(celebs="\n".join(celebrities))
+        answer += IMUN_PROMPT_CELEBS.format(celebs=_concat_objects(celebrities))
     return answer
 
 
@@ -303,19 +350,20 @@ class ImunAPIWrapper(BaseModel):
         if "tags" in api_results:
             results["tags"] = [o["name"] for o in api_results["tags"]]
         if "objects" in api_results:
-            results["objects"] = [f'{o.get("object") or o["name"]} {_get_box(o)}' for o in api_results["objects"]]
+            results["objects"] = [(o.get("object") or o["name"], _get_box(o)) for o in api_results["objects"]]
         if "faces" in api_results:
-            results["faces"] = [f'{_get_person(o)} {_get_box(o)}' for o in api_results["faces"]]
+            results["faces"] = [(_get_person(o), _get_box(o)) for o in api_results["faces"]]
         if "result" in api_results:
-            results["celebrities"] = [f'{o["name"]} {_get_box(o)}' for o in api_results["result"]["celebrities"]]
+            results["celebrities"] = [(o["name"], _get_box(o)) for o in api_results["result"]["celebrities"]]
 
         if "denseCaptionsResult" in api_results:
             results["captions"] = []
             for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
                 if idx == 0:
+                    # fist one is the image description
                     results["description"] = o['text']
                     continue
-                results["captions"].append(f'{o["text"]} {_get_box(o)}')
+                results["captions"].append((o["text"], _get_box(o)))
         if "captionResult" in api_results:
             results["description"] = api_results["captionResult"]['text']
         if "tagsResult" in api_results:
