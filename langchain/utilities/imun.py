@@ -145,7 +145,7 @@ def _parse_table(analyzeResult):
             line = "|" + "|".join(cols) + "|\n"
             content.append(line)
             if is_header:
-                line = "|" + "|".join(["-"] * col_count) + "|"
+                line = "|" + "|".join(["-"] * col_count) + "|\n"
                 content.append(line)
     return content
 
