@@ -130,23 +130,38 @@ def _parse_document(analyzeResult):
     return content.split("\n")    
 
 def _parse_table(analyzeResult):
+    found_table = False
+    raw_content:str = analyzeResult["content"]
     content = []
     for table in analyzeResult["tables"]:
         row_count = table["rowCount"]
         col_count = table["columnCount"]
+        if found_table:
+            # more than one table
+            content.append("")
+        found_table = True
         for row in range(row_count):
             cols = [""] * col_count
             is_header = False
             for cell in table.get("cells") or []:
                 if cell.get("rowIndex") != row:
                     continue
-                cols[cell["columnIndex"]] = cell["content"]
+                text = cell["content"]
+                raw_content = raw_content.replace(text, "", 1)
+                cols[cell["columnIndex"]] = text
                 is_header = cell.get("kind") == "columnHeader"
             line = "|" + "|".join(cols) + "|"
             content.append(line)
             if is_header:
                 line = "|" + "|".join(["---"] * col_count) + "|"
                 content.append(line)
+
+    # TODO: keep out of table words before/after the table based on their coordinates
+    # keep words not in the table
+    raw_content = "\n".join([t.strip() for t in raw_content.split("\n")]).strip()
+    if raw_content:
+        print(raw_content)
+        content = [raw_content] + content
     return content
 
 class InvalidRequest(requests.HTTPError):
