@@ -307,7 +307,7 @@ class ImunAPIWrapper(BaseModel):
         elif "Read" in "param_str":
             results["task"] = "OCR"
         else:
-            for task in ['prebuilt-read', 'prebuilt-receipt', 'prebuilt-businessCard']:
+            for task in ['prebuilt-read', 'prebuilt-receipt', 'prebuilt-businessCard', 'prebuilt-layout']:
                 if task in self.imun_url:
                     results["task"] = "OCR"
         w, h = None, None
