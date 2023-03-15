@@ -160,8 +160,7 @@ def _parse_table(analyzeResult):
     # keep words not in the table
     raw_content = "\n".join([t.strip() for t in raw_content.split("\n")]).strip()
     if raw_content:
-        print(raw_content)
-        content = [raw_content] + content
+        content = [raw_content, ""] + content
     return content
 
 class InvalidRequest(requests.HTTPError):
