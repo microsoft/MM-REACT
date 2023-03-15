@@ -261,7 +261,7 @@ class Chain(BaseModel, ABC):
                         new_lines.append(l)
                     action = "\n".join(new_lines)
                 conversation.append(action)
-                if not keep_short:
+                if not keep_short or action_output.startswith("http"):
                     conversation.append(f"Assistant: {action_output}")
             conversation.append("AI: " + outputs["output"])
             return conversation
