@@ -4,7 +4,7 @@ In order to set this up, follow instructions at:
 https://azure.microsoft.com/en-us/products/cognitive-services/computer-vision
 """
 import time
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import io
 import imagesize
 
@@ -162,7 +162,7 @@ def _concat_objects(objects: List) -> str:
     objects = [f'{n} {v[0]} {v[1]} {v[2]} {v[3]}' for (n, v) in objects]
     return "\n".join(objects)
 
-def intersection(o:List[float], c:List[float]) -> float:
+def intersection(o:List[float], c:List[float]) -> Tuple[float]:
     ox1, oy1, ox2, oy2 = o
     cx1, cy1, cx2, cy2 = c
 
@@ -260,7 +260,6 @@ def create_prompt(results: Dict) -> str:
         return answer + "This image is too blurry"
     
     if objects and captions:
-        # TODO: do NMS here to remove some objects
         answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(_merge_objects(objects, captions)))
     else:
         if captions:
