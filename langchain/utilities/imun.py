@@ -142,10 +142,10 @@ def _parse_table(analyzeResult):
                     continue
                 cols[cell["columnIndex"]] = cell["content"]
                 is_header = cell.get("kind") == "columnHeader"
-            line = "|" + "|".join(cols) + "|\n"
+            line = "|" + "|".join(cols) + "|"
             content.append(line)
             if is_header:
-                line = "|" + "|".join(["---"] * col_count) + "|\n"
+                line = "|" + "|".join(["---"] * col_count) + "|"
                 content.append(line)
     return content
 
