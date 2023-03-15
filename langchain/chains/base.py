@@ -261,7 +261,7 @@ class Chain(BaseModel, ABC):
                         new_lines.append(l)
                     action = "\n".join(new_lines)
                 conversation.append(action)
-                if not keep_short or action_output.startswith("http"):
+                if not keep_short or "Here is the edited image: " in action_output:
                     conversation.append(f"Assistant: {action_output}")
             conversation.append("AI: " + outputs["output"])
             return conversation
