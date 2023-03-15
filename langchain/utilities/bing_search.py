@@ -166,7 +166,7 @@ class BingSearchAPIWrapper(BaseModel):
         values["bing_subscription_key"] = bing_subscription_key
 
         # default="https://api.bing.microsoft.com/v7.0/images/visualsearch"
-        bing_vis_search_url = values.get("bing_vis_search_url") or os.environ.get("BING_VIS_SEARCH_URL")
+        bing_vis_search_url = values.get("bing_vis_search_url") or os.environ.get("BING_VIS_SEARCH_URL") or ""
         values["bing_vis_search_url"] = bing_vis_search_url
 
         bing_subscription_key_vis = values.get("bing_subscription_key_vis") or os.environ.get("BING_SUBSCRIPTION_KEY_VIS") or bing_subscription_key
