@@ -90,17 +90,6 @@ class AssistantAgent(Agent):
                 break
             new_lines.append(l)
         text = "\n".join(new_lines)
-
-        # text = text.replace("\nHumman:", "\nAI:")
-        # for term in ["\nOutput:\n"]:
-        #     prev_action_idx = text.find(term)
-        #     if prev_action_idx >= 0:
-        #         text = text[prev_action_idx + 8:]
-        # ChatGPT fix: if the Human role is assumed by smart bot!
-        # for term in ["\nNew input:", "\nFor example:"]:
-        #     prev_action_idx = text.find(term)
-        #     if prev_action_idx >= 0:
-        #         text = text[:prev_action_idx + 1]
         return text
     
     def _fix_text(self, text: str) -> str:
@@ -110,9 +99,12 @@ class AssistantAgent(Agent):
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
         # print(f"bbbbbbbbbbbbbbbbbbbbbbbbbb {llm_output}")
         llm_output = self._fix_chatgpt(llm_output)
+        photo_editing = "photo edit" in llm_output
         cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx >= 0:
             cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
+            if photo_editing:
+                return "Photo Editing", cmd
             search_idx = cmd.lower().find("bing search")
             if search_idx >= 0:
                  action_input = cmd[search_idx + len("bing serach") + 1:]
