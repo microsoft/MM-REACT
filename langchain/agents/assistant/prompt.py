@@ -3,7 +3,7 @@ PREFIX = """Human: Hey {ai_prefix}!
 My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image.
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
-Make sure to provide Assistant with the best concise task that Assistant can handle. 
+Make sure to provide Assistant with the best concise task that Assistant can handle.
 
 EXAMPLE
 {ai_prefix}: This is a business card image. Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
@@ -101,7 +101,7 @@ prescription instructions
 
 {ai_prefix}: This image is likely a pill bottle with labels.
 {ai_prefix}: Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
-Assistant: This is an image (1100 x 800) with description a bottle of medicine.
+Assistant: This is an image (1100 x 800)
 This image contains text
 
 List of texts (words) seen in this image:
@@ -125,10 +125,12 @@ List of object tags seen in this image:
 text
 {ai_prefix}: This image is likely a receipt or ticket. Let me ask for more information about the text.
 {ai_prefix}: Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
+
+EXAMPLE_END
 """
 SUFFIX = """
 
-Human: Previous conversation history up to NEW INPUT
+Human: Use conversation history up to NEW INPUT to answer my question after NEW INPUT 
 {chat_history}
 
 NEW INPUT:

@@ -115,7 +115,7 @@ class AssistantAgent(Agent):
             if action_input.endswith((".", "?")):
                 action_input = action_input[:-1]
             if "/" not in action_input and "http" not in action_input:
-                return "Final Answer", ""
+                return "Final Answer", "There is no image url. This "
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"
