@@ -111,7 +111,8 @@ SUPPLEMENT
 
 {ai_prefix}: This is medicine supplement pills by SPRING VALLEY
 Human: where can I buy this medicine? and how much is the price in Euros?
-{ai_prefix}: I do not have that information. This question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+{ai_prefix}: I do not have that information. 
+{ai_prefix}: This question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 
 
 EXAMPLE
