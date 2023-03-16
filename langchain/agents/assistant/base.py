@@ -100,7 +100,7 @@ class AssistantAgent(Agent):
         # TODO: this should be a separate llm as a tool to decide the correct tool(s) here
         llm_output = self._fix_chatgpt(llm_output)
         photo_editing = "photo edit" in llm_output or "image edit" in llm_output
-        is_table = False #" table" in llm_output
+        is_table = " table" in llm_output
         cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx >= 0:
             cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
