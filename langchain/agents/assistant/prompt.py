@@ -131,6 +131,7 @@ EXAMPLE_END
 """
 SUFFIX = """
 
+Human: Answer my question after NEW INPUT.
 Human: Answer my question after NEW INPUT. Ask Assistant when needed
 Human: Use conversation history up to NEW INPUT if needed for the answer.
 {chat_history}
