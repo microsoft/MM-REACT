@@ -131,7 +131,8 @@ EXAMPLE_END
 """
 SUFFIX = """
 
-Human: Use conversation history up to NEW INPUT to answer my question after NEW INPUT 
+Human: Answer my question after NEW INPUT
+Human: Use out conversation history up to NEW INPUT if needed for the answer 
 {chat_history}
 
 NEW INPUT:
