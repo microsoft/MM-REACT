@@ -305,7 +305,9 @@ def create_prompt(results: Dict) -> str:
     if words:
         answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
         if languages:
-            answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
+            langs = set(languages)
+            if len(langs) > 1 or languages[0] != "en":
+                answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
     if faces:
         answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces))
     if celebrities:
