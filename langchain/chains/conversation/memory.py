@@ -115,7 +115,7 @@ class ConversationBufferMemory(Memory, BaseModel):
         else:
             output_key = self.output_key
         new_input = inputs[prompt_input_key]
-        human = self.human_prefix + new_input + "<|im_end|>"
+        human = self.human_prefix + new_input + "\n<|im_end|>"
         ai = self.ai_prefix + outputs[output_key] + "<|im_end|>"
         assistant = ""
         intermediate = outputs.get(self.output_intermediate) or []

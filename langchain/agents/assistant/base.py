@@ -34,6 +34,11 @@ class AssistantAgent(Agent):
         return "<|im_start|>AI\n"
 
     @property
+    def postfix(self) -> str:
+        """Postfix to add to the end of conversations."""
+        return "<|im_end|>\n"
+
+    @property
     def _stop(self) -> List[str]:
         return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT:"]
 
@@ -94,7 +99,7 @@ class AssistantAgent(Agent):
     
     def _fix_text(self, text: str) -> str:
         text = self._fix_chatgpt(text)
-        return f"{text}\nAI:"
+        return f"{text}\n{self.llm_prefix}"
 
     def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
         # TODO: this should be a separate llm as a tool to decide the correct tool(s) here

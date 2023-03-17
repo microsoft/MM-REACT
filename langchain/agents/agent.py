@@ -182,6 +182,12 @@ class Agent(BaseModel):
     def llm_prefix(self) -> str:
         """Prefix to append the LLM call with."""
 
+    @property
+    @abstractmethod
+    def postfix(self) -> str:
+        """Postfix to add to the end of conversations."""
+        return ""
+
     @classmethod
     @abstractmethod
     def create_prompt(cls, tools: Sequence[BaseTool]) -> BasePromptTemplate:
@@ -221,13 +227,12 @@ class Agent(BaseModel):
             # `force` just returns a constant string
             return AgentFinish({"output": "Agent stopped due to max iterations."}, "")
         elif early_stopping_method == "generate":
-            boz
             # Generate does one final forward pass
             thoughts = ""
             for action, observation in intermediate_steps:
                 thoughts += action.log
                 thoughts += (
-                    f"\n{self.observation_prefix}{observation}\n{self.llm_prefix}"
+                    f"\n{self.observation_prefix}{observation}{self.postfix}\n{self.llm_prefix}"
                 )
             # Adding to the previous steps, we now tell the LLM to make a final pred
             thoughts += (
