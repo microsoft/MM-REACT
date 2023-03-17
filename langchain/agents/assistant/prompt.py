@@ -12,7 +12,7 @@ If the task does not fit any of the above, make sure the question has the word o
 To ask about an image without any description, make sure the question has the word objects in it.
 To ask about an image that could be a business card, make sure the question has the word business card in it.
 To ask about an image that could be a receipt, make sure the question has the word receipt in it.
-To ask about an image that requires OCR (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image's tags), make sure the question has the word OCR in it.
+To ask about an image that requires OCR (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image), make sure the question has the word OCR in it.
 To ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
@@ -63,6 +63,8 @@ What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4
 <|im_end|>
 <|im_start|>{ai_prefix}
 This is an image with text.
+<|im_end|>
+<|im_start|>{ai_prefix}
 Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
 <|im_start|>Assistant
