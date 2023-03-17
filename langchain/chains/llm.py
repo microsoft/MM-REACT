@@ -10,7 +10,7 @@ from langchain.prompts.base import BasePromptTemplate
 from langchain.prompts.prompt import PromptTemplate
 from langchain.schema import LLMResult
 
-
+CNT = 0
 class LLMChain(Chain, BaseModel):
     """Chain to run queries against LLMs.
 
@@ -84,6 +84,10 @@ class LLMChain(Chain, BaseModel):
                     "If `stop` is present in any inputs, should be present in all."
                 )
             prompts.append(prompt)
+            global CNT
+            CNT = CNT + 1
+            with open(f"/mnt/output/gr/lang/{CNT}.txt", "a") as fp:
+                print(prompt, file=fp)
         return prompts, stop
 
     async def aprep_prompts(
