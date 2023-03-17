@@ -221,6 +221,7 @@ class Agent(BaseModel):
             # `force` just returns a constant string
             return AgentFinish({"output": "Agent stopped due to max iterations."}, "")
         elif early_stopping_method == "generate":
+            boz
             # Generate does one final forward pass
             thoughts = ""
             for action, observation in intermediate_steps:

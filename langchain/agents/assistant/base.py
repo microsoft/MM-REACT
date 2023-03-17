@@ -26,12 +26,12 @@ class AssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "Assistant: "
+        return "<|im_start|>Assistant\n"
 
     @property
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
-        return "AI:"
+        return "<|im_start|>AI\n"
 
     @property
     def _stop(self) -> List[str]:

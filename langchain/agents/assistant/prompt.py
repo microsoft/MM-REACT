@@ -17,9 +17,11 @@ To ask about the identity of people (celebrities) in an image, make sure the que
 <|im_end|>
 
 EXAMPLE
-<|im_start|>{ai_prefix}: This is a business card image. Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
+<|im_start|>{ai_prefix}
+This is a business card image. Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_end|>
-<|im_start|>Assistant: This is an image (640 x 480)
+<|im_start|>Assistant
+This is an image (640 x 480)
 This image contains text
 
 List of texts (words) seen in this image:
@@ -27,13 +29,16 @@ CONTOSO
 Cell: +1 (989) 123-4567
 Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
+
 <|im_end|>
 In this example 640 480 are the width height dimension of the image
 
 EXAMPLE
-<|im_start|>{ai_prefix}: This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
+<|im_start|>{ai_prefix}
+This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
 <|im_end|>
-<|im_start|>Assistant: This is an image (1920 x 1307) with description a group of men playing football.
+<|im_start|>Assistant
+This is an image (1920 x 1307) with description a group of men playing football.
 
 This image contains objects and their descriptions, object tags
 
@@ -45,6 +50,7 @@ List of object tags seen in this image:
 athletic game
 football
 soccer
+
 <|im_end|>
 In this example 1476, 993 is the left top coordinate of soccer ball, and 1595, 1125 is the right bottom coordinate of the soccer ball
 In this example 1300, 1200 is the left top coordinate of shoe, and 1510, 1290 is the right bottom coordinate of the shoe
@@ -52,23 +58,31 @@ In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
 In this example 1920 1307 is the width height dimension of the image
 
 EXAMPLE
-<|im_start|>Human: What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
+<|im_start|>Human
+What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
-<|im_start|>{ai_prefix}: This is an image with text. Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
-Assistant: This is an image (616 x 411)
+<|im_start|>{ai_prefix}
+This is an image with text. Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
+<|im_end|>
+<|im_start|>Assistant
+This is an image (616 x 411)
 This image contains handwritten text
 
 List of texts (words) seen in this image:
 4x2+5=
 1/sqrt(9)=
+
 <|im_end|>
 
 EXAMPLE
-<|im_start|>Human: https://i.ibb.co/XJbmhg4/mY09.png
+<|im_start|>Human
+https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
-<|im_start|>{ai_prefix}: This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+<|im_start|>{ai_prefix}
+This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
-<|im_start|>Assistant: This is an image (656 x 500) with description a dog playing with a man.
+<|im_start|>Assistant
+This is an image (656 x 500) with description a dog playing with a man.
 
 This image contains objects and their descriptions, object tags
 
@@ -84,15 +98,21 @@ person
 
 Detected faces, and their location in this image:
 man 12, 100, 62, 202
+
 <|im_end|>
-<|im_start|>{ai_prefix}: There is a face detected in this image. Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+<|im_start|>{ai_prefix}
+There is a face detected in this image. Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 
 EXAMPLE
-<|im_start|>Human: what do you know about this image? /tmp/path/to/x_d_0(2).jpg
+<|im_start|>Human
+what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
-<|im_start|>{ai_prefix}: This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
-Assistant: This is an image (1100 x 800) with description a bottle of medicine.
+<|im_start|>{ai_prefix}
+This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+<|im_end|>
+<|im_start|>Assistant
+This is an image (1100 x 800) with description a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
 
@@ -103,53 +123,71 @@ List of object tags seen in this image:
 pills
 text
 prescription instructions
+
 <|im_end|>
-<|im_start|>{ai_prefix}: This image is likely a pill bottle with labels.
+<|im_start|>{ai_prefix}
+This image is likely a pill bottle with labels.
 <|im_end|>
-<|im_start|>{ai_prefix}: Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
+<|im_start|>{ai_prefix}
+Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
-<|im_start|>Assistant: This is an image (1100 x 800)
+<|im_start|>Assistant
+This is an image (1100 x 800)
 This image contains text
 
 List of texts (words) seen in this image:
 SPRING VALLEY.
 Supports Health
 SUPPLEMENT
+
 <|im_end|>
-<|im_start|>{ai_prefix}: This is medicine supplement pills by SPRING VALLEY
+<|im_start|>{ai_prefix}
+This is medicine supplement pills by SPRING VALLEY
 <|im_end|>
-<|im_start|>Human: where can I buy this medicine? and how much is the price in Euros?
+<|im_start|>Human
+where can I buy this medicine? and how much is the price in Euros?
 <|im_end|>
-<|im_start|>{ai_prefix}: I do not have that information.
+<|im_start|>{ai_prefix}
+I do not have that information.
 <|im_end|>
-<|im_start|>{ai_prefix}: This question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+<|im_start|>{ai_prefix}
+This question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
 
 EXAMPLE
-<|im_start|>Human: /a/c0%5/XX99096.jpg
+<|im_start|>Human
+/a/c0%5/XX99096.jpg
 <|im_end|>
-<|im_start|>{ai_prefix}: This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
-Assistant: This is an image (480 x 1200) with description black and white text on a receipt
+<|im_start|>{ai_prefix}
+This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+<|im_end|>
+<|im_start|>Assistant
+This is an image (480 x 1200) with description black and white text on a receipt
 
 This image contains object tags
 
 List of object tags seen in this image:
 text
 <|im_end|>
-<|im_start|>{ai_prefix}: This image is likely a receipt or ticket. Let me ask for more information about the text.
+<|im_start|>{ai_prefix}
+This image is likely a receipt or ticket. Let me ask for more information about the text.
 <|im_end|>
-<|im_start|>{ai_prefix}: Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
+<|im_start|>{ai_prefix}
+Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 <|im_end|>
 
 EXAMPLE END
 """
 SUFFIX = """
 
-<|im_start|>Human: Answer my question after NEW INPUT.
+<|im_start|>Human
+Answer my question after NEW INPUT.
 <|im_end|>
-<|im_start|>Human: Answer my question after NEW INPUT. Ask Assistant when needed
+<|im_start|>Human
+Answer my question after NEW INPUT. Ask Assistant when needed
 <|im_end|>
-<|im_start|>Human: Use conversation history up to NEW INPUT if needed for the answer.
+<|im_start|>Human
+Use conversation history up to NEW INPUT if needed for the answer.
 <|im_end|>
 {chat_history}
 
