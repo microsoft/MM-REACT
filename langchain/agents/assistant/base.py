@@ -40,7 +40,7 @@ class AssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT:"]
+        return ["<|im_end|>", "\nEXAMPLE"]
 
     @classmethod
     def create_prompt(
@@ -71,30 +71,7 @@ class AssistantAgent(Agent):
         return self.ai_prefix
 
     @staticmethod
-    def _remove_after(line: str) -> bool:
-        if "anything else I can help" in line:
-            return True
-        if "anything else you would like" in line:
-            return True
-        if "Previous conversation history" in line:
-            return True
-
-        return False
-    
-    @staticmethod
     def _fix_chatgpt(text: str) -> str:
-        idx = text.find("\n\nNote: ")
-        if idx >= 0:
-            text = text[:idx + 1]
-        # Remove redundant questions, to keep history shorter
-        lines = text.split("\n")
-        new_lines = []
-        for l in lines:
-            # do not keep anthing afterwards
-            if __class__._remove_after(l):
-                break
-            new_lines.append(l)
-        text = "\n".join(new_lines)
         return text
     
     def _fix_text(self, text: str) -> str:
@@ -120,7 +97,7 @@ class AssistantAgent(Agent):
             if action_input.endswith((".", "?")):
                 action_input = action_input[:-1]
             if "/" not in action_input and "http" not in action_input:
-                return "Final Answer", "There is no image url. This "
+                return self.ai_prefix, "Please provide the image url at the end."
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"
@@ -141,9 +118,10 @@ class AssistantAgent(Agent):
                 action = "Image Understanding"
             return action, action_input
         
-        if f"{self.ai_prefix}:" in llm_output:
-            return self.ai_prefix, llm_output.split(f"{self.ai_prefix}:")[-1].strip()
-        return self.ai_prefix, llm_output.strip()
+        action_log = llm_output.strip()
+        if f"{self.ai_prefix}:" in action_log:
+            action_log = "\n".join(action_log.split(f"{self.ai_prefix}:"))
+        return self.ai_prefix, action_log
 
     @classmethod
     def from_llm_and_tools(

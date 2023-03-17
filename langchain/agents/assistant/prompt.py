@@ -62,7 +62,8 @@ EXAMPLE
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
 <|im_start|>{ai_prefix}
-This is an image with text. Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
+This is an image with text.
+Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
 <|im_start|>Assistant
 This is an image (616 x 411)
@@ -184,4 +185,5 @@ SUFFIX = """
 <|im_start|>Human
 {input}
 <|im_end|>
+<|im_start|>AI
 {agent_scratchpad}"""

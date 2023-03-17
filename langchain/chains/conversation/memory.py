@@ -116,13 +116,12 @@ class ConversationBufferMemory(Memory, BaseModel):
             output_key = self.output_key
         new_input = inputs[prompt_input_key]
         human = self.human_prefix + new_input + "\n<|im_end|>"
-        ai = self.ai_prefix + outputs[output_key] + "<|im_end|>"
+        ai = self.ai_prefix + outputs[output_key] + "\n<|im_end|>"
         assistant = ""
         intermediate = outputs.get(self.output_intermediate) or []
         for action, action_output in intermediate:
             action: str = action.log.strip()
-            if not action.startswith(self.ai_prefix):
-                action = self.ai_prefix + action + "<|im_end|>"
+            action = self.ai_prefix + action + "\n<|im_end|>"
             action_output = self.assistant_prefix + action_output  + "<|im_end|>"
             assistant += "\n" + action + "\n" + action_output
         self.buffer += "\n" + "\n".join([human, assistant, ai])
