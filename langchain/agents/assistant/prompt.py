@@ -176,21 +176,12 @@ This image is likely a receipt or ticket. Let me ask for more information about 
 Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 <|im_end|>
 
-EXAMPLE END
 """
 SUFFIX = """
 
-<|im_start|>Human
-Answer my question after NEW INPUT.
-<|im_end|>
-<|im_start|>Human
-Answer my question after NEW INPUT. Ask Assistant when needed
-<|im_end|>
-<|im_start|>Human
-Use conversation history up to NEW INPUT if needed for the answer.
-<|im_end|>
 {chat_history}
 
-NEW INPUT:
+<|im_start|>Human
 {input}
+<|im_end|>
 {agent_scratchpad}"""

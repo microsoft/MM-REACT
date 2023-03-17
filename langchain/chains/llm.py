@@ -73,6 +73,7 @@ class LLMChain(Chain, BaseModel):
         if "stop" in input_list[0]:
             stop = input_list[0]["stop"]
         prompts = []
+        assert len(input_list) == 1
         for inputs in input_list:
             selected_inputs = {k: inputs[k] for k in self.prompt.input_variables}
             prompt = self.prompt.format(**selected_inputs)
@@ -86,7 +87,7 @@ class LLMChain(Chain, BaseModel):
             prompts.append(prompt)
             global CNT
             CNT = CNT + 1
-            with open(f"/mnt/output/gr/lang/{CNT}.txt", "a") as fp:
+            with open(f"/mnt/output/gr/lang/{CNT}.txt", "w") as fp:
                 print(prompt, file=fp)
         return prompts, stop
 
