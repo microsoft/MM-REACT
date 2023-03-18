@@ -192,7 +192,7 @@ Answer my question after NEW INPUT
 <|im_sep|>Human
 Answer my question after NEW INPUT. Ask Assistant when needed
 <|im_sep|>Human
-Use conversation history up to NEW INPUT if needed for the answer
+Use conversation history from here up to NEW INPUT for the answer
 <|im_end|>
 
 {chat_history}
