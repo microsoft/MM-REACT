@@ -156,7 +156,9 @@ where can I buy this medicine? and how much is the price in Euros?
 <|im_start|>{ai_prefix}
 I do not have that information.
 <|im_sep|>{ai_prefix}
-This question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+This question requires Bing search. 
+<|im_sep|>{ai_prefix}
+Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
 
 EXAMPLE
