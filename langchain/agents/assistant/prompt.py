@@ -2,23 +2,23 @@
 PREFIX = """<|im_start|>system
 Human: Hey {ai_prefix}! My name is Human. 
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image.
-We are going to have a 3 person conversation. With you trying to find an answer for my question.
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 Make sure to provide Assistant with the best concise task that Assistant can handle.
 
 These are the tasks that Assistant can handle for an image: photo editing, celebrities, landmarks, brands, business card, receipt, objects, OCR, Bing
-Instructions:
 If the task does not fit any of the above, make sure the question has the word objects in it.
 To ask about an image without any description, make sure the question has the word objects in it.
 To ask about an image that could be a business card, make sure the question has the word business card in it.
 To ask about an image that could be a receipt, make sure the question has the word receipt in it.
-To ask about an image that requires OCR (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image), make sure the question has the word OCR in it.
+To ask about an image that likely has text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image tags), make sure the question has the word OCR in it.
 To ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
 EXAMPLE
 <|im_start|>{ai_prefix}
-This is a business card image. Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
+This is a business card image.
+<|im_sep|>{ai_prefix}
+Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_end|>
 <|im_start|>Assistant
 This is an image (640 x 480)
@@ -35,7 +35,9 @@ In this example 640 480 are the width height dimension of the image
 
 EXAMPLE
 <|im_start|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
+This is an image.
+<|im_sep|>{ai_prefix}
+Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
 <|im_end|>
 <|im_start|>Assistant
 This is an image (1920 x 1307) with description a group of men playing football.
@@ -63,8 +65,7 @@ What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4
 <|im_end|>
 <|im_start|>{ai_prefix}
 This is an image with text.
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
 <|im_start|>Assistant
@@ -82,7 +83,9 @@ EXAMPLE
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 <|im_start|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+This is an image.
+<|im_sep|>{ai_prefix}
+Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 <|im_start|>Assistant
 This is an image (656 x 500) with description a dog playing with a man.
@@ -104,7 +107,9 @@ man 12, 100, 62, 202
 
 <|im_end|>
 <|im_start|>{ai_prefix}
-There is a face detected in this image. Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+There is a face detected in this image.
+<|im_sep|>{ai_prefix}
+Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 
 EXAMPLE
@@ -112,7 +117,9 @@ EXAMPLE
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+This is an image.
+<|im_sep|>{ai_prefix}
+Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>Assistant
 This is an image (1100 x 800) with description a bottle of medicine.
@@ -130,8 +137,7 @@ prescription instructions
 <|im_end|>
 <|im_start|>{ai_prefix}
 This image is likely a pill bottle with labels.
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>Assistant
@@ -152,8 +158,7 @@ where can I buy this medicine? and how much is the price in Euros?
 <|im_end|>
 <|im_start|>{ai_prefix}
 I do not have that information.
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 This question requires Bing search. Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
 
@@ -173,9 +178,10 @@ List of object tags seen in this image:
 text
 <|im_end|>
 <|im_start|>{ai_prefix}
-This image is likely a receipt or ticket. Let me ask for more information about the text.
-<|im_end|>
-<|im_start|>{ai_prefix}
+This image is likely a receipt or ticket.
+<|im_sep|>{ai_prefix}
+Let me ask for more information about the text.
+<|im_sep|>{ai_prefix}
 Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 <|im_end|>
 

@@ -72,6 +72,11 @@ class AssistantAgent(Agent):
 
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
+        text = text.replace("<|im_sep|>AI\n", "")
+        # text = text.strip()
+        # idx = text.find("<|im_end|>")
+        # if idx >= 0:
+        #     text = text[:idx]
         return text
     
     def _fix_text(self, text: str) -> str:
