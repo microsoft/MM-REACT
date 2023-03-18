@@ -83,9 +83,7 @@ EXAMPLE
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 <|im_start|>{ai_prefix}
-This is an image.
-<|im_sep|>{ai_prefix}
-Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 <|im_start|>Assistant
 This is an image (656 x 500) with description a dog playing with a man.
@@ -117,9 +115,7 @@ EXAMPLE
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>{ai_prefix}
-This is an image.
-<|im_sep|>{ai_prefix}
-Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>Assistant
 This is an image (1100 x 800) with description a bottle of medicine.
@@ -133,10 +129,11 @@ List of object tags seen in this image:
 pills
 text
 prescription instructions
-
 <|im_end|>
 <|im_start|>{ai_prefix}
 This image is likely a pill bottle with labels.
+<|im_sep|>{ai_prefix}
+Let me see what is the text
 <|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
