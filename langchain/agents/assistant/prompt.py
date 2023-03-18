@@ -188,8 +188,17 @@ Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 """
 SUFFIX = """
 
+<|im_start|>Human
+Answer my question after NEW INPUT
+<|im_sep|>Human
+Answer my question after NEW INPUT. Ask Assistant when needed
+<|im_sep|>Human
+Use conversation history up to NEW INPUT if needed for the answer
+<|im_end|>
+
 {chat_history}
 
+NEW INPUT:
 <|im_start|>Human
 {input}
 <|im_end|>
