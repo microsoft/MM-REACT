@@ -47,6 +47,11 @@ The above words are in these languages:
 {languages}
 """
 
+IMUN_PROMPT_LANGUAGE="""
+The above words are in this language:
+{language}
+"""
+
 IMUN_PROMPT_FACES="""
 Detected faces, and their location in this image:
 {faces}
@@ -306,7 +311,9 @@ def create_prompt(results: Dict) -> str:
         answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
         if languages:
             langs = set(languages)
-            if len(langs) > 1 or languages[0] != "en":
+            if len(langs) == 1 and languages[0] != "en":
+                answer += IMUN_PROMPT_LANGUAGE.format(language=languages[0])
+            elif len(langs) > 1 or languages[0] != "en":
                 answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
     if faces:
         answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces))

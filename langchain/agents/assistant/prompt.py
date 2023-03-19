@@ -31,6 +31,7 @@ Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
 <|im_end|>
+
 In this example 640 480 are the width height dimension of the image
 
 EXAMPLE
@@ -54,6 +55,7 @@ football
 soccer
 
 <|im_end|>
+
 In this example 1476, 993 is the left top coordinate of soccer ball, and 1595, 1125 is the right bottom coordinate of the soccer ball
 In this example 1300, 1200 is the left top coordinate of shoe, and 1510, 1290 is the right bottom coordinate of the shoe
 In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
@@ -179,7 +181,7 @@ text
 <|im_start|>{ai_prefix}
 This image is likely a receipt or ticket.
 <|im_sep|>{ai_prefix}
-Let me ask for more information about the text.
+Reading the label requires OCR
 <|im_sep|>{ai_prefix}
 Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 <|im_end|>
@@ -190,9 +192,11 @@ SUFFIX = """
 <|im_start|>Human
 Answer my question after NEW INPUT
 <|im_sep|>Human
-Answer my question after NEW INPUT. Ask Assistant when needed
+Ask Assistant when needed
 <|im_sep|>Human
-Use conversation history from here up to NEW INPUT for the answer
+Translate to English
+<|im_sep|>Human
+Add details to previous conversation.
 <|im_end|>
 
 {chat_history}
