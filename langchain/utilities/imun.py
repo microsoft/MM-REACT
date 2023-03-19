@@ -13,8 +13,6 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env, download_image, im_downscale, im_upscale
 
-IMUN_PROMPT_PREFIX = "This is an image ({width} x {height})"
-
 IMUN_PROMPT_DESCRIPTION = " with description {description}.\n"
 
 IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
@@ -43,12 +41,12 @@ List of texts (words) seen in this image:
 """
 
 IMUN_PROMPT_LANGUAGES="""
-The above words are in these languages:
+The above texts are in these languages:
 {languages}
 """
 
 IMUN_PROMPT_LANGUAGE="""
-The above words are in this language:
+The above texts are in this language:
 {language}
 """
 
@@ -198,7 +196,8 @@ def _handle_error(response):
     response.raise_for_status()
 
 def _concat_objects(objects: List) -> str:
-    objects = [f'{n} {v[0]} {v[1]} {v[2]} {v[3]}' for (n, v) in objects]
+    # objects = [f'{n} {v[0]} {v[1]} {v[2]} {v[3]}' for (n, v) in objects]
+    objects = [f'{n} {v[0]} {v[1]}' for (n, v) in objects]
     return "\n".join(objects)
 
 def intersection(o:List[float], c:List[float]) -> Tuple[float]:
@@ -246,12 +245,6 @@ def _merge_objects(objects: List, captions: List) -> List:
 
 def create_prompt(results: Dict) -> str:
     """Create the final prompt output"""
-    if "size" in results:
-        width, height = results["size"]["width"], results["size"]["height"]
-        answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
-    else:
-        answer = "This is an image"
-
     description = results.get("description") or ""
     captions: List = results.get("captions") or []
     tags = results.get("tags") or ""
@@ -261,6 +254,8 @@ def create_prompt(results: Dict) -> str:
     languages = results.get("languages") or ""
     faces: List = results.get("faces") or []
     celebrities: List = results.get("celebrities") or []
+
+    answer = "This is an image"
 
     if description:
         answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""

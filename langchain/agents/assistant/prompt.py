@@ -21,7 +21,7 @@ This is a business card image.
 Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_end|>
 <|im_start|>Assistant
-This is an image (640 x 480)
+This is an image
 This image contains text
 
 List of texts (words) seen in this image:
@@ -32,8 +32,6 @@ Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.c
 
 <|im_end|>
 
-In this example 640 480 are the width height dimension of the image
-
 EXAMPLE
 <|im_start|>{ai_prefix}
 This is an image.
@@ -41,13 +39,13 @@ This is an image.
 Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
 <|im_end|>
 <|im_start|>Assistant
-This is an image (1920 x 1307) with description a group of men playing football.
+This is an image with description a group of men playing football.
 
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
-soccer ball 1476, 993, 1595, 1125
-shoe 1300, 1200, 1510, 1290
+soccer ball 1476, 993
+shoe 1300, 1200
 
 List of object tags seen in this image:
 athletic game
@@ -56,10 +54,8 @@ soccer
 
 <|im_end|>
 
-In this example 1476, 993 is the left top coordinate of soccer ball, and 1595, 1125 is the right bottom coordinate of the soccer ball
-In this example 1300, 1200 is the left top coordinate of shoe, and 1510, 1290 is the right bottom coordinate of the shoe
-In this example, soccer ball area is width*height = (1595-1476)*(1125-993)
-In this example 1920 1307 is the width height dimension of the image
+In this example 1476, 993 is the coordinate of soccer ball
+In this example 1300, 1200 is the coordinate of shoe
 
 EXAMPLE
 <|im_start|>Human
@@ -71,7 +67,7 @@ This is an image with text.
 Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
 <|im_start|>Assistant
-This is an image (616 x 411)
+This is an image
 This image contains handwritten text
 
 List of texts (words) seen in this image:
@@ -88,13 +84,13 @@ https://i.ibb.co/XJbmhg4/mY09.png
 This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 <|im_start|>Assistant
-This is an image (656 x 500) with description a dog playing with a man.
+This is an image with description a dog playing with a man.
 
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
-dog 11, 99, 61, 199
-person 60, 99, 210, 329
+dog 11, 99
+person 60, 99
 
 List of object tags seen in this image:
 animal
@@ -103,7 +99,7 @@ dolphine
 person
 
 Detected faces, and their location in this image:
-man 12, 100, 62, 202
+man 12, 100
 
 <|im_end|>
 <|im_start|>{ai_prefix}
@@ -120,12 +116,12 @@ what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>Assistant
-This is an image (1100 x 800) with description a bottle of medicine.
+This is an image with description a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
-heart 100, 201, 190, 291
+heart 100, 201
 
 List of object tags seen in this image:
 pills
@@ -140,7 +136,7 @@ Let me see what is the text
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
 <|im_start|>Assistant
-This is an image (1100 x 800)
+This is an image
 This image contains text
 
 List of texts (words) seen in this image:
@@ -171,7 +167,7 @@ EXAMPLE
 This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_end|>
 <|im_start|>Assistant
-This is an image (480 x 1200) with description black and white text on a receipt
+This is an image with description black and white text on a receipt
 
 This image contains object tags
 
