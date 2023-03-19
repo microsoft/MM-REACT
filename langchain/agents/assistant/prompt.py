@@ -100,7 +100,7 @@ Detected faces, and their location in this image:
 man 12 100
 
 <|im_sep|>{ai_prefix}
-There is a face detected in this image.
+There is a face detected in this image of a man.
 <|im_sep|>{ai_prefix}
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
@@ -176,9 +176,9 @@ SUFFIX = """
 <|im_start|>Human
 Answer my question after NEW INPUT
 <|im_sep|>Human
-Ask Assistant with a task when needed
+Answer using conversation up to NEW INPUT.
 <|im_sep|>Human
-Add details to previous conversation up to NEW INPUT.
+Ask Assistant with a task when needed
 <|im_end|>
 
 {chat_history}

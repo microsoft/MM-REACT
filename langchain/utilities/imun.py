@@ -36,7 +36,7 @@ List of object tags seen in this image:
 """
 
 IMUN_PROMPT_WORDS="""
-List of texts (words) seen in this image:
+List of OCR texts (words) seen in this image:
 {words}
 """
 
