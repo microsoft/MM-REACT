@@ -151,7 +151,7 @@ where can I buy this medicine? and how much is the price in Euros?
 <|im_sep|>{ai_prefix}
 I do not have that information.
 <|im_sep|>{ai_prefix}
-This question requires Bing search. 
+This question requires Bing internet search. 
 <|im_sep|>{ai_prefix}
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
