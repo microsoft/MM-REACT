@@ -103,6 +103,8 @@ Detected faces, and their location in this image:
 man 59 100
 
 <|im_sep|>{ai_prefix}
+A man is playing with a dog in a zoo likely having a dolphine
+<|im_sep|>{ai_prefix}
 There is a face detected in this image of a man.
 <|im_sep|>{ai_prefix}
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
@@ -127,7 +129,7 @@ pills
 text
 prescription instructions
 <|im_sep|>{ai_prefix}
-This image is likely a pill bottle with labels.
+This image is likely a pill bottle with labels and related to heart
 <|im_sep|>{ai_prefix}
 Let me see what is the text
 <|im_sep|>{ai_prefix}
@@ -142,7 +144,7 @@ Supports Health
 SUPPLEMENT
 
 <|im_sep|>{ai_prefix}
-This is medicine supplement pills by SPRING VALLEY
+This is heart medicine supplement pills by SPRING VALLEY
 <|im_end|>
 <|im_start|>Human
 where can I buy this medicine? and how much is the price in Euros?
