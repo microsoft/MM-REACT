@@ -53,7 +53,7 @@ football
 soccer
 
 <|im_sep|>{ai_prefix}
-This is a group of men playing football shooting a ball
+This is a group of men playing football kicking a ball
 <|im_end|>
 
 In this image 1476, 993 is the x, y coordinate of soccer ball
