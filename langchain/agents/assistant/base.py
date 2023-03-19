@@ -63,7 +63,7 @@ class AssistantAgent(Agent):
     @property
     def finish_tool_name(self) -> str:
         """Name of the tool to use to finish the chain."""
-        return self.ai_prefix
+        return "<|im_end|>"
 
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
@@ -97,7 +97,7 @@ class AssistantAgent(Agent):
             if action_input.endswith((".", "?")):
                 action_input = action_input[:-1]
             if "/" not in action_input and "http" not in action_input:
-                return self.ai_prefix, "Please provide the image url at the end."
+                return self.finish_tool_name, "Please provide the image url at the end."
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"
@@ -117,11 +117,9 @@ class AssistantAgent(Agent):
             else:
                 action = "Image Understanding"
             return action, action_input
-        
         action_log = llm_output.strip()
-        if f"{self.ai_prefix}:" in action_log:
-            action_log = "\n".join(action_log.split(f"{self.ai_prefix}:"))
-        return self.ai_prefix, action_log
+        if not action_log:
+            return self.finish_tool_name, action_log
 
     @classmethod
     def from_llm_and_tools(
