@@ -77,8 +77,8 @@ class ConversationBufferMemory(Memory, BaseModel):
     """Buffer for storing conversation memory."""
 
     human_prefix: str = "<|im_start|>Human\n"
-    ai_prefix: str = "<|im_start|>AI\n"
-    assistant_prefix: str = "<|im_start|>Assistant\n"
+    ai_prefix: str = "<|im_sep|>AI\n"
+    assistant_prefix: str = "<|im_sep|>Assistant\n"
     """Prefix to use for AI generated responses."""
     buffer: str = ""
     output_key: Optional[str] = None
@@ -115,14 +115,14 @@ class ConversationBufferMemory(Memory, BaseModel):
         else:
             output_key = self.output_key
         new_input = inputs[prompt_input_key]
-        human = self.human_prefix + new_input + "\n<|im_end|>"
+        human = self.human_prefix + new_input
         ai = self.ai_prefix + outputs[output_key] + "\n<|im_end|>"
         assistant = ""
         intermediate = outputs.get(self.output_intermediate) or []
         for action, action_output in intermediate:
             action: str = action.log.strip()
-            action = self.ai_prefix + action + "\n<|im_end|>"
-            action_output = self.assistant_prefix + action_output  + "<|im_end|>"
+            action = self.ai_prefix + action
+            action_output = self.assistant_prefix + action_output
             assistant += "\n" + action + "\n" + action_output
         self.buffer += "\n" + "\n".join([human, assistant, ai])
 

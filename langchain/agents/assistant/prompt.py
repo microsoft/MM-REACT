@@ -60,8 +60,7 @@ In this example 1300, 1200 is the coordinate of shoe
 
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 This is an image with text.
 <|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
@@ -80,8 +79,7 @@ The equation ...
 
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 This is an image with description a dog playing with a man.
@@ -110,8 +108,7 @@ Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY0
 
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This is an image with description a bottle of medicine.
@@ -145,8 +142,7 @@ This is medicine supplement pills by SPRING VALLEY
 <|im_end|>
 <|im_start|>Human
 where can I buy this medicine? and how much is the price in Euros?
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 I do not have that information.
 <|im_sep|>{ai_prefix}
 This question requires Bing search. 
@@ -157,8 +153,7 @@ Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how m
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
-<|im_end|>
-<|im_start|>{ai_prefix}
+<|im_sep|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 This is an image with description black and white text on a receipt
@@ -193,6 +188,5 @@ Add details to previous conversation.
 NEW INPUT:
 <|im_start|>Human
 {input}
-<|im_end|>
-<|im_start|>AI
+<|im_sep|>AI
 {agent_scratchpad}"""

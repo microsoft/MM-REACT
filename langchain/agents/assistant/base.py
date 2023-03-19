@@ -26,17 +26,12 @@ class AssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "<|im_start|>Assistant\n"
+        return "<|im_sep|>Assistant\n"
 
     @property
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
-        return "<|im_start|>AI\n"
-
-    @property
-    def postfix(self) -> str:
-        """Postfix to add to the end of conversations."""
-        return "<|im_end|>\n"
+        return "<|im_sep|>AI\n"
 
     @property
     def _stop(self) -> List[str]:

@@ -55,8 +55,8 @@ class Agent(BaseModel):
         """Construct the scratchpad that lets the agent continue its thought process."""
         thoughts = ""
         for action, observation in intermediate_steps:
-            thoughts += action.log + f"\n{self.postfix}"
-            thoughts += f"\n{self.observation_prefix}{observation}\n{self.postfix}{self.llm_prefix}"
+            thoughts += action.log
+            thoughts += f"\n{self.observation_prefix}{observation}\n{self.llm_prefix}"
         return thoughts
 
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
@@ -68,7 +68,6 @@ class Agent(BaseModel):
             output = self.llm_chain.predict(**full_inputs)
             full_output += output
             parsed_output = self._extract_tool_and_input(full_output)
-            full_output += self.postfix
         return AgentAction(
             tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
         )
@@ -82,7 +81,6 @@ class Agent(BaseModel):
             output = await self.llm_chain.apredict(**full_inputs)
             full_output += output
             parsed_output = self._extract_tool_and_input(full_output)
-            full_output += self.postfix
         return AgentAction(
             tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
         )
@@ -179,12 +177,6 @@ class Agent(BaseModel):
     def llm_prefix(self) -> str:
         """Prefix to append the LLM call with."""
 
-    @property
-    @abstractmethod
-    def postfix(self) -> str:
-        """Postfix to add to the end of conversations."""
-        return ""
-
     @classmethod
     @abstractmethod
     def create_prompt(cls, tools: Sequence[BaseTool]) -> BasePromptTemplate:
@@ -229,7 +221,7 @@ class Agent(BaseModel):
             for action, observation in intermediate_steps:
                 thoughts += action.log
                 thoughts += (
-                    f"\n{self.observation_prefix}{observation}{self.postfix}\n{self.llm_prefix}"
+                    f"\n{self.observation_prefix}{observation}\n{self.llm_prefix}"
                 )
             # Adding to the previous steps, we now tell the LLM to make a final pred
             thoughts += (
