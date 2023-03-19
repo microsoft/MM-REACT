@@ -194,7 +194,10 @@ class BingSearchAPIWrapper(BaseModel):
             snippet = snippet.replace("<b>", "").replace("</b>", "")  # remove bold
             snippets.append(snippet)
 
-        return "\n".join(snippets)
+        snippets = "\n".join(snippets)
+        if snippets:
+            return "results from internet search:\n" + snippets
+        return snippets
 
     def results(self, query: str, num_results: int) -> List[Dict]:
         """Run query through BingSearch and return metadata.
