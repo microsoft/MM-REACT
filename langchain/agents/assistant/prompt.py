@@ -14,7 +14,7 @@ To ask about an image that likely has text (e.g. text, stamp, currency, money, d
 To ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
-EXAMPLE
+
 <|im_start|>{ai_prefix}
 This is a business card image.
 <|im_sep|>{ai_prefix}
@@ -30,14 +30,12 @@ Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
 <|im_sep|>{ai_prefix}
-This is a ...
+This is a ... business card belonging to ...
 <|im_end|>
 
-EXAMPLE
+
 <|im_start|>{ai_prefix}
-This is an image.
-<|im_sep|>{ai_prefix}
-Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
+This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
 <|im_sep|>Assistant
 This is an image with description a group of men playing football.
 
@@ -59,7 +57,7 @@ This is a ... football .. shoe kicking a ball
 In this example 1476, 993 is the coordinate of soccer ball
 In this example 1300, 1200 is the coordinate of shoe
 
-EXAMPLE
+
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_end|>
@@ -79,7 +77,7 @@ List of texts (words) seen in this image:
 The equation ...
 <|im_end|>
 
-EXAMPLE
+
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
@@ -109,7 +107,7 @@ There is a face detected in this image.
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
 
-EXAMPLE
+
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_end|>
@@ -156,7 +154,7 @@ This question requires Bing search.
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
 
-EXAMPLE
+
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_end|>
