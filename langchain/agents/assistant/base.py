@@ -124,7 +124,10 @@ class AssistantAgent(Agent):
             elif "brand" in cmd:
                 action = "Bing Search"
             else:
-                action = "Image Understanding"
+                if "objects" in cmd:
+                    action = "Image Understanding"
+                else:
+                    action = self.finish_tool_name
             return action, action_input
         action_log = llm_output.strip()
         if tries == 1 or not action_log:
