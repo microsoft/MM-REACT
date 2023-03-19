@@ -176,11 +176,9 @@ SUFFIX = """
 <|im_start|>Human
 Answer my question after NEW INPUT
 <|im_sep|>Human
-Ask Assistant when needed
+Ask Assistant with a task when needed
 <|im_sep|>Human
-Translate to English
-<|im_sep|>Human
-Add details to previous conversation.
+Add details to previous conversation up to NEW INPUT.
 <|im_end|>
 
 {chat_history}

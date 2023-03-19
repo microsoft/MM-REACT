@@ -1,7 +1,6 @@
 """An agent designed to hold a conversation in addition to using tools."""
 from __future__ import annotations
 
-import re
 from typing import Any, List, Optional, Sequence, Tuple
 
 from langchain.agents.agent import Agent
@@ -68,17 +67,27 @@ class AssistantAgent(Agent):
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
         text = text.replace("<|im_sep|>AI\n", "")
-        # text = text.strip()
-        # idx = text.find("<|im_end|>")
-        # if idx >= 0:
-        #     text = text[:idx]
+        lines = text.split("\n")
+        new_lines = []
+        for l in lines:
+            term = "Is there anything else I"
+            idx = text.find(term)
+            if idx >= 0:
+                l = l[:idx]
+            if not l:
+                continue
+            new_lines.append(l)
+        text = "\n".join(new_lines)
+
         return text
     
     def _fix_text(self, text: str) -> str:
         text = self._fix_chatgpt(text)
+        if "Assistant, " in text:
+            return text
         return f"{text}\n{self.llm_prefix}"
 
-    def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
+    def _extract_tool_and_input(self, llm_output: str, tries=0) -> Optional[Tuple[str, str]]:
         # TODO: this should be a separate llm as a tool to decide the correct tool(s) here
         llm_output = self._fix_chatgpt(llm_output)
         photo_editing = "photo edit" in llm_output or "image edit" in llm_output
@@ -118,7 +127,7 @@ class AssistantAgent(Agent):
                 action = "Image Understanding"
             return action, action_input
         action_log = llm_output.strip()
-        if not action_log:
+        if tries == 1 or not action_log:
             return self.finish_tool_name, action_log
 
     @classmethod
