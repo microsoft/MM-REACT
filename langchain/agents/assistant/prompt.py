@@ -144,7 +144,7 @@ Supports Health
 SUPPLEMENT
 
 <|im_sep|>{ai_prefix}
-This is heart medicine supplement pills by SPRING VALLEY
+This is heart medicine supplement pills in a bottle by SPRING VALLEY
 <|im_end|>
 <|im_start|>Human
 where can I buy this medicine? and how much is the price in Euros?
