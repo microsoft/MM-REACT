@@ -75,7 +75,8 @@ List of OCR texts (words) seen in this image:
 1/sqrt(9)=
 
 <|im_sep|>{ai_prefix}
-The equation ...
+There are two simple equations in the image ....
+The first equation is 4x2+5= which results in 13
 <|im_end|>
 
 
