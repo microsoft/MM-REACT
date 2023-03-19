@@ -180,8 +180,6 @@ Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 """
 SUFFIX = """
 
-{chat_history}
-
 <|im_start|>Human
 Answer my question after NEW INPUT
 <|im_sep|>Human
@@ -191,6 +189,8 @@ Translate to English
 <|im_sep|>Human
 Add details to previous conversation.
 <|im_end|>
+
+{chat_history}
 
 NEW INPUT:
 <|im_start|>Human
