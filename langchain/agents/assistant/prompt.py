@@ -183,7 +183,7 @@ SUFFIX = """
 <|im_start|>Human
 Answer my question after NEW INPUT
 <|im_sep|>Human
-Answer using conversation from here up to NEW INPUT
+Answer using conversation up to NEW INPUT
 <|im_sep|>Human
 Ask Assistant with a task when needed
 <|im_end|>
