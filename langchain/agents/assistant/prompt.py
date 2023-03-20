@@ -1,6 +1,6 @@
 # flake8: noqa
 PREFIX = """<|im_start|>system
-Human: Hey {ai_prefix}! My name is Human. 
+Hey {ai_prefix}! My name is Human. 
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image.
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
