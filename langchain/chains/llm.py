@@ -87,8 +87,8 @@ class LLMChain(Chain, BaseModel):
             prompts.append(prompt)
             global CNT
             CNT = CNT + 1
-            with open(f"/mnt/output/gr/lang/{CNT}.txt", "w") as fp:
-                print(prompt, file=fp)
+            # with open(f"/mnt/output/gr/lang/{CNT}.txt", "w") as fp:
+            #     print(prompt, file=fp)
         return prompts, stop
 
     async def aprep_prompts(
