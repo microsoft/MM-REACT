@@ -108,7 +108,9 @@ class AssistantAgent(Agent):
                     return "Bing Search" , action_input       
                 return self.finish_tool_name, "Please provide the image url at the end."
             if action_input.endswith((".", "?")):
-                action_input = action_input[:-1]
+                action_input = action_input[:-1].strip()
+            if not action_input:
+                return self.finish_tool_name, "Please provide the image url at the end."
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"

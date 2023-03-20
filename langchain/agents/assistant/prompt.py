@@ -1,6 +1,6 @@
 # flake8: noqa
 PREFIX = """<|im_start|>system
-Hey {ai_prefix}! My name is Human. 
+Hey {ai_prefix}! My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image.
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
@@ -16,8 +16,10 @@ For example to ask about the identity of people (celebrities) in an image, make 
 
 Make sure to provide Assistant with a concise description and a task that Assistant can handle.
 For example:
-<|im_start|>{ai_prefix}
-This is a business card image.
+<|im_start|>Human
+My business card https://i.ibb.co/tsQ0Myn/00.jpg
+<|im_sep|>{ai_prefix}
+This is a business card image
 <|im_sep|>{ai_prefix}
 Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
@@ -30,13 +32,17 @@ Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
 <|im_sep|>{ai_prefix}
-This is a ... business card belonging to ...
+This is your business card belonging to Jake ...
 <|im_end|>
 
 Elaborate on the Assistant's response. Aggregate information about the last image.
 For example:
-<|im_start|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
+<|im_start|>Human
+https://tinyurl.com/foo092001.jpeg
+<|im_sep|>{ai_prefix}
+This is a url path to an image file with type jpeg
+<|im_sep|>{ai_prefix}
+This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Image description is: a group of men playing football.
 
@@ -52,7 +58,7 @@ football
 soccer
 
 <|im_sep|>{ai_prefix}
-This is a group of men playing football kicking a ball
+This is a group of men playing football kicking a soccer ball
 <|im_end|>
 
 In this image 1476, 993 is the x, y coordinate of soccer ball
@@ -179,7 +185,7 @@ SUFFIX = """
 <|im_start|>Human
 Answer my question after NEW INPUT
 <|im_sep|>Human
-Answer using conversation up to NEW INPUT
+Answer using conversation from here up to NEW INPUT
 <|im_sep|>Human
 Ask Assistant with a task when needed
 <|im_end|>
