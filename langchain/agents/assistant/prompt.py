@@ -12,6 +12,7 @@ For example to ask about an image that could be a business card, make sure the q
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example to ask about an image that likely has text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image tags), make sure the question has the word OCR in it.
 For example to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
+For exmple to ask about something you do not know, use Bing internet search
 <|im_end|>
 
 Make sure to provide Assistant with a concise description and a task that Assistant can handle.
