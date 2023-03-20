@@ -127,6 +127,7 @@ class AssistantAgent(Agent):
                     action = self.finish_tool_name
             if "/" not in action_input and "http" not in action_input:
                 if action_input.endswith("?") and not action:
+                    # if no image and no action
                     return "Bing Search" , action_input       
                 return self.finish_tool_name, "Please provide the image url at the end."
             if action_input.endswith((".", "?")):

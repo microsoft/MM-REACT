@@ -63,6 +63,16 @@ In this image 1476, 993 is the x, y coordinate of soccer ball
 In this image 1300, 1200 is the x, y coordinate of shoe
 In this image the shoe is to the right and bottom of the soccer ball
 
+Respond to Human's non-image related inputs when you can
+For example:
+<|im_start|>Human
+:--)
+<|im_sep|>{ai_prefix}
+This is not an image.
+<|im_sep|>{ai_prefix}
+I am glad you are happy.
+<|im_end|>
+
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
@@ -181,9 +191,9 @@ EXAMPLE END
 SUFFIX = """
 
 <|im_start|>Human
-Answer my question after NEW INPUT
+Check if there is a question after NEW INPUT
 <|im_sep|>Human
-Answer using conversation from here up to NEW INPUT
+Answer using the information in conversation up to NEW INPUT
 <|im_sep|>Human
 Ask Assistant with a task when needed
 <|im_end|>
