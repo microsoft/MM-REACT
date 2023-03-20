@@ -103,10 +103,12 @@ class AssistantAgent(Agent):
                  return "Bing Search", action_input
             cmd_idx = cmd.rfind(" ")
             action_input = cmd[cmd_idx + 1:].strip()
+            if "/" not in action_input and "http" not in action_input:
+                if action_input.endswith("?"):
+                    return "Bing Search" , action_input       
+                return self.finish_tool_name, "Please provide the image url at the end."
             if action_input.endswith((".", "?")):
                 action_input = action_input[:-1]
-            if "/" not in action_input and "http" not in action_input:
-                return self.finish_tool_name, "Please provide the image url at the end."
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"
