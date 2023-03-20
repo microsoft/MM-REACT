@@ -63,15 +63,25 @@ In this image 1476, 993 is the x, y coordinate of soccer ball
 In this image 1300, 1200 is the x, y coordinate of shoe
 In this image the shoe is to the right and bottom of the soccer ball
 
-Respond to Human's non-image related inputs when you can
+Respond to Human's non-image related inputs when you can. Use Bing Search if needed.
 For example:
 <|im_start|>Human
-:--)
+Apple is my favourite fruit :--)
 <|im_sep|>{ai_prefix}
 This is not an image.
 <|im_sep|>{ai_prefix}
-I am glad you are happy.
+I am glad you are happy about it
 <|im_end|>
+<|im_start|>Human
+What is the most expensive type of my favourite fruit in the US?
+<|im_sep|>{ai_prefix}
+I do not have that information.
+<|im_sep|>{ai_prefix}
+This question requires Bing search. 
+<|im_sep|>{ai_prefix}
+Assistant, Bing search what is the most expensive apple in the US?
+<|im_end|>
+
 
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
