@@ -102,15 +102,8 @@ class AssistantAgent(Agent):
                  action_input = cmd[search_idx + len("bing serach") + 1:]
                  return "Bing Search", action_input
             cmd_idx = cmd.rfind(" ")
+            action = None
             action_input = cmd[cmd_idx + 1:].strip()
-            if "/" not in action_input and "http" not in action_input:
-                if action_input.endswith("?"):
-                    return "Bing Search" , action_input       
-                return self.finish_tool_name, "Please provide the image url at the end."
-            if action_input.endswith((".", "?")):
-                action_input = action_input[:-1].strip()
-            if not action_input:
-                return self.finish_tool_name, "Please provide the image url at the end."
             cmd = cmd[:cmd_idx + 1].lower()
             if "receipt" in cmd:
                 action = "Receipt Understanding"
@@ -132,6 +125,14 @@ class AssistantAgent(Agent):
                     action = "Image Understanding"
                 else:
                     action = self.finish_tool_name
+            if "/" not in action_input and "http" not in action_input:
+                if action_input.endswith("?") and not action:
+                    return "Bing Search" , action_input       
+                return self.finish_tool_name, "Please provide the image url at the end."
+            if action_input.endswith((".", "?")):
+                action_input = action_input[:-1].strip()
+            if not action_input:
+                return self.finish_tool_name, "Please provide the image url at the end."
             return action, action_input
         action_log = llm_output.strip()
         if tries == 1 or not action_log:

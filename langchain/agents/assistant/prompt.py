@@ -40,9 +40,7 @@ For example:
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
-This is a url path to an image file with type jpeg
-<|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
+This is an image. Image type is jpeg. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Image description is: a group of men playing football.
 
@@ -86,7 +84,7 @@ There are two simple equations in the image in the form of ....
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+This is an image. Image type is png. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
 
@@ -118,7 +116,7 @@ For example:
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+This is an image. Image type is jpg. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Image description is: a bottle of medicine.
 
@@ -132,9 +130,9 @@ pills
 text
 prescription instructions
 <|im_sep|>{ai_prefix}
-This image is likely a pill bottle with labels and related to heart
+This image is likely a pill bottle with labels and is related to heart
 <|im_sep|>{ai_prefix}
-Let me see what is the text
+Let me see what is the text in the image
 <|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
@@ -162,7 +160,7 @@ Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how m
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+This is an image. Image type is jpg. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 Image description is: black and white text on a receipt
 
