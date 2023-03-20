@@ -70,7 +70,7 @@ class AssistantAgent(Agent):
         lines = text.split("\n")
         new_lines = []
         for l in lines:
-            term = "Is there anything else I"
+            term = "Is there anything else "
             idx = text.find(term)
             if idx >= 0:
                 l = l[:idx]
@@ -101,34 +101,31 @@ class AssistantAgent(Agent):
             if search_idx >= 0:
                  action_input = cmd[search_idx + len("bing serach") + 1:]
                  return "Bing Search", action_input
-            cmd_idx = cmd.rfind(" ")
+            action_input_idx = cmd.rfind(" ")
             action = None
-            action_input = cmd[cmd_idx + 1:].strip()
-            cmd = cmd[:cmd_idx + 1].lower()
-            if "receipt" in cmd:
+            action_input = cmd[action_input_idx + 1:].strip()
+            sub_cmd = cmd[:action_input_idx + 1].lower()
+            if "receipt" in sub_cmd:
                 action = "Receipt Understanding"
             elif "business card" in cmd:
                 action = "Business Card Understanding"
-            elif "ocr" in cmd:
+            elif "ocr" in sub_cmd:
                 if is_table:
                     action = "Layout Understanding"
                 else:
                     action = "OCR Understanding"
-            elif "celebrit" in cmd:
+            elif "celebrit" in sub_cmd:
                 action = "Celebrity Understanding"
-            elif "landmark" in cmd:
+            elif "landmark" in sub_cmd:
                 action = "Bing Search"
-            elif "brand" in cmd:
+            elif "brand" in sub_cmd:
                 action = "Bing Search"
-            else:
-                if "objects" in cmd:
-                    action = "Image Understanding"
-                else:
-                    action = self.finish_tool_name
+            elif "objects" in sub_cmd:
+                action = "Image Understanding"
             if "/" not in action_input and "http" not in action_input:
                 if action_input.endswith("?") and not action:
                     # if no image and no action
-                    return "Bing Search" , action_input       
+                    return "Bing Search" , cmd       
                 return self.finish_tool_name, "Please provide the image url at the end."
             if action_input.endswith((".", "?")):
                 action_input = action_input[:-1].strip()
