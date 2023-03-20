@@ -13,7 +13,7 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env, download_image, im_downscale, im_upscale
 
-IMUN_PROMPT_DESCRIPTION = " with description {description}.\n"
+IMUN_PROMPT_DESCRIPTION = "Image description is: {description}.\n"
 
 IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
 
@@ -255,10 +255,7 @@ def create_prompt(results: Dict) -> str:
     faces: List = results.get("faces") or []
     celebrities: List = results.get("celebrities") or []
 
-    answer = "This is an image"
-
-    if description:
-        answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
+    answer = IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
 
     found = False
     if captions or objects:

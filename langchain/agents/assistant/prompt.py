@@ -21,7 +21,6 @@ This is a business card image.
 <|im_sep|>{ai_prefix}
 Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
-This is an image
 This image contains text
 
 List of OCR texts (words) seen in this image:
@@ -39,7 +38,7 @@ For example:
 <|im_start|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001
 <|im_sep|>Assistant
-This is an image with description a group of men playing football.
+Image description is: a group of men playing football.
 
 This image contains objects and their descriptions, object tags
 
@@ -67,7 +66,6 @@ This is an image with text.
 <|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
-This is an image
 This image contains handwritten text
 
 List of OCR texts (words) seen in this image:
@@ -75,8 +73,7 @@ List of OCR texts (words) seen in this image:
 1/sqrt(9)=
 
 <|im_sep|>{ai_prefix}
-There are two simple equations in the image ....
-The first equation is 4x2+5= which results in 13
+There are two simple equations in the image in the form of ....
 <|im_end|>
 
 
@@ -85,7 +82,7 @@ https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
-This is an image with description a dog playing with a man.
+Image description is: a dog playing with a man.
 
 This image contains objects and their descriptions, object tags
 
@@ -117,7 +114,7 @@ what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
-This is an image with description a bottle of medicine.
+Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
 
@@ -135,7 +132,6 @@ Let me see what is the text
 <|im_sep|>{ai_prefix}
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
-This is an image
 This image contains text
 
 List of OCR texts (words) seen in this image:
@@ -162,7 +158,7 @@ Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how m
 <|im_sep|>{ai_prefix}
 This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
-This is an image with description black and white text on a receipt
+Image description is: black and white text on a receipt
 
 This image contains object tags
 
