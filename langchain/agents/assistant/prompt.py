@@ -77,7 +77,7 @@ What is the most expensive type of my favourite fruit in the US?
 <|im_sep|>{ai_prefix}
 I do not have that information.
 <|im_sep|>{ai_prefix}
-This question requires Bing internet search. 
+This question requires Bing search. 
 <|im_sep|>{ai_prefix}
 Assistant, Bing search what is the most expensive apple in the US?
 <|im_end|>
@@ -162,10 +162,21 @@ List of OCR texts (words) seen in this image:
 SPRING VALLEY.
 Supports Health
 SUPPLEMENT
-
 <|im_sep|>{ai_prefix}
 This is heart medicine supplement pills in a bottle by SPRING VALLEY
 <|im_end|>
+<|im_start|>Human
+where can I buy this medicine? and how much is the price in Euros?
+<|im_sep|>{ai_prefix}
+This question requires further context or external knowledge.
+<|im_sep|>{ai_prefix}
+I do not have that information.
+<|im_sep|>{ai_prefix}
+This question requires Bing search. 
+<|im_sep|>{ai_prefix}
+Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+<|im_end|>
+EXAMPLE END
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
