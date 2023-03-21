@@ -13,7 +13,7 @@ For example to ask about an image that likely has OCR text (e.g. text, stamp, cu
 For example to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
-Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle. 
+Gather your thoughts and observations and deductions in a list then if needed ask Assistant with tasks it can handle. 
 Summerize the observations at the end.
 For example:
 <|im_start|>Human
@@ -108,7 +108,7 @@ Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
 
-This image contains objects and their descriptions, object tags
+This image contains objects and their descriptions, object tags, faces
 
 List of object descriptions, and their location in this image:
 dog 11 99
