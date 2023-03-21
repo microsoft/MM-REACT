@@ -113,7 +113,7 @@ This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
 dog 11 99
-person 60 99
+happy person 60 99
 
 List of object tags seen in this image:
 animal
@@ -122,7 +122,7 @@ dolphine
 person
 
 Detected faces, and their location in this image:
-man 59 100
+man 60 99
 
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
@@ -132,13 +132,12 @@ Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY0
 This image contains celebrities
 
 List of celebrities, and their location in this image:
-Brad Pitt 60 100
+Brad Pitt 60 99
 <|im_sep|>{ai_prefix}
 1. The only celebrity detected is Brad Pitt
-2. He is the man playing with the dog
-3. He is likely located in the 60, 100 coordinate
-4. He is playing with his dog, located in 11, 99
-To summerize, Brad Pitt playing in a zoo with his dog and a dolphine in the background
+2. He is likely the man playing with the dog
+3. He is located around the 60, 99 coordinate
+To summerize, Brad Pitt happily playing in a zoo with his dog and a dolphine in the background
 <|im_end|>
 
 <|im_start|>Human
