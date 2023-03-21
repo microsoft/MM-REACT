@@ -20,6 +20,76 @@ MM-REACT code is bases on langchain.
 
 Please refer to [langchain](https://github.com/hwchase17/langchain) for [instructions on installation](https://github.com/hwchase17/langchain#quick-install) and [documentation](https://github.com/hwchase17/langchain#-documentation).
 
+# Additional packages needed for MM-REACT
+
+```bash
+pip install PIL imagesize
+```
+
+# Here are the list of resources you need to set up in Azure and their environment variables
+
+1. Computer Vision service, for Tags, Objects, Faces and Celebrity.
+
+```bash
+export IMUN_URL="https://yourazureendpoint.cognitiveservices.azure.com/vision/v3.2/analyze"
+export IMUN_PARAMS="visualFeatures=Tags,Objects,Faces"
+export IMUN_CELEB_URL="https://yourazureendpoint.cognitiveservices.azure.com/vision/v3.2/models/celebrities/analyze"
+export IMUN_CELEB_PARAMS=""
+export IMUN_SUBSCRIPTION_KEY=
+```
+
+2. Computer Vision service for dense captioning. With a potentially different subscription key (e.g. westus region supports this)
+
+```bash
+export IMUN_URL2="https://yourazureendpoint.cognitiveservices.azure.com/computervision/imageanalysis:analyze"
+export IMUN_PARAMS2="api-version=2023-02-01-preview&model-version=latest&features=denseCaptions"
+export IMUN_SUBSCRIPTION_KEY2=
+```
+
+3. Form Recogizer (OCR) prebuilt services
+
+```bash
+export IMUN_OCR_READ_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-read:analyze"
+export IMUN_OCR_RECEIPT_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-receipt:analyze"
+export IMUN_OCR_BC_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-businessCard:analyze"
+export IMUN_OCR_LAYOUT_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-layout:analyze"
+export IMUN_OCR_PARAMS="api-version=2022-08-31"
+export IMUN_OCR_SUBSCRIPTION_KEY=
+```
+
+4. Bing search service
+
+```bash
+export BING_SEARCH_URL="https://api.bing.microsoft.com/v7.0/search"
+export BING_SUBSCRIPTION_KEY=
+```
+
+5. Bing visual search service (available on a separate pricing)
+
+```bash
+export BING_VIS_SEARCH_URL="https://api.bing.microsoft.com/v7.0/images/visualsearch"
+export BING_SUBSCRIPTION_KEY_VIS=
+```
+
+6. Azure OpenAI service
+
+```bash
+export OPENAI_API_TYPE=azure
+export OPENAI_API_VERSION=2022-12-01
+export OPENAI_API_BASE=https://yourazureendpoint.openai.azure.com/
+export OPENAI_API_KEY=
+```
+
+Note: At the time of writing, we use and test against private endpoint. The public endpoint is now released and we plan to add support for it later.
+
+7. Photo editting local service
+
+```bash
+export PHOTO_EDIT_ENDPOINT_URL="http://127.0.0.1:123/"
+export PHOTO_EDIT_ENDPOINT_URL_SHORT=127.0.0.1
+```
+
+
 ## Acknowledgement
 
 We are highly inspired by [langchain](https://github.com/hwchase17/langchain).
