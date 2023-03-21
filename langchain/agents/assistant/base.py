@@ -141,9 +141,13 @@ class AssistantAgent(Agent):
                 return
             return action, action_input
         action_log = llm_output.strip()
-        if "do not have that information" in llm_output:
-            # Let the model rethink
-            return
+        if tries < 4:
+            if "do not have that information" in llm_output:
+                # Let the model rethink
+                return
+            if " faces " in llm_output or " face "in llm_output:
+                # Let the model rethink
+                return
         # if tries != 1 and action_log:
         #     return
         return self.finish_tool_name, action_log
