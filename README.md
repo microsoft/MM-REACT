@@ -1,11 +1,29 @@
-# MM-REACT
+# MM-REACT: Prompting ChatGPT for Multimodal Reasoning and Action
 
-MM-REACT is multi-modal REACT
+## :fire: News
+* **[2023.03.21]** We build MM-REACT, a system paradigm that integrates ChatGPT with a pool of vision experts to achieve multimodal reasoning and action.
+* **[2023.03.21]** Feel free to explore various demo videos on our [website](https://multimodal-react.github.io/)!
 
-# 🦜️🔗 LangChain
+## :notes: Introduction
+![MM-REACT teaser](https://multimodal-react.github.io/images/teaser.png)
+MM-REACT allocates specialized vision experts with ChatGPT to solve challenging visual understanding tasks through multimodal reasoning and action.
 
-MM-REACT is bases on langchain.
-Please refer to [langchain](https://github.com/hwchase17/langchain) for documentation, support and additional license.
+### MM-ReAct Design
+![design](https://multimodal-react.github.io/images/model_figure_2.gif)
+* To enable the image as input, we simply use the file path as the input to ChatGPT. The file path functions as a placeholder, allowing ChatGPT to treat it as a black box.
+* Whenever a specific property, such as celebrity names or box coordinates, is required, ChatGPT is expected to seek help from a specific vision expert to identify the desired information.
+* The expert output is serialized as text and combined with the input to further activate ChatGPT.
+* If no external experts are needed, we directly return the response to the user.
+
+## Getting Started
+MM-REACT code is bases on langchain.
+
+Please refer to [langchain](https://github.com/hwchase17/langchain) for [instructions on installation](https://github.com/hwchase17/langchain#quick-install) and [documentation](https://github.com/hwchase17/langchain#-documentation).
+
+## Acknowledgement
+
+We are highly inspired by [langchain](https://github.com/hwchase17/langchain).
+
 
 ## Contributing
 
