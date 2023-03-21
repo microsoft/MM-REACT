@@ -139,16 +139,15 @@ class AssistantAgent(Agent):
                 return self.finish_tool_name, "Please provide the image url at the end."
             if not action and is_face:
                 action = "Celebrity Understanding"
-            if not action and tries < 4:
-                # Let the model rethink
-                return
+            if not action:
+                if tries < 4:
+                    # Let the model rethink
+                    return
+                return self.finish_tool_name, action_input
             return action, action_input
         action_log = llm_output.strip()
         if tries < 4:
             if "do not have that information" in llm_output:
-                # Let the model rethink
-                return
-            if " faces " in llm_output or " face "in llm_output:
                 # Let the model rethink
                 return
         return self.finish_tool_name, action_log

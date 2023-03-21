@@ -13,13 +13,14 @@ For example to ask about an image that likely has OCR text (e.g. text, stamp, cu
 For example to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
-Make sure to provide Assistant with a concise description and a task that Assistant can handle.
+Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle. 
+Summerize the observations at the end.
 For example:
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
-This is a business card image
-<|im_sep|>{ai_prefix}
+1.This is a business card image
+2.This is an image with text
 Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 This image contains text
@@ -31,16 +32,16 @@ Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
 <|im_sep|>{ai_prefix}
-This is your business card belonging to Jake ...
+1. This is your business card belonging to Jake ... with email
+To summerize, this is your business card with details such as ...
 <|im_end|>
-EXAMPLE END
 
-Elaborate on the Assistant's response. Aggregate information about the last image.
 For example:
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
+1. This is an image
+Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Image description is: a group of men playing football.
 
@@ -56,7 +57,8 @@ football
 soccer
 
 <|im_sep|>{ai_prefix}
-This is a group of men playing football kicking a soccer ball
+1. This is a group of men playing football kicking a soccer ball ...
+To summerize, ...
 <|im_end|>
 
 In this image 1476, 993 is the x, y coordinate of soccer ball
@@ -69,17 +71,14 @@ For example:
 <|im_start|>Human
 Apple is my favourite fruit :--)
 <|im_sep|>{ai_prefix}
-This is not an image.
-<|im_sep|>{ai_prefix}
+1. This is not an image.
 I am glad you are happy about it
 <|im_end|>
 <|im_start|>Human
 What is the most expensive type of my favourite fruit in the US?
 <|im_sep|>{ai_prefix}
-I do not have that information.
-<|im_sep|>{ai_prefix}
-This question requires Bing search. 
-<|im_sep|>{ai_prefix}
+1. I do not have that information.
+2. This question requires Bing search. 
 Assistant, Bing search what is the most expensive apple in the US?
 <|im_end|>
 EXAMPLE END
@@ -87,9 +86,8 @@ EXAMPLE END
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
-This is an image with text.
-<|im_sep|>{ai_prefix}
-Assistant, what is the OCR texts in this image?  https://i.ibb.co/YJbmKg4/somX1.png
+1. This is an image with text.
+Assistant, what is the OCR texts in this image? https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 This image contains handwritten text
 
@@ -98,14 +96,16 @@ List of OCR texts (words) seen in this image:
 1/sqrt(9)=
 
 <|im_sep|>{ai_prefix}
-There are two simple equations in the image in the form of ....
+1. There are two simple equations hand written in the image in the form of ....
+To summerize, the result of the ...
 <|im_end|>
 
 
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+1. This is an image. 
+Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
 
@@ -125,20 +125,27 @@ Detected faces, and their location in this image:
 man 59 100
 
 <|im_sep|>{ai_prefix}
-A man is playing with a dog in a zoo likely in front of a dolphine
-<|im_sep|>{ai_prefix}
-There is a face detected in this image of a man.
-<|im_sep|>{ai_prefix}
+1. A man is playing with a dog in a zoo likely in front of a dolphine
+2. There is a face of a man detected in this image.
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
-<|im_end|>
-EXAMPLE END
+<|im_sep|>Assistant
+This image contains celebrities
 
-Elaborate on the Assistant's response. Aggregate information about the last image.
-For example:
+List of celebrities, and their location in this image:
+Brad Pitt 60 100
+<|im_sep|>{ai_prefix}
+1. The only celebrity detected is Brad Pitt
+2. He is the man playing with the dog
+3. He is likely located in the 60, 100 coordinate
+4. He is playing with his dog, located in 11, 99
+To summerize, Brad Pitt playing in a zoo with his dog and a dolphine in the background
+<|im_end|>
+
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+1. This is an image. 
+Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Image description is: a bottle of medicine.
 
@@ -152,10 +159,8 @@ pills
 text
 prescription instructions
 <|im_sep|>{ai_prefix}
-This image is likely a pill bottle with labels and is related to heart
-<|im_sep|>{ai_prefix}
-Let me see what is the text in the image
-<|im_sep|>{ai_prefix}
+1. This image is likely a pill bottle with labels and is related to heart
+2. Let me read text this image
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This image contains text
@@ -165,23 +170,23 @@ SPRING VALLEY.
 Supports Health
 SUPPLEMENT
 <|im_sep|>{ai_prefix}
-This is heart medicine supplement pills in a bottle by SPRING VALLEY
+1. A bottle of heart medicine from SPRING VALLEY ...
+To summerize, this is heart medicine bottle of supplement pills by SPRING VALLEY
 <|im_end|>
 <|im_start|>Human
 where can I buy this medicine? and how much is the price in Euros?
 <|im_sep|>{ai_prefix}
-I do not have that information.
-<|im_sep|>{ai_prefix}
-This question requires Bing search. 
-<|im_sep|>{ai_prefix}
+1. I do not have that information.
+2. This question requires Bing search. 
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
-<|im_end|>
+<|im_sep|>
 EXAMPLE END
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_sep|>{ai_prefix}
-This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+1. This is an image. 
+Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 Image description is: black and white text on a receipt
 
@@ -190,23 +195,18 @@ This image contains object tags
 List of object tags seen in this image:
 text
 <|im_sep|>{ai_prefix}
-This image is likely a receipt or ticket.
-<|im_sep|>{ai_prefix}
-Reading the label requires OCR
-<|im_sep|>{ai_prefix}
+1. This image is likely a receipt or ticket.
+2. Reading the label requires OCR
 Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
-<|im_end|>
-
+<|im_sep|>
 EXAMPLE END
 """
 SUFFIX = """
 
 <|im_start|>Human
-Check if there is a question after NEW INPUT
-<|im_sep|>Human
-Answer using the information in conversation up to NEW INPUT
-<|im_sep|>Human
-Ask Assistant with a task when needed
+1. Check if there is a question after NEW INPUT
+2. Answer using the information in conversation up to NEW INPUT
+3. Ask Assistant with a task when needed
 <|im_end|>
 
 {chat_history}
