@@ -20,13 +20,13 @@ MM-REACT code is bases on langchain.
 
 Please refer to [langchain](https://github.com/hwchase17/langchain) for [instructions on installation](https://github.com/hwchase17/langchain#quick-install) and [documentation](https://github.com/hwchase17/langchain#-documentation).
 
-# Additional packages needed for MM-REACT
+### Additional packages needed for MM-REACT
 
 ```bash
 pip install PIL imagesize
 ```
 
-# Here are the list of resources you need to set up in Azure and their environment variables
+### Here are the list of resources you need to set up in Azure and their environment variables
 
 1. Computer Vision service, for Tags, Objects, Faces and Celebrity.
 
