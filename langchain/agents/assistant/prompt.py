@@ -125,9 +125,9 @@ Detected faces, and their location in this image:
 man 59 100
 
 <|im_sep|>{ai_prefix}
-A man is playing with a dog in a zoo likely having a dolphine
+A man is playing with a dog in a zoo likely with a dolphine.
 <|im_sep|>{ai_prefix}
-There is a face detected in this image of a man.
+There is a man's face detected in this image
 <|im_sep|>{ai_prefix}
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>

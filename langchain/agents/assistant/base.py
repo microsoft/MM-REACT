@@ -94,6 +94,7 @@ class AssistantAgent(Agent):
         llm_output = self._fix_chatgpt(llm_output)
         photo_editing = "photo edit" in llm_output or "image edit" in llm_output
         is_table = " table" in llm_output
+        is_face = "facial recognition" in llm_output
         cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx >= 0:
             cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
@@ -133,8 +134,16 @@ class AssistantAgent(Agent):
                 action_input = action_input[:-1].strip()
             if not action_input:
                 return self.finish_tool_name, "Please provide the image url at the end."
+            if not action and is_face:
+                action = "Celebrity Understanding"
+            if not action and tries < 4:
+                # Let the model rethink
+                return
             return action, action_input
         action_log = llm_output.strip()
+        if "do not have that information" in llm_output:
+            # Let the model rethink
+            return
         # if tries != 1 and action_log:
         #     return
         return self.finish_tool_name, action_log
