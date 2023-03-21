@@ -225,8 +225,87 @@ class Chain(BaseModel, ABC):
         """Call the chain on all inputs in the list."""
         return [self(inputs) for inputs in input_list]
 
+    def conversation(self, *args: str, **kwargs: str) -> List[str]:
+        """Run the chain as text in, text out or multiple variables, text out."""
+        if len(self.output_keys) == 2:
+            assert "output" in self.output_keys and "intermediate_steps" in self.output_keys
+            keep_short = False
+            if "keep_short" in kwargs:
+                keep_short = kwargs.pop("keep_short")
+            outputs = {}
+            if args and not kwargs:
+                if len(args) != 1:
+                    raise ValueError("`run` supports only one positional argument.")
+                outputs = self(args[0])
+            if kwargs and not args:
+                outputs = self(kwargs)
+            intermediate = outputs.get("intermediate_steps") or []
+            conversation = []
+            for action, action_output in intermediate:
+                action: str = action.log.strip()
+                if not action.startswith(f"AI:"):
+                    action = f"AI: {action}"
+                if keep_short:
+                    # Hide the internal conversation
+                    lines = action.split("\n")
+                    new_lines = []
+                    for l in lines:
+                        for term in [" Let me ask for ", " Let me find if ", " Assistant,"]:
+                            idx = l.lower().find(term.lower())
+                            if idx >= 0:
+                                l = l[:idx]
+                                if l.lower().strip() == "ai:":
+                                    l = ""
+                        if not l:
+                            continue
+                        new_lines.append(l)
+                    action = "\n".join(new_lines)
+                conversation.append(action)
+                if not keep_short or action_output.lstrip().startswith("Here is the edited image"):
+                    conversation.append(f"Assistant: {action_output}")
+            conversation.append("AI: " + outputs["output"])
+            return conversation
+
+        if len(self.output_keys) != 1:
+            raise ValueError(
+                f"`run` not supported when there is not exactly "
+                f"one output key. Got {self.output_keys}."
+            )
+
+        if args and not kwargs:
+            if len(args) != 1:
+                raise ValueError("`run` supports only one positional argument.")
+            return ["AI: " + self(args[0])[self.output_keys[0]]]
+
+        if kwargs and not args:
+            return ["AI: " + self(kwargs)[self.output_keys[0]]]
+
+        raise ValueError(
+            f"`run` supported with either positional arguments or keyword arguments"
+            f" but not both. Got args: {args} and kwargs: {kwargs}."
+        )
+
     def run(self, *args: str, **kwargs: str) -> str:
         """Run the chain as text in, text out or multiple variables, text out."""
+        if len(self.output_keys) == 2:
+            assert "output" in self.output_keys and "intermediate_steps" in self.output_keys
+            outputs = {}
+            if args and not kwargs:
+                if len(args) != 1:
+                    raise ValueError("`run` supports only one positional argument.")
+                outputs = self(args[0])
+            if kwargs and not args:
+                outputs = self(kwargs)
+            intermediate = outputs.get("intermediate_steps") or []
+            assistant = ""
+            for action, action_output in intermediate:
+                action: str = action.log.strip()
+                if not action.startswith(f"AI:"):
+                    action = f"AI: {action}"
+                action_output = f"Assistant: {action_output}"
+                assistant += "\n" + action + "\n" + action_output
+            return assistant + "\n" + "AI: " + outputs["output"]
+            
         if len(self.output_keys) != 1:
             raise ValueError(
                 f"`run` not supported when there is not exactly "

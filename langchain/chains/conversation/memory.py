@@ -78,11 +78,13 @@ class ConversationBufferMemory(Memory, BaseModel):
 
     human_prefix: str = "Human"
     ai_prefix: str = "AI"
+    assistant_prefix: str = "Assistant"
     """Prefix to use for AI generated responses."""
     buffer: str = ""
     output_key: Optional[str] = None
     input_key: Optional[str] = None
     memory_key: str = "history"  #: :meta private:
+    output_intermediate: Optional[str] = "intermediate_steps"
 
     @property
     def memory_variables(self) -> List[str]:
@@ -103,14 +105,32 @@ class ConversationBufferMemory(Memory, BaseModel):
         else:
             prompt_input_key = self.input_key
         if self.output_key is None:
-            if len(outputs) != 1:
+            if len(outputs) == 1:
+                output_key = list(outputs.keys())[0]
+            elif len(outputs) == 2:
+                output_key = "output"
+                assert self.output_intermediate in outputs and output_key in outputs, "output or output_intermediate not present"
+            else:
                 raise ValueError(f"One output key expected, got {outputs.keys()}")
-            output_key = list(outputs.keys())[0]
         else:
             output_key = self.output_key
-        human = f"{self.human_prefix}: " + inputs[prompt_input_key]
+        new_input = inputs[prompt_input_key]
+        # if new_input.startswith("http://0.0.0.0"):
+        #     self.clear()
+        human = new_input
+        prefix = f"{self.human_prefix}: "
+        if not human.startswith(prefix):
+            human = prefix + new_input
         ai = f"{self.ai_prefix}: " + outputs[output_key]
-        self.buffer += "\n" + "\n".join([human, ai])
+        assistant = ""
+        intermediate = outputs.get(self.output_intermediate) or []
+        for action, action_output in intermediate:
+            action: str = action.log.strip()
+            if not action.startswith(f"{self.ai_prefix}:"):
+                action = f"{self.ai_prefix}: {action}"
+            action_output = f"{self.assistant_prefix}: {action_output}"
+            assistant += "\n" + action + "\n" + action_output
+        self.buffer += "\n" + "\n".join([human, assistant, ai])
 
     def clear(self) -> None:
         """Clear memory contents."""

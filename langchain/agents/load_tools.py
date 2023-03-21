@@ -15,6 +15,7 @@ from langchain.tools.base import BaseTool
 from langchain.tools.bing_search.tool import BingSearchRun
 from langchain.tools.google_search.tool import GoogleSearchResults, GoogleSearchRun
 from langchain.tools.wolfram_alpha.tool import WolframAlphaQueryRun
+from langchain.tools.imun.tool import ImunRun
 from langchain.utilities.bash import BashProcess
 from langchain.utilities.bing_search import BingSearchAPIWrapper
 from langchain.utilities.google_search import GoogleSearchAPIWrapper
@@ -22,6 +23,7 @@ from langchain.utilities.google_serper import GoogleSerperAPIWrapper
 from langchain.utilities.searx_search import SearxSearchWrapper
 from langchain.utilities.serpapi import SerpAPIWrapper
 from langchain.utilities.wolfram_alpha import WolframAlphaAPIWrapper
+from langchain.utilities.imun import ImunAPIWrapper
 
 
 def _get_python_repl() -> BaseTool:
@@ -164,6 +166,9 @@ def _get_bing_search(**kwargs: Any) -> BaseTool:
     return BingSearchRun(api_wrapper=BingSearchAPIWrapper(**kwargs))
 
 
+def _get_imun(**kwargs: Any) -> BaseTool:
+    return ImunRun(api_wrapper=ImunAPIWrapper(**kwargs))
+
 _EXTRA_LLM_TOOLS = {
     "news-api": (_get_news_api, ["news_api_key"]),
     "tmdb-api": (_get_tmdb_api, ["tmdb_bearer_token"]),
@@ -180,6 +185,7 @@ _EXTRA_OPTIONAL_TOOLS = {
     "google-serper": (_get_google_serper, ["serper_api_key"]),
     "serpapi": (_get_serpapi, ["serpapi_api_key", "aiosession"]),
     "searx-search": (_get_searx_search, ["searx_host"]),
+    "imun": (_get_imun, ["imun_subscription_key", "imun_url"]),
 }
 
 
