@@ -1,3 +1,5 @@
+.vscode/
+.idea/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -76,6 +78,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+notebooks/
 
 # IPython
 profile_default/
@@ -104,6 +107,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venvs
 env/
 venv/
 ENV/
@@ -127,3 +131,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# macOS display setting files
+.DS_Store
