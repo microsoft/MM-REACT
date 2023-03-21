@@ -80,7 +80,6 @@ What is the most expensive type of my favourite fruit in the US?
 1. I do not have that information.
 2. This question requires Bing search. 
 Assistant, Bing search what is the most expensive apple in the US?
-<|im_end|>
 EXAMPLE END
 
 <|im_start|>Human
@@ -178,7 +177,6 @@ where can I buy this medicine? and how much is the price in Euros?
 1. I do not have that information.
 2. This question requires Bing search. 
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
-<|im_sep|>
 EXAMPLE END
 
 <|im_start|>Human
@@ -197,7 +195,6 @@ text
 1. This image is likely a receipt or ticket.
 2. Reading the label requires OCR
 Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
-<|im_sep|>
 EXAMPLE END
 """
 SUFFIX = """
