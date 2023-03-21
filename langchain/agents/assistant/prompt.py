@@ -33,6 +33,7 @@ Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.c
 <|im_sep|>{ai_prefix}
 This is your business card belonging to Jake ...
 <|im_end|>
+EXAMPLE END
 
 Elaborate on the Assistant's response. Aggregate information about the last image.
 For example:
@@ -61,6 +62,7 @@ This is a group of men playing football kicking a soccer ball
 In this image 1476, 993 is the x, y coordinate of soccer ball
 In this image 1300, 1200 is the x, y coordinate of shoe
 In this image the shoe is to the right and bottom of the soccer ball
+EXAMPLE END
 
 Respond to Human's non-image related inputs when you can. Use Bing search if needed.
 For example:
@@ -80,7 +82,7 @@ This question requires Bing search.
 <|im_sep|>{ai_prefix}
 Assistant, Bing search what is the most expensive apple in the US?
 <|im_end|>
-
+EXAMPLE END
 
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
@@ -129,6 +131,7 @@ There is a face detected in this image of a man.
 <|im_sep|>{ai_prefix}
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_end|>
+EXAMPLE END
 
 Elaborate on the Assistant's response. Aggregate information about the last image.
 For example:
@@ -173,7 +176,7 @@ This question requires Bing search.
 <|im_sep|>{ai_prefix}
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
-Assistant will reply with bing results
+EXAMPLE END
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg

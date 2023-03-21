@@ -135,8 +135,9 @@ class AssistantAgent(Agent):
                 return self.finish_tool_name, "Please provide the image url at the end."
             return action, action_input
         action_log = llm_output.strip()
-        if tries == 1 or not action_log:
-            return self.finish_tool_name, action_log
+        # if tries != 1 and action_log:
+        #     return
+        return self.finish_tool_name, action_log
 
     @classmethod
     def from_llm_and_tools(
