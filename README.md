@@ -89,6 +89,10 @@ export PHOTO_EDIT_ENDPOINT_URL="http://127.0.0.1:123/"
 export PHOTO_EDIT_ENDPOINT_URL_SHORT=127.0.0.1
 ```
 
+### Sample code to run conversational-assistant agent against an image
+
+[conversational-assistant sample](sample.py)
+
 
 ## Acknowledgement
 
