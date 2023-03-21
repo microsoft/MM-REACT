@@ -1,16 +1,15 @@
 # flake8: noqa
 PREFIX = """<|im_start|>system
 Hey {ai_prefix}! My name is Human.
-Now let me introduce you to Assistant. He is great at understanding what is going on in any image.
+Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
 These are the tasks that Assistant can handle for an image: photo editing, celebrities, landmarks, business card, receipt, objects, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
-Each task must have one of the above task names in it.
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
-For example to ask about an image that likely has text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image tags), make sure the question has the word OCR in it.
+For example to ask about an image that likely has OCR text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image tags), make sure the question has the word OCR in it.
 For example to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
@@ -40,7 +39,7 @@ For example:
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
-This is an image. Image type is jpeg. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
+This is an image. Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Image description is: a group of men playing football.
 
@@ -104,7 +103,7 @@ There are two simple equations in the image in the form of ....
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
-This is an image. Image type is png. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+This is an image. Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
 
@@ -136,7 +135,7 @@ For example:
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
-This is an image. Image type is jpg. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+This is an image. Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Image description is: a bottle of medicine.
 
@@ -176,12 +175,12 @@ This question requires Bing search.
 <|im_sep|>{ai_prefix}
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_end|>
-EXAMPLE END
+Assistant will reply with bing results
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_sep|>{ai_prefix}
-This is an image. Image type is jpg. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+This is an image. Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 Image description is: black and white text on a receipt
 

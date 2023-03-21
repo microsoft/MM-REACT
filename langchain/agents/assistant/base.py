@@ -70,10 +70,12 @@ class AssistantAgent(Agent):
         lines = text.split("\n")
         new_lines = []
         for l in lines:
-            term = "Is there anything else "
-            idx = text.find(term)
-            if idx >= 0:
-                l = l[:idx]
+            l_lower = l.lower()
+            for term in ["is there anything else I ", "or is there something else I "]:
+                idx = l_lower.find(term)
+                if idx >= 0:
+                    l = l[:idx]
+                    break
             if not l:
                 continue
             new_lines.append(l)
