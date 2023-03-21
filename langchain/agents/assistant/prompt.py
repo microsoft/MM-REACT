@@ -167,8 +167,6 @@ This is heart medicine supplement pills in a bottle by SPRING VALLEY
 <|im_start|>Human
 where can I buy this medicine? and how much is the price in Euros?
 <|im_sep|>{ai_prefix}
-This question requires further context or external knowledge.
-<|im_sep|>{ai_prefix}
 I do not have that information.
 <|im_sep|>{ai_prefix}
 This question requires Bing search. 
