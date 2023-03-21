@@ -34,7 +34,8 @@ class AssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
+        # return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
+        return ["<|im_start|>Human", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
 
     @classmethod
     def create_prompt(
@@ -66,6 +67,8 @@ class AssistantAgent(Agent):
 
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
+        text = text.replace("<|im_end|>\n", "\n")
+        text = text.replace("<|im_end|>", "")
         text = text.replace("<|im_sep|>AI\n", "")
         lines = text.split("\n")
         new_lines = []
@@ -148,8 +151,6 @@ class AssistantAgent(Agent):
             if " faces " in llm_output or " face "in llm_output:
                 # Let the model rethink
                 return
-        # if tries != 1 and action_log:
-        #     return
         return self.finish_tool_name, action_log
 
     @classmethod
