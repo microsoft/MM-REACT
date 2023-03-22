@@ -13,8 +13,8 @@ For example to ask about an image that likely has OCR text (e.g. text, stamp, cu
 For example to ask about the identity of famous people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
-Gather your thoughts and observations and deductions in a list.
-Finally ask Assistant if needed with a task it can handle
+Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
+Finally summerize the information.
 For example:
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
@@ -157,7 +157,7 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. Let me read the text in this image
+2. This is an image with text
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This image contains text
@@ -192,7 +192,7 @@ List of object tags seen in this image:
 text
 <|im_sep|>{ai_prefix}
 1. This image is likely a receipt or ticket.
-2. Reading the label requires OCR
+2. This is an image with text
 Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
 EXAMPLE END
 """
