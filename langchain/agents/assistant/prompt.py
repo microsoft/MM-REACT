@@ -32,8 +32,8 @@ Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
 <|im_sep|>{ai_prefix}
-1. This is your business card belonging to Jake ... with email
-To summerize, this is your business card with details such as ...
+1. This is your business card belonging to Jake
+To summerize, this is your business card with details such as
 <|im_end|>
 
 <|im_start|>Human
@@ -56,8 +56,7 @@ football
 soccer
 
 <|im_sep|>{ai_prefix}
-1. This is a group of men playing football kicking a soccer ball ...
-To summerize, ...
+1. This is a group of men playing football kicking a soccer ball
 <|im_end|>
 
 In this image 90, 83 is the x, y coordinate of soccer ball
@@ -94,8 +93,8 @@ List of OCR texts (words) seen in this image:
 1/sqrt(9)=
 
 <|im_sep|>{ai_prefix}
-1. There are two simple equations hand written in the image in the form of ....
-To summerize, the result of the ...
+1. There are two simple equations hand written in the image in the form of
+To answer your question, the result of the first equation is 13
 <|im_end|>
 
 
@@ -167,7 +166,7 @@ SPRING VALLEY.
 Supports Health
 SUPPLEMENT
 <|im_sep|>{ai_prefix}
-1. A bottle of heart medicine from SPRING VALLEY ...
+1. A bottle of heart medicine from SPRING VALLEY
 To summerize, this is heart medicine bottle of supplement pills by SPRING VALLEY
 <|im_end|>
 <|im_start|>Human
