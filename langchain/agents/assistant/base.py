@@ -128,9 +128,13 @@ class AssistantAgent(Agent):
             elif "objects" in sub_cmd:
                 action = "Image Understanding"
             if not action_input:
-                if cmd.endswith("?") and not action:
-                    # if no image and no action
-                    return "Bing Search" , cmd       
+                if not action:
+                    if cmd.endswith("?"):
+                        # if no image and no action
+                        return "Bing Search" , cmd       
+                    if tries < 4:
+                        # Let the model rethink
+                        return
                 return self.finish_tool_name, "Please provide the image url at the end."
             if not action and is_face:
                 action = "Celebrity Understanding"
