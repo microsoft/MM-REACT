@@ -179,7 +179,8 @@ To summerize, this is heart medicine bottle of supplement pills by SPRING VALLEY
 where can I buy this medicine? and how much is the price in Euros?
 <|im_sep|>{ai_prefix}
 1. I do not have that information.
-2. This question requires Bing search. 
+2. This question requires further context.
+3. This question requires Bing search. 
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 EXAMPLE END
 
