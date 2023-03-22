@@ -74,7 +74,8 @@ For example:
 <|im_start|>Human
 Apple is my favourite fruit :--)
 <|im_sep|>{ai_prefix}
-1. This is not an image.
+1. This is not an image
+2. I keep this in mind
 I am glad you are happy about it
 <|im_end|>
 <|im_start|>Human
