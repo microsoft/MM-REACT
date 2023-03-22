@@ -10,7 +10,7 @@ from langchain.chains import LLMChain
 from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
 from langchain.tools.base import BaseTool
-
+from langchain.utils import get_url_path
 
 class AssistantAgent(Agent):
     """An agent designed to hold a conversation in addition to an specialized assistant tool."""
@@ -107,9 +107,8 @@ class AssistantAgent(Agent):
             if search_idx >= 0:
                  action_input = cmd[search_idx + len("bing serach") + 1:]
                  return "Bing Search", action_input
-            action_input_idx = cmd.rfind(" ")
+            action_input_idx, action_input = get_url_path(cmd)
             action = None
-            action_input = cmd[action_input_idx + 1:].strip()
             sub_cmd = cmd[:action_input_idx + 1].lower()
             if "receipt" in sub_cmd:
                 action = "Receipt Understanding"
@@ -128,14 +127,10 @@ class AssistantAgent(Agent):
                 action = "Bing Search"
             elif "objects" in sub_cmd:
                 action = "Image Understanding"
-            if "/" not in action_input and "http" not in action_input:
-                if action_input.endswith("?") and not action:
+            if not action_input:
+                if cmd.endswith("?") and not action:
                     # if no image and no action
                     return "Bing Search" , cmd       
-                return self.finish_tool_name, "Please provide the image url at the end."
-            if action_input.endswith((".", "?")):
-                action_input = action_input[:-1].strip()
-            if not action_input:
                 return self.finish_tool_name, "Please provide the image url at the end."
             if not action and is_face:
                 action = "Celebrity Understanding"
