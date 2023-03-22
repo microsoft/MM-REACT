@@ -10,11 +10,11 @@ For example to ask about an image without any description, make sure the questio
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example to ask about an image that likely has OCR text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image tags), make sure the question has the word OCR in it.
-For example to ask about the identity of people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
+For example to ask about the identity of famous people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
-Gather your thoughts and observations and deductions in a list then if needed ask Assistant with tasks it can handle. 
-Summerize the observations at the end.
+Gather your thoughts and observations and deductions in a list.
+Finally ask Assistant if needed with a task it can handle
 For example:
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
@@ -36,7 +36,6 @@ Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.c
 To summerize, this is your business card with details such as ...
 <|im_end|>
 
-For example:
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
@@ -48,8 +47,8 @@ Image description is: a group of men playing football.
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
-soccer ball 1476 993
-shoe 1300 1200
+soccer ball 90 83
+shoe 95 88
 
 List of object tags seen in this image:
 athletic game
@@ -61,8 +60,8 @@ soccer
 To summerize, ...
 <|im_end|>
 
-In this image 1476, 993 is the x, y coordinate of soccer ball
-In this image 1300, 1200 is the x, y coordinate of shoe
+In this image 90, 83 is the x, y coordinate of soccer ball
+In this image 95, 88 is the x, y coordinate of shoe
 In this image the shoe is to the right and bottom of the soccer ball
 EXAMPLE END
 
@@ -136,7 +135,7 @@ Brad Pitt 60 99
 1. The only celebrity detected is Brad Pitt
 2. He is likely the man playing with the dog
 3. He is located around the 60, 99 coordinate
-To summerize, Brad Pitt happily playing in a zoo with his dog and a dolphine in the background
+To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in the background
 <|im_end|>
 
 <|im_start|>Human
@@ -158,7 +157,7 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. Let me read text this image
+2. Let me read the text in this image
 Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This image contains text

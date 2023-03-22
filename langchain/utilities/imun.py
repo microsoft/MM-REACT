@@ -195,8 +195,12 @@ def _handle_error(response):
         pass
     response.raise_for_status()
 
-def _concat_objects(objects: List) -> str:
-    # objects = [f'{n} {v[0]} {v[1]} {v[2]} {v[3]}' for (n, v) in objects]
+def _concat_objects(objects: List, size=None) -> str:
+    width = height = 1
+    if size:
+        width, height = size["width"], size["height"]
+    # normalize if size given
+    objects = [(n, [(100 * v[0]) // width, (100 * v[1]) // height]) for (n, v) in objects]
     objects = [f'{n} {v[0]} {v[1]}' for (n, v) in objects]
     return "\n".join(objects)
 
@@ -290,13 +294,14 @@ def create_prompt(results: Dict) -> str:
             return answer + "Did not find any celebrities in this image"
         return answer + "This image is too blurry"
     
+    size = results.get("size")
     if objects and captions:
-        answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(_merge_objects(objects, captions)))
+        answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(_merge_objects(objects, captions), size=size))
     else:
         if captions:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(captions))
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(captions, size=size))
         if objects:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(objects))
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(objects, size=size))
     if tags:
         answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
     if words:
@@ -308,9 +313,9 @@ def create_prompt(results: Dict) -> str:
             elif len(langs) > 1 or languages[0] != "en":
                 answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
     if faces:
-        answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces))
+        answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces, size=size))
     if celebrities:
-        answer += IMUN_PROMPT_CELEBS.format(celebs=_concat_objects(celebrities))
+        answer += IMUN_PROMPT_CELEBS.format(celebs=_concat_objects(celebrities, size=size))
     return answer
 
 
