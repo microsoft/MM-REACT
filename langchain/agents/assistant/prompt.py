@@ -9,7 +9,7 @@ If the task does not fit any of the above, make sure the question has the word o
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
-For example to ask about an image that likely has text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the tags), make sure the question has the word OCR in it.
+For example to ask about an image that likely has text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan, sign in the tags), make sure the question has the word OCR in it.
 For example to ask about the identity of famous people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
@@ -66,9 +66,9 @@ soccer
 1. This is a group of men playing football kicking a soccer ball
 <|im_end|>
 
-In this image 90, 83 is the x, y coordinate of soccer ball
-In this image 95, 88 is the x, y coordinate of shoe
-In this image the shoe is to the right and bottom of the soccer ball
+In this image 90, 83 is the x, y cartesian coordinate of soccer ball
+In this image 95, 88 is the x, y cartesian coordinate of shoe
+In this image the soccer ball is located to the left and bottom of the shoe
 EXAMPLE END
 
 Respond to Human's non-image related inputs when you can. Use Bing search if needed.
@@ -117,8 +117,8 @@ Image description is: a dog playing with a man.
 This image contains objects and their descriptions, object tags, faces
 
 List of object descriptions, and their location in this image:
-dog 11 99
-happy person 60 99
+dog 11 50
+happy person 40 65
 
 List of object tags seen in this image:
 animal
@@ -127,7 +127,7 @@ dolphine
 person
 
 Detected faces, and their location in this image:
-man 60 99
+man 40 90
 
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
@@ -137,11 +137,10 @@ Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY0
 This image contains celebrities
 
 List of celebrities, and their location in this image:
-Brad Pitt 60 99
+Brad Pitt 40 90
 <|im_sep|>{ai_prefix}
 1. The only celebrity detected is Brad Pitt
 2. He is likely the man playing with the dog
-3. He is located around the 60, 99 coordinate
 To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in the background
 <|im_end|>
 
@@ -210,7 +209,7 @@ SUFFIX = """
 <|im_start|>Human
 1. Check if there is a question after NEW INPUT
 2. Answer using the information in conversation up to NEW INPUT
-3. Ask Assistant with a task when needed
+3. Ask Assistant with a task it can handle if needed
 <|im_end|>
 
 {chat_history}

@@ -195,12 +195,23 @@ def _handle_error(response):
         pass
     response.raise_for_status()
 
-def _concat_objects(objects: List, size=None) -> str:
-    width = height = 1
+def _cartesian_center(v:List[int], size=None) -> List[int]:
     if size:
-        width, height = size["width"], size["height"]
-    # normalize if size given
-    objects = [(n, [(100 * v[0]) // width, (100 * v[1]) // height]) for (n, v) in objects]
+        image_width, image_height = size["width"], size["height"]
+    else:
+        image_width = image_height = max(v)
+
+    width = v[2] - v[0]
+    height = v[3] - v[1]
+    # Use center of the box
+    x = v[0] + width // 2
+    y = v[1] + height // 2
+    y = image_height - v[1]
+    return [(100 * x) // image_width, (100 * y) // image_height]
+
+def _concat_objects(objects: List, size=None) -> str:
+    # normalize if size given, cartesian 
+    objects = [(n, _cartesian_center(v, size)) for (n, v) in objects]
     objects = [f'{n} {v[0]} {v[1]}' for (n, v) in objects]
     return "\n".join(objects)
 

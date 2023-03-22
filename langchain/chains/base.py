@@ -261,7 +261,8 @@ class Chain(BaseModel, ABC):
                         new_lines.append(l)
                     action = "\n".join(new_lines)
                 conversation.append(action)
-                if not keep_short or action_output.lstrip().startswith("Here is the edited image"):
+                # Keep this
+                if not keep_short or " edited image" in action_output.lstrip():
                     conversation.append(f"Assistant: {action_output}")
             conversation.append("AI: " + outputs["output"])
             return conversation
