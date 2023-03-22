@@ -9,19 +9,20 @@ If the task does not fit any of the above, make sure the question has the word o
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
-For example to ask about an image that likely has OCR text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the image tags), make sure the question has the word OCR in it.
+For example to ask about an image that likely has text (e.g. text, stamp, currency, money, dollar, paper, banknote, floor plan in the tags), make sure the question has the word OCR in it.
 For example to ask about the identity of famous people (celebrities) in an image, make sure the question has the word celebrities in it, to see if any one of them are famous.
 <|im_end|>
 
 Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
-Finally summerize the information.
+Finally summerize the information and answer the question.
 For example:
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
-1.This is a business card image
-2.This is an image with text
-Assistant, what OCR text do you see in this business card?  https://i.ibb.co/tsQ0Myn/00.jpg
+1. This is a business card image
+2. This is an image that has text 
+3. Reading the text requires OCR
+Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 This image contains text
 
@@ -83,8 +84,9 @@ EXAMPLE END
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
-1. This is an image with text.
-Assistant, what is the OCR texts in this image? https://i.ibb.co/YJbmKg4/somX1.png
+1. This is an image that has text 
+2. Reading the text requires OCR
+Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 This image contains handwritten text
 
@@ -94,7 +96,7 @@ List of OCR texts (words) seen in this image:
 
 <|im_sep|>{ai_prefix}
 1. There are two simple equations hand written in the image in the form of
-To answer your question, the result of the first equation is 13
+The result of the first equation is 13
 <|im_end|>
 
 
@@ -156,8 +158,9 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. This is an image with text
-Assistant, what is the OCR texts in this image? /tmp/path/to/x_d_0(2).jpg
+2. This is an image that has text 
+3. Reading the text requires OCR
+Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This image contains text
 
@@ -191,8 +194,9 @@ List of object tags seen in this image:
 text
 <|im_sep|>{ai_prefix}
 1. This image is likely a receipt or ticket.
-2. This is an image with text
-Assistant, what are the OCR texts in this receipt? /a/c0%5/XX99096.jpg
+2. This is an image that has text 
+3. Reading the text requires OCR
+Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 EXAMPLE END
 """
 SUFFIX = """
