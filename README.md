@@ -3,6 +3,7 @@
 ## :fire: News
 * **[2023.03.21]** We build MM-REACT, a system paradigm that integrates ChatGPT with a pool of vision experts to achieve multimodal reasoning and action.
 * **[2023.03.21]** Feel free to explore various demo videos on our [website](https://multimodal-react.github.io/)!
+* **[2023.03.21]** Try our [live demo](https://huggingface.co/spaces/microsoft-cognitive-service/mm-react)!
 
 ## :notes: Introduction
 ![MM-REACT teaser](https://multimodal-react.github.io/images/teaser.png)
@@ -98,6 +99,16 @@ export PHOTO_EDIT_ENDPOINT_URL_SHORT=127.0.0.1
 
 We are highly inspired by [langchain](https://github.com/hwchase17/langchain).
 
+
+## Citation
+```
+@article{yang2023mmreact,
+  author      = {Zhengyuan Yang* and Linjie Li* and Jianfeng Wang* and Kevin Lin* and Ehsan Azarnasab* and Faisal Ahmed* and Zicheng Liu and Ce Liu and Michael Zeng and Lijuan Wang^},
+  title       = {MM-REACT: Prompting ChatGPT for Multimodal Reasoning and Action},
+  publisher   = {arXiv},
+  year        = {2023},
+}
+```
 
 ## Contributing
 
