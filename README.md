@@ -83,7 +83,7 @@ export OPENAI_API_KEY=
 
 Note: At the time of writing, we use and test against private endpoint. The public endpoint is now released and we plan to add support for it later.
 
-7. Photo editting local service
+7. Photo editing local service
 
 ```bash
 export PHOTO_EDIT_ENDPOINT_URL="http://127.0.0.1:123/"
