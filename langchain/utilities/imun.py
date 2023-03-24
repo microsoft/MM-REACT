@@ -113,8 +113,20 @@ def _is_handwritten(styles):
         handwritten = True
     return handwritten
 
-def _parse_document(analyzeResult):
-    content = analyzeResult["content"]
+def _parse_lines(analyzeResult:Dict[str])->Tuple[List[str],List[str]]:
+    lines = []
+    for idx, page in enumerate(analyzeResult["pages"]):
+        lines += [o["content"] for o in page["lines"]]
+    languages = []
+    for l in analyzeResult.get("languages") or []:
+        locale = l['locale']
+        if locale == 'en' or (l.get("confidence") or 0) > 0.9:
+            languages.append(locale)
+    
+    return lines, languages
+
+def _parse_document(analyzeResult:Dict[str])->List[str]:
+    content:str = analyzeResult["content"]
     new_total = False
     total = 0.0
     # remove extra newlines in the items
@@ -132,10 +144,10 @@ def _parse_document(analyzeResult):
         content += f"\nTotal amount {total}" 
     return content.split("\n")    
 
-def _parse_table(analyzeResult):
+def _parse_table(analyzeResult:Dict[str])->List[str]:
     found_table = False
     raw_content:str = analyzeResult["content"]
-    content = []
+    content:List[str] = []
     for table in analyzeResult["tables"]:
         row_count = table["rowCount"]
         col_count = table["columnCount"]
@@ -429,37 +441,31 @@ class ImunAPIWrapper(BaseModel):
         if "analyzeResult" in api_results:
             is_table = False
             is_document = False
+            analyzeResult = api_results["analyzeResult"]
             if "size" not in results:
-                for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
+                for idx, page in enumerate(analyzeResult["pages"]):
                     results["size"] = {"width": page["width"], "height": page["height"]}
                     break
-            for doc in api_results["analyzeResult"].get("documents") or []:
+            for doc in analyzeResult.get("documents") or []:
                 if doc.get("fields"):
                     is_document = True
                     break
-            for doc in api_results["analyzeResult"].get("tables") or []:
+            for doc in analyzeResult.get("tables") or []:
                 if doc.get("cells") and doc.get("rowCount"):
                     is_table = True
                     break
             if is_table:
-                results["words"] = _parse_table(api_results["analyzeResult"])
+                results["words"] = _parse_table(analyzeResult)
             elif is_document:
-                results["words"] = _parse_document(api_results["analyzeResult"])
+                results["words"] = _parse_document(analyzeResult)
             else:
-                for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
-                    lines = [o["content"]  for o in page["lines"]]
-                    if lines:
-                        results["words"] = lines
-                    break  # TODO: handle more pages
-                if _is_handwritten(api_results["analyzeResult"]["styles"]):
-                    results["words_style"] = "handwritten "
-                languages = []
-                for l in api_results["analyzeResult"].get("languages") or []:
-                    locale = l['locale']
-                    if locale == 'en' or (l.get("confidence") or 0) > 0.9:
-                        languages.append(locale)
+                lines, languages = _parse_lines(analyzeResult)
+                if lines:
+                    results["words"] = lines
                 if languages:
                     results["languages"] = languages
+                if _is_handwritten(analyzeResult["styles"]):
+                    results["words_style"] = "handwritten "
         self.cache[key] = results
         return results
 
