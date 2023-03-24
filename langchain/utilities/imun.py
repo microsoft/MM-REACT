@@ -113,19 +113,32 @@ def _is_handwritten(styles):
         handwritten = True
     return handwritten
 
-def _parse_lines(analyzeResult:Dict[str])->Tuple[List[str],List[str]]:
+def _isascii(s):
+    return len(s) == len(s.encode())
+                         
+def _parse_lines(analyzeResult:Dict)->Tuple[List[str],List[str]]:
     lines = []
-    for idx, page in enumerate(analyzeResult["pages"]):
+    for _, page in enumerate(analyzeResult["pages"]):
         lines += [o["content"] for o in page["lines"]]
+    text = "\n".join(lines)
     languages = []
     for l in analyzeResult.get("languages") or []:
         locale = l['locale']
-        if locale == 'en' or (l.get("confidence") or 0) > 0.9:
+        if locale == "en":
             languages.append(locale)
-    
+            continue
+        if (l.get("confidence") or 0) < 0.9:
+            continue
+        # check if it is really not English
+        for span in l.get("spans") or []:
+            offset, length = span["offset"], span["length"]
+            line = text[offset:offset + length]
+            if not _isascii(line):
+                languages.append(locale)
+                break
     return lines, languages
 
-def _parse_document(analyzeResult:Dict[str])->List[str]:
+def _parse_document(analyzeResult:Dict)->List[str]:
     content:str = analyzeResult["content"]
     new_total = False
     total = 0.0
@@ -144,7 +157,7 @@ def _parse_document(analyzeResult:Dict[str])->List[str]:
         content += f"\nTotal amount {total}" 
     return content.split("\n")    
 
-def _parse_table(analyzeResult:Dict[str])->List[str]:
+def _parse_table(analyzeResult:Dict)->List[str]:
     found_table = False
     raw_content:str = analyzeResult["content"]
     content:List[str] = []
