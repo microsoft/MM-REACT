@@ -1,7 +1,7 @@
 # MM-REACT: Prompting ChatGPT for Multimodal Reasoning and Action
 
 ## :fire: News
-* **[2023.03.21]** We build MM-REACT, a system paradigm that integrates ChatGPT with a pool of vision experts to achieve multimodal reasoning and action.
+* **[2023.03.21]** We built MM-REACT, a system paradigm that integrates ChatGPT with a pool of vision experts to achieve multimodal reasoning and action.
 * **[2023.03.21]** Feel free to explore various demo videos on our [website](https://multimodal-react.github.io/)!
 * **[2023.03.21]** Try our [live demo](https://huggingface.co/spaces/microsoft-cognitive-service/mm-react)!
 
@@ -17,7 +17,7 @@ MM-REACT allocates specialized vision experts with ChatGPT to solve challenging 
 * If no external experts are needed, we directly return the response to the user.
 
 ## Getting Started
-MM-REACT code is bases on langchain.
+MM-REACT code is based on langchain.
 
 Please refer to [langchain](https://github.com/hwchase17/langchain) for [instructions on installation](https://github.com/hwchase17/langchain#quick-install) and [documentation](https://github.com/hwchase17/langchain#-documentation).
 
@@ -27,7 +27,7 @@ Please refer to [langchain](https://github.com/hwchase17/langchain) for [instruc
 pip install PIL imagesize
 ```
 
-### Here are the list of resources you need to set up in Azure and their environment variables
+### Here is the list of resources you need to set up in Azure and their environment variables
 
 1. Computer Vision service, for Tags, Objects, Faces and Celebrity.
 
@@ -83,7 +83,7 @@ export OPENAI_API_KEY=
 
 Note: At the time of writing, we use and test against private endpoint. The public endpoint is now released and we plan to add support for it later.
 
-7. Photo editting local service
+7. Photo editing local service
 
 ```bash
 export PHOTO_EDIT_ENDPOINT_URL="http://127.0.0.1:123/"
