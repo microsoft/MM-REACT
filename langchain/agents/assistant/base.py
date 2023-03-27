@@ -114,6 +114,8 @@ class AssistantAgent(Agent):
                 action = "Receipt Understanding"
             elif "business card" in cmd:
                 action = "Business Card Understanding"
+            elif "invoice" in cmd:
+                action = "Invoice Understanding"
             elif "ocr" in sub_cmd:
                 if is_table:
                     action = "Layout Understanding"
