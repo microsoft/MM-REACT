@@ -35,7 +35,7 @@ def download_image(url):
     except requests.exceptions.MissingSchema:
         # This should be configured because of security
         ext = os.path.splitext(url)[1].lower()
-        if ext in [".jpg", ".png", ".bmp", ".jpeg"]:
+        if ext in [".jpg", ".png", ".bmp", ".jpeg", ".pdf"]:
             with open(url, "rb") as fp:
                 return fp.read()
         raise
@@ -73,7 +73,7 @@ def im_upscale(data, target_size):
     return output.getvalue(), (w, h)
 
 def get_url_path(query:str)->Tuple[int,str]:
-    match = re.search(r"https?://.+\.(?:jpg|jpeg|png|bmp)", query, re.IGNORECASE)
+    match = re.search(r"https?://.+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)
     if match:
         return match.start(), match.group(0)
     match = re.search(r"https?://\S+", query, re.IGNORECASE)
@@ -82,7 +82,7 @@ def get_url_path(query:str)->Tuple[int,str]:
         if url.endswith((".", "?")):
             url = url[:-1]
         return match.start(), url
-    match = re.search(r"/[\w\d/]+\.(?:jpg|jpeg|png|bmp)", query, re.IGNORECASE)
+    match = re.search(r"/[\w/-]+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)
     if match:
         return match.start(), match.group(0)
     return -1, ""

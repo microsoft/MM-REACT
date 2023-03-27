@@ -66,6 +66,7 @@ def resize_image(data, img_url):
     try:
         # Using imagesize to avoid decoding when not needed
         w, h = imagesize.get(io.BytesIO(data))
+        assert w > 0 and h > 0
     except:
         return data, (None, None)
     data_len = len(data)
