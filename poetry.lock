@@ -2564,6 +2564,7 @@ optional = true
 python-versions = "*"
 files = [
     {file = "libclang-15.0.6.1-py2.py3-none-macosx_10_9_x86_64.whl", hash = "sha256:8621795e07b87e17fc7aac9f071bc7fe6b52ed6110c0a96a9975d8113c8c2527"},
+    {file = "libclang-15.0.6.1-py2.py3-none-macosx_11_0_arm64.whl", hash = "sha256:0bf192c48a8d2992fc5034393ddc99e772ac30e105df84927d62fc88ef8a659f"},
     {file = "libclang-15.0.6.1-py2.py3-none-manylinux2010_x86_64.whl", hash = "sha256:69b01a23ab543908a661532595daa23cf88bd96d80e41f58ba0eaa6a378fe0d8"},
     {file = "libclang-15.0.6.1-py2.py3-none-manylinux2014_aarch64.whl", hash = "sha256:4a5188184b937132c198ee9de9a8a2316d5fdd1a825398d5ad1a8f5e06f9b40e"},
     {file = "libclang-15.0.6.1-py2.py3-none-manylinux2014_armv7l.whl", hash = "sha256:f7ffa02ac5e586cfffde039dcccc439d88d0feac7d77bf9426d9ba7543d16545"},
@@ -4861,18 +4862,18 @@ test = ["pytest (>=6,!=7.0.0,!=7.0.1)", "pytest-cov (>=3.0.0)", "pytest-qt"]
 
 [[package]]
 name = "redis"
-version = "4.5.1"
+version = "4.5.3"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "redis-4.5.1-py3-none-any.whl", hash = "sha256:5deb072d26e67d2be1712603bfb7947ec3431fb0eec9c578994052e33035af6d"},
-    {file = "redis-4.5.1.tar.gz", hash = "sha256:1eec3741cda408d3a5f84b78d089c8b8d895f21b3b050988351e925faf202864"},
+    {file = "redis-4.5.3-py3-none-any.whl", hash = "sha256:7df17a0a2b72a4c8895b462dd07616c51b1dcb48fdd7ecb7b6f4bf39ecb2e94e"},
+    {file = "redis-4.5.3.tar.gz", hash = "sha256:56732e156fe31801c4f43396bd3ca0c2a7f6f83d7936798531b9848d103381aa"},
 ]
 
 [package.dependencies]
-async-timeout = ">=4.0.2"
+async-timeout = {version = ">=4.0.2", markers = "python_version < \"3.11\""}
 
 [package.extras]
 hiredis = ["hiredis (>=1.0.0)"]
