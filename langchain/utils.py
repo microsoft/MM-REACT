@@ -79,7 +79,7 @@ def get_url_path(query:str)->Tuple[int,str]:
     match = re.search(r"https?://\S+", query, re.IGNORECASE)
     if match:
         url = match.group(0)
-        if url.endswith((".", "?")):
+        if url.endswith((".", "?", '"')):
             url = url[:-1]
         return match.start(), url
     match = re.search(r"/[\w/-]+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)

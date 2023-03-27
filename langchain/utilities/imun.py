@@ -159,16 +159,11 @@ def _parse_document(analyzeResult:Dict)->List[str]:
     return content.split("\n")    
 
 def _parse_table(analyzeResult:Dict)->List[str]:
-    found_table = False
-    raw_content:str = analyzeResult["content"]
-    content:List[str] = []
+    raw_content = list(analyzeResult["content"])
     for table in analyzeResult["tables"]:
         row_count = table["rowCount"]
         col_count = table["columnCount"]
-        if found_table:
-            # more than one table
-            content.append("")
-        found_table = True
+        table_content = "\n"
         for row in range(row_count):
             cols = [""] * col_count
             is_header = False
@@ -176,21 +171,23 @@ def _parse_table(analyzeResult:Dict)->List[str]:
                 if cell.get("rowIndex") != row:
                     continue
                 text = cell["content"]
-                raw_content = raw_content.replace(text, "", 1)
-                cols[cell["columnIndex"]] = text
+                col = cell["columnIndex"]
+                cols[col] = text
                 is_header = cell.get("kind") == "columnHeader"
             line = "|" + "|".join(cols) + "|"
-            content.append(line)
+            table_content += line + "\n"
             if is_header:
                 line = "|" + "|".join(["---"] * col_count) + "|"
-                content.append(line)
-
-    # TODO: keep out of table words before/after the table based on their coordinates
-    # keep words not in the table
-    raw_content = "\n".join([t.strip() for t in raw_content.split("\n")]).strip()
-    if raw_content:
-        content = [raw_content, ""] + content
-    return content
+                table_content += line  + "\n"
+        for span in table["spans"]:
+            offset, length = span["offset"], span["length"]
+            for idx in range(offset, offset + length):
+                raw_content[idx] = ""
+            if table_content:
+                raw_content[offset] = table_content
+                table_content = ""
+    raw_content = "".join(raw_content)
+    return raw_content.split("\n")
 
 class InvalidRequest(requests.HTTPError):
     pass
