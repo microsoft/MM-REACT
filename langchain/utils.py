@@ -24,7 +24,7 @@ def get_from_dict_or_env(
             f"  `{key}` as a named parameter."
         )
 
-def download_image(url):
+def download_image(url:str):
     """Download raw image from url
     """
     try:

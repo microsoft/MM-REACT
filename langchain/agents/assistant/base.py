@@ -139,14 +139,17 @@ class AssistantAgent(Agent):
                     if tries < 4:
                         # Let the model rethink
                         return
-                return self.finish_tool_name, "Please provide the image url at the end."
+                return self.finish_tool_name, llm_output
+            assert action_input
             if not action and is_face:
                 action = "Celebrity Understanding"
+            if not action and " text" in sub_cmd:
+                action = "OCR Understanding"
             if not action:
                 if tries < 4:
                     # Let the model rethink
                     return
-                return self.finish_tool_name, action_input
+                return self.finish_tool_name, llm_output
             return action, action_input
         action_log = llm_output.strip()
         if tries < 4:

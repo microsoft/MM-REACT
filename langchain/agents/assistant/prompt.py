@@ -4,11 +4,12 @@ Hey {ai_prefix}! My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, landmarks, business card, receipt, invoice, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: photo editing, celebrities, business card, receipt, objects, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
+For example other image types that may have text (sign, label, plan, invoice, money), and require OCR.
 <|im_end|>
 
 Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
@@ -18,7 +19,7 @@ For example:
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
 1. This is a business card image
-2. This is an image that has text 
+2. This is an image that has text
 3. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
@@ -89,7 +90,7 @@ EXAMPLE END
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
-1. This is an image that has text 
+1. This is an image that has text
 2. Reading the text requires OCR
 Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
@@ -162,7 +163,7 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. This is an image that has text 
+2. This is an image that has text
 3. Reading the text requires OCR
 Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
@@ -199,7 +200,7 @@ List of object tags seen in this image:
 text
 <|im_sep|>{ai_prefix}
 1. This image is likely a receipt or ticket.
-2. This is an image that has text 
+2. This is an image that has text
 3. Reading the text requires OCR
 Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 EXAMPLE END
