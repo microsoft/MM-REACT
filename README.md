@@ -55,6 +55,7 @@ export IMUN_OCR_READ_URL="https://yourazureendpoint.cognitiveservices.azure.com/
 export IMUN_OCR_RECEIPT_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-receipt:analyze"
 export IMUN_OCR_BC_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-businessCard:analyze"
 export IMUN_OCR_LAYOUT_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-layout:analyze"
+export IMUN_OCR_INVOICE_URL="https://yourazureendpoint.cognitiveservices.azure.com/formrecognizer/documentModels/prebuilt-invoice:analyze"
 export IMUN_OCR_PARAMS="api-version=2022-08-31"
 export IMUN_OCR_SUBSCRIPTION_KEY=
 ```
