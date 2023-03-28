@@ -4,7 +4,7 @@ Hey {ai_prefix}! My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, landmarks, business card, receipt, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: photo editing, celebrities, landmarks, business card, receipt, invoice, objects, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
