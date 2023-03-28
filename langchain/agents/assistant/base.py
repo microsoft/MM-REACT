@@ -112,9 +112,9 @@ class AssistantAgent(Agent):
             sub_cmd = cmd[:action_input_idx + 1].lower()
             if "receipt" in sub_cmd:
                 action = "Receipt Understanding"
-            elif "business card" in cmd:
+            elif "business card" in sub_cmd:
                 action = "Business Card Understanding"
-            elif "invoice" in cmd:
+            elif "invoice" in sub_cmd:
                 action = "Invoice Understanding"
             elif "ocr" in sub_cmd:
                 if is_table:
