@@ -110,12 +110,14 @@ class AssistantAgent(Agent):
             action_input_idx, action_input = get_url_path(cmd)
             action = None
             sub_cmd = cmd[:action_input_idx + 1].lower()
-            if "receipt" in sub_cmd:
+            # TODO: need a separate chain to decide OCR specialization, 
+            #       perhaps we do genric OCR (or receipt) then if we see an invoice then we do invoice
+            if "invoice" in sub_cmd:
+                action = "Invoice Understanding"
+            elif "receipt" in sub_cmd:
                 action = "Receipt Understanding"
             elif "business card" in sub_cmd:
                 action = "Business Card Understanding"
-            elif "invoice" in sub_cmd:
-                action = "Invoice Understanding"
             elif "ocr" in sub_cmd:
                 if is_table:
                     action = "Layout Understanding"
