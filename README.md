@@ -1,6 +1,7 @@
 # MM-REACT: Prompting ChatGPT for Multimodal Reasoning and Action
 
 ## :fire: News
+* **[2023.03.27]** Incoming changes by 2023.03.31: Update LLM to [Azure OpenAI API for GPT3.5 Turbo](https://azure.microsoft.com/en-in/blog/chatgpt-is-now-available-in-azure-openai-service/)
 * **[2023.03.21]** We build MM-REACT, a system paradigm that integrates ChatGPT with a pool of vision experts to achieve multimodal reasoning and action.
 * **[2023.03.21]** Feel free to explore various demo videos on our [website](https://multimodal-react.github.io/)!
 * **[2023.03.21]** Try our [live demo](https://huggingface.co/spaces/microsoft-cognitive-service/mm-react)!
