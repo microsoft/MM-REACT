@@ -14,7 +14,7 @@ from langchain.utils import get_url_path
 MAX_TOKENS = 512
 
 # This is private endpoint, will have to change to turbo later
-llm = AzureOpenAI(deployment_name="text-chat-davinci-002", model_name="text-chat-davinci-002", temperature=0, max_tokens=MAX_TOKENS)
+llm = AzureOpenAI(deployment_name="gpt-35-turbo-version-0301", model_name="gpt-35-turbo (version 0301)", temperature=0, max_tokens=MAX_TOKENS)
 
 memory = ConversationBufferMemory(memory_key="chat_history")
 
