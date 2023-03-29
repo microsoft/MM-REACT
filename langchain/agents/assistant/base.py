@@ -1,7 +1,6 @@
 """An agent designed to hold a conversation in addition to using tools."""
 from __future__ import annotations
 
-import re
 from typing import Any, List, Optional, Sequence, Tuple
 
 from langchain.agents.agent import Agent
@@ -11,7 +10,7 @@ from langchain.chains import LLMChain
 from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
 from langchain.tools.base import BaseTool
-
+from langchain.utils import get_url_path
 
 class AssistantAgent(Agent):
     """An agent designed to hold a conversation in addition to an specialized assistant tool."""
@@ -26,16 +25,17 @@ class AssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "Assistant: "
+        return "<|im_sep|>Assistant\n"
 
     @property
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
-        return "AI:"
+        return "<|im_sep|>AI\n"
 
     @property
     def _stop(self) -> List[str]:
-        return [f"\n{self.observation_prefix}", "\nHuman:", "\nEXAMPLE", "\nNEW INPUT:"]
+        return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
+        # return ["<|im_start|>Human", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
 
     @classmethod
     def create_prompt(
@@ -63,44 +63,41 @@ class AssistantAgent(Agent):
     @property
     def finish_tool_name(self) -> str:
         """Name of the tool to use to finish the chain."""
-        return self.ai_prefix
+        return "<|im_end|>"
 
-    @staticmethod
-    def _remove_after(line: str) -> bool:
-        if "anything else I can help" in line:
-            return True
-        if "anything else you would like" in line:
-            return True
-        if "Previous conversation history" in line:
-            return True
-
-        return False
-    
     @staticmethod
     def _fix_chatgpt(text: str) -> str:
-        idx = text.find("\n\nNote: ")
-        if idx >= 0:
-            text = text[:idx + 1]
-        # Remove redundant questions, to keep history shorter
+        text = text.replace("<|im_end|>\n", "\n")
+        text = text.replace("<|im_end|>", "")
+        text = text.replace("<|im_sep|>AI\n", "")
         lines = text.split("\n")
         new_lines = []
         for l in lines:
-            # do not keep anthing afterwards
-            if __class__._remove_after(l):
-                break
+            l_lower = l.lower()
+            for term in ["is there anything else ", "or is there something else "]:
+                idx = l_lower.find(term)
+                if idx >= 0:
+                    l = l[:idx]
+                    break
+            if not l:
+                continue
             new_lines.append(l)
         text = "\n".join(new_lines)
+
         return text
     
     def _fix_text(self, text: str) -> str:
         text = self._fix_chatgpt(text)
-        return f"{text}\nAI:"
+        if "Assistant, " in text:
+            return text
+        return f"{text}\n{self.llm_prefix}"
 
-    def _extract_tool_and_input(self, llm_output: str) -> Optional[Tuple[str, str]]:
+    def _extract_tool_and_input(self, llm_output: str, tries=0) -> Optional[Tuple[str, str]]:
         # TODO: this should be a separate llm as a tool to decide the correct tool(s) here
         llm_output = self._fix_chatgpt(llm_output)
         photo_editing = "photo edit" in llm_output or "image edit" in llm_output
         is_table = " table" in llm_output
+        is_face = "facial recognition" in llm_output
         cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx >= 0:
             cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
@@ -110,35 +107,56 @@ class AssistantAgent(Agent):
             if search_idx >= 0:
                  action_input = cmd[search_idx + len("bing serach") + 1:]
                  return "Bing Search", action_input
-            cmd_idx = cmd.rfind(" ")
-            action_input = cmd[cmd_idx + 1:].strip()
-            if action_input.endswith((".", "?")):
-                action_input = action_input[:-1]
-            if "/" not in action_input and "http" not in action_input:
-                return "Final Answer", "There is no image url. This "
-            cmd = cmd[:cmd_idx + 1].lower()
-            if "receipt" in cmd:
+            action_input_idx, action_input = get_url_path(cmd)
+            action = None
+            sub_cmd = cmd[:action_input_idx + 1].lower()
+            # TODO: need a separate chain to decide OCR specialization, 
+            #       perhaps we do genric OCR (or receipt) then if we see an invoice then we do invoice
+            if "invoice" in sub_cmd:
+                action = "Invoice Understanding"
+            elif "receipt" in sub_cmd:
                 action = "Receipt Understanding"
-            elif "business card" in cmd:
+            elif "business card" in sub_cmd:
                 action = "Business Card Understanding"
-            elif "ocr" in cmd:
+            elif "ocr" in sub_cmd:
                 if is_table:
                     action = "Layout Understanding"
                 else:
                     action = "OCR Understanding"
-            elif "celebrit" in cmd:
+            elif "celebrit" in sub_cmd:
                 action = "Celebrity Understanding"
-            elif "landmark" in cmd:
+            elif "landmark" in sub_cmd:
                 action = "Bing Search"
-            elif "brand" in cmd:
+            elif "brand" in sub_cmd:
                 action = "Bing Search"
-            else:
+            elif "objects" in sub_cmd:
                 action = "Image Understanding"
+            if not action_input:
+                if not action:
+                    if cmd.endswith("?"):
+                        # if no image and no action
+                        return "Bing Search" , cmd       
+                    if tries < 4:
+                        # Let the model rethink
+                        return
+                return self.finish_tool_name, llm_output
+            assert action_input
+            if not action and is_face:
+                action = "Celebrity Understanding"
+            if not action and " text" in sub_cmd:
+                action = "OCR Understanding"
+            if not action:
+                if tries < 4:
+                    # Let the model rethink
+                    return
+                return self.finish_tool_name, llm_output
             return action, action_input
-        
-        if f"{self.ai_prefix}:" in llm_output:
-            return self.ai_prefix, llm_output.split(f"{self.ai_prefix}:")[-1].strip()
-        return self.ai_prefix, llm_output.strip()
+        action_log = llm_output.strip()
+        if tries < 4:
+            if "do not have that information" in llm_output:
+                # Let the model rethink
+                return
+        return self.finish_tool_name, action_log
 
     @classmethod
     def from_llm_and_tools(

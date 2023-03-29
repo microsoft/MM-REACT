@@ -9,11 +9,12 @@ from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.chains import PALChain
 from langchain.llms import AzureOpenAI
 from langchain.utilities import ImunAPIWrapper, ImunMultiAPIWrapper
+from langchain.utils import get_url_path
 
 MAX_TOKENS = 512
 
 # This is private endpoint, will have to change to turbo later
-llm = AzureOpenAI(deployment_name="text-chat-davinci-002", model_name="text-chat-davinci-002", temperature=0, max_tokens=MAX_TOKENS)
+llm = AzureOpenAI(deployment_name="gpt-35-turbo-version-0301", model_name="gpt-35-turbo (version 0301)", temperature=0, max_tokens=MAX_TOKENS)
 
 memory = ConversationBufferMemory(memory_key="chat_history")
 
@@ -49,15 +50,17 @@ imun_layout = ImunAPIWrapper(
     params=os.environ["IMUN_OCR_PARAMS"],
     imun_subscription_key=os.environ["IMUN_OCR_SUBSCRIPTION_KEY"])
 
+imun_invoice = ImunAPIWrapper(
+    imun_url=os.environ["IMUN_OCR_INVOICE_URL"],
+    params=os.environ["IMUN_OCR_PARAMS"],
+    imun_subscription_key=os.environ["IMUN_OCR_SUBSCRIPTION_KEY"])
+
 bing = BingSearchAPIWrapper(k=2)
 
 def edit_photo(query: str) -> str:
     endpoint = os.environ["PHOTO_EDIT_ENDPOINT_URL"]
     query = query.strip()
-    url_idx = query.rfind(" ")
-    img_url = query[url_idx + 1:].strip()
-    if img_url.endswith((".", "?")):
-        img_url = img_url[:-1]
+    url_idx, img_url = get_url_path(query)
     if not img_url.startswith(("http://", "https://")):
         return "Invalid image URL"
     img_url = img_url.replace("0.0.0.0", os.environ["PHOTO_EDIT_ENDPOINT_URL_SHORT"])
@@ -124,6 +127,16 @@ tools = [
         func=imun_layout.run,
         description=(
         "A wrapper around layout and table understanding. "
+        "Useful after Image Understanding tool has recognized businesscard in the image tags."
+        "This tool can find the actual business card text, name, address, email, website on the card."
+        "Input should be an image url, or path to an image file (e.g. .jpg, .png)."
+        )
+    ),
+    Tool(
+        name = "Invoice Understanding",
+        func=imun_invoice.run,
+        description=(
+        "A wrapper around invoice understanding. "
         "Useful after Image Understanding tool has recognized businesscard in the image tags."
         "This tool can find the actual business card text, name, address, email, website on the card."
         "Input should be an image url, or path to an image file (e.g. .jpg, .png)."

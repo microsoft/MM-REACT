@@ -11,7 +11,7 @@ import os
 import requests
 from pydantic import BaseModel, Extra, root_validator
 
-from langchain.utils import get_from_dict_or_env, download_image, im_downscale
+from langchain.utils import get_from_dict_or_env, download_image, im_downscale, get_url_path
 from datetime import datetime
 from dateutil import parser
 
@@ -37,11 +37,8 @@ class BingSearchAPIWrapper(BaseModel):
     @staticmethod
     def _get_image(search_term):
         search_term = search_term.strip()
-        url_idx = search_term.rfind(" ")
-        img_url = search_term[url_idx + 1:].strip()
-        if img_url.endswith((".", "?")):
-            img_url = img_url[:-1]
-        if not img_url.startswith(("http://", "https://", "/")):
+        _, img_url = get_url_path(search_term)
+        if not img_url:
             return
         try:
             data = download_image(img_url)
@@ -194,7 +191,10 @@ class BingSearchAPIWrapper(BaseModel):
             snippet = snippet.replace("<b>", "").replace("</b>", "")  # remove bold
             snippets.append(snippet)
 
-        return "\n".join(snippets)
+        snippets = "\n".join(snippets)
+        if snippets:
+            return "results from internet search:\n" + snippets
+        return snippets
 
     def results(self, query: str, num_results: int) -> List[Dict]:
         """Run query through BingSearch and return metadata.

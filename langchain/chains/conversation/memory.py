@@ -76,9 +76,9 @@ class CombinedMemory(Memory, BaseModel):
 class ConversationBufferMemory(Memory, BaseModel):
     """Buffer for storing conversation memory."""
 
-    human_prefix: str = "Human"
-    ai_prefix: str = "AI"
-    assistant_prefix: str = "Assistant"
+    human_prefix: str = "<|im_start|>Human\n"
+    ai_prefix: str = "<|im_sep|>AI\n"
+    assistant_prefix: str = "<|im_sep|>Assistant\n"
     """Prefix to use for AI generated responses."""
     buffer: str = ""
     output_key: Optional[str] = None
@@ -115,20 +115,18 @@ class ConversationBufferMemory(Memory, BaseModel):
         else:
             output_key = self.output_key
         new_input = inputs[prompt_input_key]
-        # if new_input.startswith("http://0.0.0.0"):
-        #     self.clear()
-        human = new_input
-        prefix = f"{self.human_prefix}: "
-        if not human.startswith(prefix):
-            human = prefix + new_input
-        ai = f"{self.ai_prefix}: " + outputs[output_key]
+        human = self.human_prefix + new_input
+        ai_output = outputs[output_key]
+        if not ai_output.strip():
+            ai = "\n<|im_end|>"
+        else:
+            ai = self.ai_prefix + ai_output + "\n<|im_end|>"
         assistant = ""
         intermediate = outputs.get(self.output_intermediate) or []
         for action, action_output in intermediate:
             action: str = action.log.strip()
-            if not action.startswith(f"{self.ai_prefix}:"):
-                action = f"{self.ai_prefix}: {action}"
-            action_output = f"{self.assistant_prefix}: {action_output}"
+            action = self.ai_prefix + action
+            action_output = self.assistant_prefix + action_output
             assistant += "\n" + action + "\n" + action_output
         self.buffer += "\n" + "\n".join([human, assistant, ai])
 

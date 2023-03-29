@@ -250,7 +250,7 @@ class Chain(BaseModel, ABC):
                     lines = action.split("\n")
                     new_lines = []
                     for l in lines:
-                        for term in [" Let me ask for ", " Let me find if ", " Assistant,"]:
+                        for term in ["Assistant,"]:
                             idx = l.lower().find(term.lower())
                             if idx >= 0:
                                 l = l[:idx]

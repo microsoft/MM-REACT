@@ -1,8 +1,9 @@
 """Generic utility functions."""
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 import requests
 import io
+import re
 from PIL import Image
 
 
@@ -23,7 +24,7 @@ def get_from_dict_or_env(
             f"  `{key}` as a named parameter."
         )
 
-def download_image(url):
+def download_image(url:str):
     """Download raw image from url
     """
     try:
@@ -33,11 +34,10 @@ def download_image(url):
         return r.content
     except requests.exceptions.MissingSchema:
         # This should be configured because of security
-        if os.environ.get("ALLOW_LOCAL_FILE_ACCESS") == "1":
-            ext = os.path.splitext(url)[1].lower()
-            if ext in [".jpg", ".png", ".bmp", ".jpeg"]:
-                with open(url, "rb") as fp:
-                    return fp.read()
+        ext = os.path.splitext(url)[1].lower()
+        if ext in [".jpg", ".png", ".bmp", ".jpeg", ".pdf"]:
+            with open(url, "rb") as fp:
+                return fp.read()
         raise
 
 def im_downscale(data, target_size):
@@ -71,3 +71,18 @@ def im_upscale(data, target_size):
         im = im.convert("RGB")
     im.save(output, format="JPEG")
     return output.getvalue(), (w, h)
+
+def get_url_path(query:str)->Tuple[int,str]:
+    match = re.search(r"https?://.+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)
+    if match:
+        return match.start(), match.group(0)
+    match = re.search(r"https?://\S+", query, re.IGNORECASE)
+    if match:
+        url = match.group(0)
+        if url.endswith((".", "?", '"')):
+            url = url[:-1]
+        return match.start(), url
+    match = re.search(r"/[\w/-]+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)
+    if match:
+        return match.start(), match.group(0)
+    return -1, ""

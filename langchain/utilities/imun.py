@@ -13,9 +13,7 @@ from pydantic import BaseModel, Extra, root_validator
 
 from langchain.utils import get_from_dict_or_env, download_image, im_downscale, im_upscale
 
-IMUN_PROMPT_PREFIX = "This is an image ({width} x {height})"
-
-IMUN_PROMPT_DESCRIPTION = " with description {description}.\n"
+IMUN_PROMPT_DESCRIPTION = "Image description is: {description}.\n"
 
 IMUN_PROMPT_CAPTIONS_PEFIX = " objects and their descriptions"
 
@@ -38,13 +36,18 @@ List of object tags seen in this image:
 """
 
 IMUN_PROMPT_WORDS="""
-List of texts (words) seen in this image:
+List of OCR texts (words) seen in this image:
 {words}
 """
 
 IMUN_PROMPT_LANGUAGES="""
-The above words are in these languages:
+The above texts are in these languages:
 {languages}
+"""
+
+IMUN_PROMPT_LANGUAGE="""
+The above texts are in this language:
+{language}
 """
 
 IMUN_PROMPT_FACES="""
@@ -63,6 +66,7 @@ def resize_image(data, img_url):
     try:
         # Using imagesize to avoid decoding when not needed
         w, h = imagesize.get(io.BytesIO(data))
+        assert w > 0 and h > 0
     except:
         return data, (None, None)
     data_len = len(data)
@@ -110,8 +114,33 @@ def _is_handwritten(styles):
         handwritten = True
     return handwritten
 
-def _parse_document(analyzeResult):
-    content = analyzeResult["content"]
+def _isascii(s):
+    return len(s) == len(s.encode())
+                         
+def _parse_lines(analyzeResult:Dict)->Tuple[List[str],List[str]]:
+    lines = []
+    for _, page in enumerate(analyzeResult["pages"]):
+        lines += [o["content"] for o in page["lines"]]
+    text = "\n".join(lines)
+    languages = []
+    for l in analyzeResult.get("languages") or []:
+        locale = l['locale']
+        if locale == "en":
+            languages.append(locale)
+            continue
+        if (l.get("confidence") or 0) < 0.9:
+            continue
+        # check if it is really not English
+        for span in l.get("spans") or []:
+            offset, length = span["offset"], span["length"]
+            line = text[offset:offset + length]
+            if not _isascii(line):
+                languages.append(locale)
+                break
+    return lines, languages
+
+def _parse_document(analyzeResult:Dict)->List[str]:
+    content:str = analyzeResult["content"]
     new_total = False
     total = 0.0
     # remove extra newlines in the items
@@ -129,17 +158,12 @@ def _parse_document(analyzeResult):
         content += f"\nTotal amount {total}" 
     return content.split("\n")    
 
-def _parse_table(analyzeResult):
-    found_table = False
-    raw_content:str = analyzeResult["content"]
-    content = []
+def _parse_table(analyzeResult:Dict)->List[str]:
+    raw_content = list(analyzeResult["content"])
     for table in analyzeResult["tables"]:
         row_count = table["rowCount"]
         col_count = table["columnCount"]
-        if found_table:
-            # more than one table
-            content.append("")
-        found_table = True
+        table_content = "\n"
         for row in range(row_count):
             cols = [""] * col_count
             is_header = False
@@ -147,21 +171,23 @@ def _parse_table(analyzeResult):
                 if cell.get("rowIndex") != row:
                     continue
                 text = cell["content"]
-                raw_content = raw_content.replace(text, "", 1)
-                cols[cell["columnIndex"]] = text
+                col = cell["columnIndex"]
+                cols[col] = text
                 is_header = cell.get("kind") == "columnHeader"
             line = "|" + "|".join(cols) + "|"
-            content.append(line)
+            table_content += line + "\n"
             if is_header:
                 line = "|" + "|".join(["---"] * col_count) + "|"
-                content.append(line)
-
-    # TODO: keep out of table words before/after the table based on their coordinates
-    # keep words not in the table
-    raw_content = "\n".join([t.strip() for t in raw_content.split("\n")]).strip()
-    if raw_content:
-        content = [raw_content, ""] + content
-    return content
+                table_content += line  + "\n"
+        for span in table["spans"]:
+            offset, length = span["offset"], span["length"]
+            for idx in range(offset, offset + length):
+                raw_content[idx] = ""
+            if table_content:
+                raw_content[offset] = table_content
+                table_content = ""
+    raw_content = "".join(raw_content)
+    return raw_content.split("\n")
 
 class InvalidRequest(requests.HTTPError):
     pass
@@ -192,8 +218,24 @@ def _handle_error(response):
         pass
     response.raise_for_status()
 
-def _concat_objects(objects: List) -> str:
-    objects = [f'{n} {v[0]} {v[1]} {v[2]} {v[3]}' for (n, v) in objects]
+def _cartesian_center(v:List[int], size=None) -> List[int]:
+    if size:
+        image_width, image_height = size["width"], size["height"]
+    else:
+        image_width = image_height = max(v)
+
+    width = v[2] - v[0]
+    height = v[3] - v[1]
+    # Use center of the box
+    x = v[0] + width // 2
+    y = v[1] + height // 2
+    y = image_height - v[1]
+    return [(100 * x) // image_width, (100 * y) // image_height]
+
+def _concat_objects(objects: List, size=None) -> str:
+    # normalize if size given, cartesian 
+    objects = [(n, _cartesian_center(v, size)) for (n, v) in objects]
+    objects = [f'{n} {v[0]} {v[1]}' for (n, v) in objects]
     return "\n".join(objects)
 
 def intersection(o:List[float], c:List[float]) -> Tuple[float]:
@@ -241,12 +283,6 @@ def _merge_objects(objects: List, captions: List) -> List:
 
 def create_prompt(results: Dict) -> str:
     """Create the final prompt output"""
-    if "size" in results:
-        width, height = results["size"]["width"], results["size"]["height"]
-        answer = IMUN_PROMPT_PREFIX.format(width=width, height=height)
-    else:
-        answer = "This is an image"
-
     description = results.get("description") or ""
     captions: List = results.get("captions") or []
     tags = results.get("tags") or ""
@@ -257,8 +293,7 @@ def create_prompt(results: Dict) -> str:
     faces: List = results.get("faces") or []
     celebrities: List = results.get("celebrities") or []
 
-    if description:
-        answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
+    answer = IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
 
     found = False
     if captions or objects:
@@ -293,25 +328,28 @@ def create_prompt(results: Dict) -> str:
             return answer + "Did not find any celebrities in this image"
         return answer + "This image is too blurry"
     
+    size = results.get("size")
     if objects and captions:
-        answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(_merge_objects(objects, captions)))
+        answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(_merge_objects(objects, captions), size=size))
     else:
         if captions:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(captions))
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(captions, size=size))
         if objects:
-            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(objects))
+            answer += IMUN_PROMPT_CAPTIONS.format(captions=_concat_objects(objects, size=size))
     if tags:
         answer += IMUN_PROMPT_TAGS.format(tags="\n".join(tags))
     if words:
         answer += IMUN_PROMPT_WORDS.format(words="\n".join(words))
         if languages:
             langs = set(languages)
-            if len(langs) > 1 or languages[0] != "en":
+            if len(langs) == 1 and languages[0] != "en":
+                answer += IMUN_PROMPT_LANGUAGE.format(language=languages[0])
+            elif len(langs) > 1 or languages[0] != "en":
                 answer += IMUN_PROMPT_LANGUAGES.format(languages="\n".join(languages))
     if faces:
-        answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces))
+        answer += IMUN_PROMPT_FACES.format(faces=_concat_objects(faces, size=size))
     if celebrities:
-        answer += IMUN_PROMPT_CELEBS.format(celebs=_concat_objects(celebrities))
+        answer += IMUN_PROMPT_CELEBS.format(celebs=_concat_objects(celebrities, size=size))
     return answer
 
 
@@ -414,37 +452,31 @@ class ImunAPIWrapper(BaseModel):
         if "analyzeResult" in api_results:
             is_table = False
             is_document = False
+            analyzeResult = api_results["analyzeResult"]
             if "size" not in results:
-                for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
+                for idx, page in enumerate(analyzeResult["pages"]):
                     results["size"] = {"width": page["width"], "height": page["height"]}
                     break
-            for doc in api_results["analyzeResult"].get("documents") or []:
+            for doc in analyzeResult.get("documents") or []:
                 if doc.get("fields"):
                     is_document = True
                     break
-            for doc in api_results["analyzeResult"].get("tables") or []:
+            for doc in analyzeResult.get("tables") or []:
                 if doc.get("cells") and doc.get("rowCount"):
                     is_table = True
                     break
             if is_table:
-                results["words"] = _parse_table(api_results["analyzeResult"])
+                results["words"] = _parse_table(analyzeResult)
             elif is_document:
-                results["words"] = _parse_document(api_results["analyzeResult"])
+                results["words"] = _parse_document(analyzeResult)
             else:
-                for idx, page in enumerate(api_results["analyzeResult"]["pages"]):
-                    lines = [o["content"]  for o in page["lines"]]
-                    if lines:
-                        results["words"] = lines
-                    break  # TODO: handle more pages
-                if _is_handwritten(api_results["analyzeResult"]["styles"]):
-                    results["words_style"] = "handwritten "
-                languages = []
-                for l in api_results["analyzeResult"].get("languages") or []:
-                    locale = l['locale']
-                    if locale == 'en' or (l.get("confidence") or 0) > 0.9:
-                        languages.append(locale)
+                lines, languages = _parse_lines(analyzeResult)
+                if lines:
+                    results["words"] = lines
                 if languages:
                     results["languages"] = languages
+                if _is_handwritten(analyzeResult["styles"]):
+                    results["words_style"] = "handwritten "
         self.cache[key] = results
         return results
 
