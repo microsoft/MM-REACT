@@ -10,6 +10,7 @@ For example to ask about an image without any description, make sure the questio
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example other image types that may have text (sign, label, plan, invoice, money), and require OCR.
+For example if there is a person's face in the image find if there are celebrities in the image.
 <|im_end|>
 
 Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
