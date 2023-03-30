@@ -38,7 +38,8 @@ To summerize, this is your business card with details such as
 <|im_start|>Human
 Move the logo in this image to the right
 <|im_sep|>{ai_prefix}
-1. This is a photo editing task
+1. The image should be edited
+2. This is a photo editing task
 Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 EXAMPLE END
 
