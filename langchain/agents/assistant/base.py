@@ -146,7 +146,7 @@ class AssistantAgent(Agent):
             assert action_input
             if not action and is_face:
                 action = "Celebrity Understanding"
-            if not action and (" text" in sub_cmd or sub_cmd.endswith(" say?")):
+            if not action and (" is written" in sub_cmd or " text" in sub_cmd or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
             if not action:
                 if tries < 4:
