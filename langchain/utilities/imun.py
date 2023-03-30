@@ -69,6 +69,10 @@ def resize_image(data, img_url):
         assert w > 0 and h > 0
     except:
         return data, (None, None)
+    img_url = img_url.lower()
+    if img_url.endswith((".webp")):
+        # just convert few formats that we do not support otherwise
+        data, (w, h) = im_downscale(data, None)
     data_len = len(data)
     if data_len > 1024 * 1024 * 4:
         if not img_url.endswith((".jpg", ".jpeg")):
@@ -321,12 +325,19 @@ def create_prompt(results: Dict) -> str:
 
     if not found and not description:
         # did not find anything
-        task = results.get("task") or ""
-        if task == "OCR":
-            return answer + "This image is too blurry for OCR text extraction"
-        if task == "celebrities":
-            return answer + "Did not find any celebrities in this image"
-        return answer + "This image is too blurry"
+        task = results.get("task") or []
+        task_done = False
+        if "OCR" in task:
+            answer += "This image is too blurry for OCR text extraction"
+            task_done = True 
+        if "celebrities" in task:
+            if task_done:
+                answer += "\n"
+            answer += "Did not find any celebrities in this image"
+            task_done = True
+        if not task_done:
+            answer += "This image is too blurry"
+        return answer
     
     size = results.get("size")
     if objects and captions:
@@ -375,15 +386,16 @@ class ImunAPIWrapper(BaseModel):
         key = f"{self.imun_url}?{param_str}&data={img_url}"
         if key in self.cache:
             return self.cache[key]
-        results = {}
+        results = {"task": []}
         if "celebrities" in self.imun_url:
-            results["task"] = "celebrities"
+            results["task"].append("celebrities")
         elif "Read" in "param_str":
-            results["task"] = "OCR"
+            results["task"].append("OCR")
         else:
             for task in ['prebuilt-read', 'prebuilt-receipt', 'prebuilt-businessCard', 'prebuilt-layout']:
                 if task in self.imun_url:
-                    results["task"] = "OCR"
+                    results["task"].append("OCR")
+                    break
         w, h = None, None
         headers = {"Ocp-Apim-Subscription-Key": self.imun_subscription_key, "Content-Type": "application/octet-stream"}
         try:

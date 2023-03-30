@@ -13,7 +13,7 @@ For example other image types that may have text (sign, label, plan, invoice, mo
 For example if a face detected in the image tags, find if there are celebrities in the image.
 <|im_end|>
 
-Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
+Gather your thoughts and observations in a list then if needed ask Assistant with list of tasks it can handle.
 Finally summerize the information and answer the question.
 For example:
 <|im_start|>Human
@@ -22,7 +22,8 @@ My business card https://i.ibb.co/tsQ0Myn/00.jpg
 1. This is a business card image
 2. This is an image that has text
 3. Reading the text requires OCR
-Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
+Assistant,
+* do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 This image contains text
 
@@ -40,14 +41,16 @@ To summerize, this is your business card with details such as
 Move the logo in this image to the right
 <|im_sep|>{ai_prefix}
 1. This is a photo editing task
-Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
+Assistant,
+* Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 EXAMPLE END
 
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
 1. This is an image
-Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
+Assistant,
+* what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Image description is: a group of men playing football.
 
@@ -85,7 +88,8 @@ What is the most expensive type of my favourite fruit in the US?
 <|im_sep|>{ai_prefix}
 1. I do not have that information.
 2. This question requires Bing search. 
-Assistant, Bing search what is the most expensive apple in the US?
+Assistant,
+* Bing search what is the most expensive apple in the US?
 EXAMPLE END
 
 <|im_start|>Human
@@ -93,7 +97,8 @@ What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4
 <|im_sep|>{ai_prefix}
 1. This is an image that has text
 2. Reading the text requires OCR
-Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
+Assistant,
+* do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 This image contains handwritten text
 
@@ -111,7 +116,8 @@ The result of the first equation is 13
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
 1. This is an image. 
-Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+Assistant,
+* what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
 
@@ -132,12 +138,12 @@ Detected faces, and their location in this image:
 man 40 90
 
 <|im_sep|>{ai_prefix}
-1. A man is playing with a dog in a zoo likely in front of a dolphine
-2. There is a face of a man detected in this image.
-Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
-<|im_sep|>{ai_prefix}
-1. This is an image that has text
-Assistant, also do OCR to this image of Brad Pitt in the zoo to find the text https://i.ibb.co/XJbmhg4/mY09.png
+1. A man is playing with a dog in a zoo likely in front of a dolphine, his face is visible
+2. There is a man's face detected in this image.
+3. This is an image that has text
+Assistant,
+* do OCR to this image of zoo to find the text https://i.ibb.co/XJbmhg4/mY09.png
+* are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 This image contains celebrities, text
 
@@ -156,7 +162,8 @@ To summerize, Brad Pitt is happy playing in the Community Zoo in LA with his dog
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
 1. This is an image. 
-Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+Assistant,
+* what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Image description is: a bottle of medicine.
 
@@ -173,7 +180,8 @@ prescription instructions
 1. This image is likely a pill bottle with labels and is related to heart
 2. This is an image that has text
 3. Reading the text requires OCR
-Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
+Assistant,
+* do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This image contains text
 
@@ -191,14 +199,16 @@ where can I buy this medicine? and how much is the price in Euros?
 1. I do not have that information.
 2. This question requires further context.
 3. This question requires Bing search. 
-Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+Assistant,
+* Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 EXAMPLE END
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_sep|>{ai_prefix}
 1. This is an image. 
-Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
+Assistant,
+* what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 Image description is: black and white text on a receipt
 
@@ -210,7 +220,8 @@ text
 1. This image is likely a receipt or ticket.
 2. This is an image that has text
 3. Reading the text requires OCR
-Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
+Assistant,
+* do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 EXAMPLE END
 """
 SUFFIX = """
@@ -218,7 +229,7 @@ SUFFIX = """
 <|im_start|>Human
 1. Check if there is a question after NEW INPUT
 2. Answer using the information in conversation up to NEW INPUT
-3. Ask Assistant with a task it can handle if needed
+3. Ask Assistant with task(s) it can handle if needed
 <|im_end|>
 
 {chat_history}
