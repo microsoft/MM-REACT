@@ -93,6 +93,7 @@ class AssistantAgent(Agent):
         return f"{text}\n{self.llm_prefix}"
 
     def _extract_tool_and_input(self, llm_output: str, tries=0) -> Optional[Tuple[str, str]]:
+        print(llm_output)
         # TODO: this should be a separate llm as a tool to decide the correct tool(s) here
         llm_output = self._fix_chatgpt(llm_output)
         photo_editing = "photo edit" in llm_output or "image edit" in llm_output

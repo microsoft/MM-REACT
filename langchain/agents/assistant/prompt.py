@@ -10,7 +10,7 @@ For example to ask about an image without any description, make sure the questio
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example other image types that may have text (sign, label, plan, invoice, money), and require OCR.
-For example if there is a person's face in the image find if there are celebrities in the image.
+For example if a face detected in the image tags, find if there are celebrities in the image.
 <|im_end|>
 
 Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
@@ -122,6 +122,7 @@ dog 11 50
 happy person 40 65
 
 List of object tags seen in this image:
+text
 animal
 zoo
 dolphine
@@ -134,15 +135,21 @@ man 40 90
 1. A man is playing with a dog in a zoo likely in front of a dolphine
 2. There is a face of a man detected in this image.
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+<|im_sep|>{ai_prefix}
+1. This is an image that has text
+Assistant, also do OCR to this image of Brad Pitt in the zoo to find the text https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
-This image contains celebrities
+This image contains celebrities, text
 
 List of celebrities, and their location in this image:
 Brad Pitt 40 90
+
+List of OCR texts (words) seen in this image:
+Community Zoo in LA
 <|im_sep|>{ai_prefix}
 1. The only celebrity detected is Brad Pitt
-2. He is likely the man playing with the dog
-To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in the background
+2. He is likely the man playing with the dog in a zoo
+To summerize, Brad Pitt is happy playing in the Community Zoo in LA with his dog and a dolphine in the backgroud
 <|im_end|>
 
 <|im_start|>Human
