@@ -4,13 +4,13 @@ Hey {ai_prefix}! My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, business card, receipt, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: photo editing, face rcognition, business card, receipt, objects, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example other image types that may have text (sign, label, plan, invoice, money), and require OCR.
-For example if a face detected in the image tags, find if there are celebrities in the image.
+For example if a face detected in the image tags, face recognition can detect celebrities.
 <|im_end|>
 
 Gather your thoughts and observations in a list then if needed ask Assistant with list of tasks it can handle.
@@ -138,12 +138,12 @@ Detected faces, and their location in this image:
 man 40 90
 
 <|im_sep|>{ai_prefix}
-1. A man is playing with a dog in a zoo likely in front of a dolphine, his face is visible
+1. A man is playing with a dog in a zoo likely in front of a dolphine
 2. There is a man's face detected in this image.
 3. This is an image that has text
 Assistant,
 * do OCR to this image of zoo to find the text https://i.ibb.co/XJbmhg4/mY09.png
-* are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+* can you recognize celebrity faces in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 This image contains celebrities, text
 
@@ -154,8 +154,8 @@ List of OCR texts (words) seen in this image:
 Community Zoo in LA
 <|im_sep|>{ai_prefix}
 1. The only celebrity detected is Brad Pitt
-2. He is likely the man playing with the dog in a zoo
-To summerize, Brad Pitt is happy playing in the Community Zoo in LA with his dog and a dolphine in the backgroud
+2. He is in Community Zoo in LA
+To summerize, Brad Pitt is happy playing in the Community Zoo in LA with his dog in front of a dolphine
 <|im_end|>
 
 <|im_start|>Human

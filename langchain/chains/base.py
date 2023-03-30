@@ -248,14 +248,19 @@ class Chain(BaseModel, ABC):
                 if keep_short:
                     # Hide the internal conversation
                     lines = action.split("\n")
+                    found = False
                     new_lines = []
                     for l in lines:
-                        for term in ["Assistant,"]:
-                            idx = l.lower().find(term.lower())
-                            if idx >= 0:
-                                l = l[:idx]
-                                if l.lower().strip() == "ai:":
-                                    l = ""
+                        l_lower = l.lower()
+                        if found:
+                            # multiline tasks
+                            if l_lower.startswith("* "):
+                                continue
+                            found = False 
+                        idx = l_lower.find("assistant,")
+                        if idx >= 0:
+                            found = True
+                            l = l[:idx]
                         if not l:
                             continue
                         new_lines.append(l)
