@@ -130,7 +130,10 @@ class AssistantAgent(Agent):
             elif "brand" in sub_cmd:
                 action = "Bing Search"
             elif "objects" in sub_cmd:
-                action = "Image Understanding"
+                if action_input.lower().endswith(".pdf"):
+                    action = "OCR Understanding"
+                else:
+                    action = "Image Understanding"
             if not action_input:
                 if not action:
                     if cmd.endswith("?"):
@@ -143,7 +146,8 @@ class AssistantAgent(Agent):
             assert action_input
             if not action and is_face:
                 action = "Celebrity Understanding"
-            if not action and " text" in sub_cmd:
+            # TODO: separate llm to decide the task
+            if not action and (" is written" in sub_cmd or " text" in sub_cmd or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
             if not action:
                 if tries < 4:
