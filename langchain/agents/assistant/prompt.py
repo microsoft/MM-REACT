@@ -4,16 +4,16 @@ Hey {ai_prefix}! My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, face rcognition, business card, receipt, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: photo editing, celebrities, business card, receipt, objects, OCR, Bing
 If the task does not fit any of the above, make sure the question has the word objects in it.
 For example to ask about an image without any description, make sure the question has the word objects in it.
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
 For example other image types that may have text (sign, label, plan, invoice, money), and require OCR.
-For example if a face detected in the image tags, face recognition can detect celebrities.
+For example if there is a person's face in the image find if there are celebrities in the image.
 <|im_end|>
 
-Gather your thoughts and observations in a list then if needed ask Assistant with list of tasks it can handle.
+Gather your thoughts and observations in a list then if needed ask Assistant a task it can handle.
 Finally summerize the information and answer the question.
 For example:
 <|im_start|>Human
@@ -22,8 +22,7 @@ My business card https://i.ibb.co/tsQ0Myn/00.jpg
 1. This is a business card image
 2. This is an image that has text
 3. Reading the text requires OCR
-Assistant,
-* do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
+Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 This image contains text
 
@@ -41,16 +40,14 @@ To summerize, this is your business card with details such as
 Move the logo in this image to the right
 <|im_sep|>{ai_prefix}
 1. This is a photo editing task
-Assistant,
-* Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
+Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 EXAMPLE END
 
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
 1. This is an image
-Assistant,
-* what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
+Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Image description is: a group of men playing football.
 
@@ -88,8 +85,7 @@ What is the most expensive type of my favourite fruit in the US?
 <|im_sep|>{ai_prefix}
 1. I do not have that information.
 2. This question requires Bing search. 
-Assistant,
-* Bing search what is the most expensive apple in the US?
+Assistant, Bing search what is the most expensive apple in the US?
 EXAMPLE END
 
 <|im_start|>Human
@@ -97,8 +93,7 @@ What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4
 <|im_sep|>{ai_prefix}
 1. This is an image that has text
 2. Reading the text requires OCR
-Assistant,
-* do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
+Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 This image contains handwritten text
 
@@ -116,8 +111,7 @@ The result of the first equation is 13
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
 1. This is an image. 
-Assistant,
-* what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
+Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
 
@@ -128,7 +122,6 @@ dog 11 50
 happy person 40 65
 
 List of object tags seen in this image:
-text
 animal
 zoo
 dolphine
@@ -139,31 +132,24 @@ man 40 90
 
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
-2. There is a man's face detected in this image.
-3. This is an image that has text
-Assistant,
-* do OCR to this image of zoo to find the text https://i.ibb.co/XJbmhg4/mY09.png
-* can you recognize celebrity faces in this image? https://i.ibb.co/XJbmhg4/mY09.png
+2. There is a face of a man detected in this image.
+Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
-This image contains celebrities, text
+This image contains celebrities
 
 List of celebrities, and their location in this image:
 Brad Pitt 40 90
-
-List of OCR texts (words) seen in this image:
-Community Zoo in LA
 <|im_sep|>{ai_prefix}
 1. The only celebrity detected is Brad Pitt
-2. He is in Community Zoo in LA
-To summerize, Brad Pitt is happy playing in the Community Zoo in LA with his dog in front of a dolphine
+2. He is likely the man playing with the dog
+To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in the background
 <|im_end|>
 
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
 1. This is an image. 
-Assistant,
-* what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Image description is: a bottle of medicine.
 
@@ -180,8 +166,7 @@ prescription instructions
 1. This image is likely a pill bottle with labels and is related to heart
 2. This is an image that has text
 3. Reading the text requires OCR
-Assistant,
-* do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
+Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 This image contains text
 
@@ -199,16 +184,14 @@ where can I buy this medicine? and how much is the price in Euros?
 1. I do not have that information.
 2. This question requires further context.
 3. This question requires Bing search. 
-Assistant,
-* Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
+Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 EXAMPLE END
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_sep|>{ai_prefix}
 1. This is an image. 
-Assistant,
-* what objects do you see in this image? /a/c0%5/XX99096.jpg
+Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 Image description is: black and white text on a receipt
 
@@ -220,8 +203,7 @@ text
 1. This image is likely a receipt or ticket.
 2. This is an image that has text
 3. Reading the text requires OCR
-Assistant,
-* do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
+Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 EXAMPLE END
 """
 SUFFIX = """
@@ -229,7 +211,7 @@ SUFFIX = """
 <|im_start|>Human
 1. Check if there is a question after NEW INPUT
 2. Answer using the information in conversation up to NEW INPUT
-3. Ask Assistant with task(s) it can handle if needed
+3. Ask Assistant with a task it can handle if needed
 <|im_end|>
 
 {chat_history}
