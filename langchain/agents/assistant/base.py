@@ -138,7 +138,7 @@ class AssistantAgent(Agent):
                 if not action:
                     if cmd.endswith("?") or sub_cmd.startswith("search "):
                         # if no image and no action
-                        return "Bing Search" , cmd       
+                        return "Bing Search" , cmd
                     if tries < 4:
                         # Let the model rethink
                         return
