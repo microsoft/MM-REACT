@@ -136,7 +136,7 @@ class AssistantAgent(Agent):
                     action = "Image Understanding"
             if not action_input:
                 if not action:
-                    if cmd.endswith("?"):
+                    if cmd.endswith("?") or sub_cmd.startswith("search "):
                         # if no image and no action
                         return "Bing Search" , cmd       
                     if tries < 4:
@@ -149,6 +149,8 @@ class AssistantAgent(Agent):
             # TODO: separate llm to decide the task
             if not action and (" is written" in sub_cmd or " text" in sub_cmd or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
+            if not action and sub_cmd.startswith("search "):
+                action = "Bing Search"
             if not action:
                 if tries < 4:
                     # Let the model rethink
