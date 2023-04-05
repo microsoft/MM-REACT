@@ -149,7 +149,7 @@ class AssistantAgent(Agent):
             # TODO: separate llm to decide the task
             if not action and (" is written" in sub_cmd or " text" in sub_cmd or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
-            if not action and sub_cmd.startswith("search "):
+            if not action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
                 action = "Bing Search"
             if not action:
                 if tries < 4:
