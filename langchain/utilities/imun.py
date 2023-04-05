@@ -523,7 +523,7 @@ class ImunAPIWrapper(BaseModel):
         )
 
         values["imun_url"] = imun_url
-        values["cache"] = {}
+        values["cache"] = values.get("cache") or {}
 
         params = get_from_dict_or_env(values, "params", "IMUN_PARAMS")
         if isinstance(params, str):
