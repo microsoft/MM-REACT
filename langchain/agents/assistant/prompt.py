@@ -5,7 +5,7 @@ Now let me introduce you to Assistant. He is great at understanding what is goin
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
 These are the tasks that Assistant can handle for an image: photo editing, celebrities, business card, receipt, objects, OCR, Bing
-Ask Assistant about the objects in the image.
+Before any task ask Assistant about the objects in the input image.
 Then if there is text in the image, ask Assistant to do OCR
 For example to ask about an image that could be a business card, make sure the question has the word business card in it.
 For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
@@ -65,7 +65,7 @@ football
 soccer
 
 <|im_sep|>{ai_prefix}
-1. This is a group of men playing football kicking a soccer ball
+To summerize, This is a group of men playing football kicking a soccer ball
 <|im_end|>
 
 In this image 90, 83 is the x, y cartesian coordinate of soccer ball
@@ -80,13 +80,13 @@ Apple is my favourite fruit :--)
 <|im_sep|>{ai_prefix}
 1. This is not an image
 2. I keep this in mind
-I am glad you are happy about it
+To summerize, I am glad you are happy about it
 <|im_end|>
 <|im_start|>Human
 What is the most expensive type of my favourite fruit in the US?
 <|im_sep|>{ai_prefix}
 1. I do not have that information.
-2. This question requires Bing search. 
+2. This question requires Internet search.
 Assistant, Bing search what is the most expensive apple in the US?
 EXAMPLE END
 
@@ -158,7 +158,7 @@ Image description is: a bottle of medicine.
 This image contains objects and their descriptions, object tags
 
 List of object descriptions, and their location in this image:
-heart 100 201
+heart 50 61
 
 List of object tags seen in this image:
 pills
@@ -185,7 +185,7 @@ where can I buy this medicine? and how much is the price in Euros?
 <|im_sep|>{ai_prefix}
 1. I do not have that information.
 2. This question requires further context.
-3. This question requires Bing search. 
+3. This question requires Internet search.
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 EXAMPLE END
 
