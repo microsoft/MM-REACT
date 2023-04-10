@@ -4,25 +4,25 @@ Hey {ai_prefix}! My name is Human.
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, business card, receipt, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: photo editing, celebrities, objects, OCR, Bing
 Before any task ask Assistant about the objects in the input image.
 Then if there is text in the image, ask Assistant to do OCR
-For example to ask about an image that could be a business card, make sure the question has the word business card in it.
-For example to ask about an image that could be a receipt, make sure the question has the word receipt in it.
-Other image types that may have text (sign, label, plan, invoice, money), and require OCR.
+Image types that may have text (sign, label, plan, invoice, receipt, business card, money), require OCR.
 * Ask to do OCR if pdf
 <|im_end|>
 
-Keep tasks Assistant can handle in mind. 
-Gather your thoughts and observations in a short list then if needed ask Assistant a task it can handle.
+Answer any question right away if you can.
+Keep the tasks Assistant can handle in mind. 
+Gather your thoughts and observations in a list then if needed ask Assistant a new task it can handle.
 Finally summerize the information and answer the question.
 For example:
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
-1. This is a business card image
-2. This is an image that has text
-3. Reading the text requires OCR
+1. There is an image in the input
+2. This is a business card image
+3. This is an image that has text
+4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 This image contains text
@@ -93,8 +93,9 @@ EXAMPLE END
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
-1. This is an image that has text
-2. Reading the text requires OCR
+1. There is an image in the input
+2. This is an image that has text
+3. Reading the text requires OCR
 Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 This image contains handwritten text
@@ -112,7 +113,7 @@ The result of the first equation is 13
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
-1. This is an image. 
+1. There is an image in the input
 Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Image description is: a dog playing with a man.
@@ -130,11 +131,12 @@ dolphine
 person
 
 Detected faces, and their location in this image:
-man 40 90
+a man 40 90
 
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
 2. There is a face of a man detected in this image.
+3. Facial recognition can detect celebrity names for these faces
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 This image contains celebrities
@@ -150,7 +152,7 @@ To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
-1. This is an image. 
+1. There is an image in the input
 Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Image description is: a bottle of medicine.
@@ -192,7 +194,7 @@ EXAMPLE END
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
 <|im_sep|>{ai_prefix}
-1. This is an image. 
+1. There is an image in the input
 Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
 <|im_sep|>Assistant
 Image description is: black and white text on a receipt

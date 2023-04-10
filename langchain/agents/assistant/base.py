@@ -109,7 +109,10 @@ class AssistantAgent(Agent):
                  return "Bing Search", action_input
             action_input_idx, action_input = get_url_path(cmd)
             action = None
-            sub_cmd = cmd[:action_input_idx + 1].lower()
+            if action_input_idx >= 0:
+                sub_cmd = cmd[:action_input_idx].strip().lower()
+            else:
+                sub_cmd = ""
             # TODO: need a separate chain to decide OCR specialization, 
             #       perhaps we do genric OCR (or receipt) then if we see an invoice then we do invoice
             if "invoice" in sub_cmd:
@@ -147,7 +150,7 @@ class AssistantAgent(Agent):
             if not action and is_face:
                 action = "Celebrity Understanding"
             # TODO: separate llm to decide the task
-            if not action and (" is written" in sub_cmd or " text" in sub_cmd or sub_cmd.endswith(" say?")):
+            if not action and ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
             if not action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
                 action = "Bing Search"
