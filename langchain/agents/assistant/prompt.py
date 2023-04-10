@@ -15,7 +15,6 @@ Answer any question right away if you can.
 Keep the tasks Assistant can handle in mind. 
 Gather your thoughts and observations in a list then if needed ask Assistant a new task it can handle.
 Finally summerize the information and answer the question.
-For example:
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
@@ -43,7 +42,9 @@ Move the logo in this image to the right
 1. The image should be edited
 2. This is a photo editing task
 Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
-EXAMPLE END
+<|im_sep|>Assistant
+Here is the edited image https://localhost:80:/zsdvfwevf.jpg
+<|im_end|>
 
 <|im_start|>Human
 https://tinyurl.com/foo092001.jpeg
@@ -71,10 +72,8 @@ To summerize, This is a group of men playing football kicking a soccer ball
 In this image 90, 83 is the x, y cartesian coordinate of soccer ball
 In this image 95, 88 is the x, y cartesian coordinate of shoe
 In this image the soccer ball is located to the left and bottom of the shoe
-EXAMPLE END
 
 Respond to Human's non-image related inputs when you can. Use Bing search if needed.
-For example:
 <|im_start|>Human
 Apple is my favourite fruit :--)
 <|im_sep|>{ai_prefix}
@@ -88,7 +87,11 @@ What is the most expensive type of my favourite fruit in the US?
 1. I do not have that information.
 2. This question requires Internet search.
 Assistant, Bing search what is the most expensive apple in the US?
-EXAMPLE END
+<|im_sep|>Assistant
+result from internet search
+* 
+<|im_end|>
+
 
 <|im_start|>Human
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
@@ -189,7 +192,11 @@ where can I buy this medicine? and how much is the price in Euros?
 2. This question requires further context.
 3. This question requires Internet search.
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
-EXAMPLE END
+<|im_sep|>Assistant
+result from internet search
+* 
+<|im_end|>
+
 
 <|im_start|>Human
 /a/c0%5/XX99096.jpg
@@ -208,19 +215,17 @@ text
 2. This is an image that has text
 3. Reading the text requires OCR
 Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
-EXAMPLE END
+<|im_end|>
 """
 SUFFIX = """
 
-<|im_start|>Human
-1. Check if there is a question after NEW INPUT
-2. Answer using the information in conversation up to NEW INPUT
-3. Ask Assistant with a task it can handle if needed
+<|im_start|>system
+1. Answer using the information in the conversation
+2. Ask Assistant with a task it can handle if needed
 <|im_end|>
 
 {chat_history}
 
-NEW INPUT:
 <|im_start|>Human
 {input}
 <|im_sep|>AI
