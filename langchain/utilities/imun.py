@@ -100,15 +100,15 @@ def _get_person(o):
     gender = (o.get("gender") or "").lower()
     if age < 20:
         if gender == "female":
-            return "young woman"
+            return "a young woman"
         if gender == "male":
-            return "young man"
-        return "young person"
+            return "a young man"
+        return "a young person"
     if gender == "female":
-        return "woman"
+        return "a woman"
     if gender == "male":
-        return "man"
-    return "person"
+        return "a man"
+    return "a person"
 
 def _is_handwritten(styles):
     handwritten = False
