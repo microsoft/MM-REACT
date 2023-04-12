@@ -155,10 +155,7 @@ class AssistantAgent(Agent):
             if not action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
                 action = "Bing Search"
             if not action:
-                if tries < 4:
-                    # Let the model rethink
-                    return
-                return self.finish_tool_name, llm_output
+                return "Image Understanding", llm_output
             return action, action_input
         action_log = llm_output.strip()
         if tries < 4:
