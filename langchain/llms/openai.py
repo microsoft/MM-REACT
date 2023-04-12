@@ -101,6 +101,7 @@ class BaseOpenAI(BaseLLM, BaseModel):
     model_kwargs: Dict[str, Any] = Field(default_factory=dict)
     """Holds any model parameters valid for `create` call not explicitly specified."""
     openai_api_key: Optional[str] = None
+    openai_api_version: Optional[str] = None
     batch_size: int = 20
     """Batch size to use when passing multiple documents to generate."""
     request_timeout: Optional[Union[float, Tuple[float, float]]] = None
@@ -111,6 +112,8 @@ class BaseOpenAI(BaseLLM, BaseModel):
     """Maximum number of retries to make when generating."""
     streaming: bool = False
     """Whether to stream the results or not."""
+    chat_completion: bool = False
+    """Whether to use the chat client"""
 
     class Config:
         """Configuration for this pydantic object."""
@@ -142,11 +145,20 @@ class BaseOpenAI(BaseLLM, BaseModel):
         openai_api_key = get_from_dict_or_env(
             values, "openai_api_key", "OPENAI_API_KEY"
         )
+        openai_api_version = get_from_dict_or_env(
+            values, "openai_api_version", "OPENAI_API_VERSION"
+        )
+        chat_completion = values.get("chat_completion") or False
+        values["chat_completion"] = chat_completion
         try:
             import openai
 
             openai.api_key = openai_api_key
-            values["client"] = openai.Completion
+            openai.api_version = openai_api_version
+            if chat_completion:
+                values["client"] = openai.ChatCompletion
+            else:
+                values["client"] = openai.Completion
         except ImportError:
             raise ValueError(
                 "Could not import openai python package. "
@@ -195,9 +207,57 @@ class BaseOpenAI(BaseLLM, BaseModel):
             before_sleep=before_sleep_log(logger, logging.WARNING),
         )
 
+    @staticmethod
+    def _chat_completion_adapter(kwargs:dict):
+        new_kwargs = {}
+        for key, val in kwargs.items():
+            if key in ["stop"]:
+                continue
+            if key == "prompt":
+                assert len(val) == 1, "Only a single prompt"
+                prompt:str = val[0]
+                messages = []
+                prompt = prompt.replace("<|im_sep|>", "<|im_end|><|im_start|>")
+                for line in prompt.split("<|im_start|>"):
+                    if not line:
+                        continue
+                    if line.startswith("AI\n"):
+                        role = "assistant"
+                        line = line[3:]
+                    elif line.startswith("Assistant\n"):
+                        role = "user"
+                        line = line[10:]
+                    elif line.startswith("system\n"):
+                        role = "system"
+                        line = line[7:]
+                    elif line.startswith("Human\n"):
+                        role = "user"
+                        line = line[7:]
+                    else:
+                        raise ValueError(f"{line} no valid role")
+                    system_content = ""
+                    content = line
+                    idx = line.find("<|im_end|>")
+                    if idx >= 0:
+                        content = line[:idx]
+                        system_content = line[idx + 10:].strip()
+                    if content:
+                        messages.append({"role": role, "content": content})
+                    if system_content:
+                        messages.append({"role": "system", "content": system_content})
+
+                new_kwargs["messages"] = messages
+                continue
+            new_kwargs[key] = val
+
+        return new_kwargs
+
     def completion_with_retry(self, **kwargs: Any) -> Any:
         """Use tenacity to retry the completion call."""
         retry_decorator = self._create_retry_decorator()
+
+        if self.chat_completion:
+            kwargs = self._chat_completion_adapter(kwargs)
 
         @retry_decorator
         def _completion_with_retry(**kwargs: Any) -> Any:
@@ -208,6 +268,9 @@ class BaseOpenAI(BaseLLM, BaseModel):
     async def acompletion_with_retry(self, **kwargs: Any) -> Any:
         """Use tenacity to retry the async completion call."""
         retry_decorator = self._create_retry_decorator()
+
+        if self.chat_completion:
+            kwargs = self._chat_completion_adapter(kwargs)
 
         @retry_decorator
         async def _completion_with_retry(**kwargs: Any) -> Any:
@@ -340,7 +403,7 @@ class BaseOpenAI(BaseLLM, BaseModel):
             generations.append(
                 [
                     Generation(
-                        text=choice["text"],
+                        text=choice["text"] if "text" in choice else choice["message"]["content"],
                         generation_info=dict(
                             finish_reason=choice.get("finish_reason"),
                             logprobs=choice.get("logprobs"),
