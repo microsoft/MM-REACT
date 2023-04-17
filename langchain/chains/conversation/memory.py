@@ -114,7 +114,9 @@ class ConversationBufferMemory(Memory, BaseModel):
                 raise ValueError(f"One output key expected, got {outputs.keys()}")
         else:
             output_key = self.output_key
-        new_input = inputs[prompt_input_key]
+        new_input:str = inputs[prompt_input_key]
+        if new_input[-10:].lower().endswith((".mp4", ".mpg", ".avi")):
+            self.clear()
         human = self.human_prefix + new_input
         ai_output = outputs[output_key]
         if not ai_output.strip():
