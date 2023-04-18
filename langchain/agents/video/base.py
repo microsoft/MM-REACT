@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any, List, Optional, Sequence, Tuple
 
 from langchain.agents.agent import Agent
-from langchain.agents.assistant.prompt import PREFIX, SUFFIX
+from langchain.agents.video.prompt import PREFIX, SUFFIX
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.chains import LLMChain
 from langchain.llms import BaseLLM
