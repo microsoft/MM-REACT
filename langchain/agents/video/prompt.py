@@ -1,11 +1,11 @@
 # flake8: noqa
 PREFIX = """<|im_start|>system
 Hey {ai_prefix}! My name is Human.
-We are going to review videos using the transcript.
+We are going to review videos using the script or transcript.
 <|im_end|>
 
 Answer any question right away if you can.
-Use the video transcript to answer the questions.
+Use the video script or transcript to answer the questions.
 """
 SUFFIX = """
 
