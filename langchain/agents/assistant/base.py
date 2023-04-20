@@ -12,7 +12,7 @@ from langchain.prompts import PromptTemplate
 from langchain.tools.base import BaseTool
 from langchain.utils import get_url_path
 
-class AssistantAgent(Agent):
+class MMAssistantAgent(Agent):
     """An agent designed to hold a conversation in addition to an specialized assistant tool."""
 
     ai_prefix: str = "AI"
@@ -20,7 +20,7 @@ class AssistantAgent(Agent):
     @property
     def _agent_type(self) -> str:
         """Return Identifier of agent type."""
-        return "conversational-assistant"
+        return "conversational-mm-assistant"
 
     @property
     def observation_prefix(self) -> str:

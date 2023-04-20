@@ -164,5 +164,5 @@ tools = [
     ),
 ]
 
-chain = initialize_agent(tools, llm, agent="conversational-assistant", verbose=True, memory=memory, return_intermediate_steps=True, max_iterations=4)
+chain = initialize_agent(tools, llm, agent="conversational-mm-assistant", verbose=True, memory=memory, return_intermediate_steps=True, max_iterations=4)
 output = chain.conversation("https://www.oracle-dba-online.com/sql/weekly_sales_table.png")
