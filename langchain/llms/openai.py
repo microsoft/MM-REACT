@@ -232,7 +232,7 @@ class BaseOpenAI(BaseLLM, BaseModel):
                         line = line[7:]
                     elif line.startswith("Human\n"):
                         role = "user"
-                        line = line[7:]
+                        line = line[6:]
                     else:
                         raise ValueError(f"{line} no valid role")
                     system_content = ""
