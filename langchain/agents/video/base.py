@@ -97,9 +97,9 @@ class VideoAssistantAgent(Agent):
         action = ""
         if cmd_idx >= 0:
             cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
-            search_idx = cmd.lower().find("bing search")
+            search_idx = cmd.lower().find("stream search")
             if search_idx >= 0:
-                 action_input = cmd[search_idx + len("bing serach") + 1:]
+                 action_input = cmd[search_idx + len("stream serach") + 1:]
                  return "Bing Search", action_input
             action_input = cmd
             if cmd.startswith("search ") or  " the name of " in cmd:
