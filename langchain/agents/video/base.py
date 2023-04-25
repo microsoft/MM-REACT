@@ -92,7 +92,24 @@ class VideoAssistantAgent(Agent):
         return f"{text}\n{self.llm_prefix}"
 
     def _extract_tool_and_input(self, llm_output: str, tries=0) -> Optional[Tuple[str, str]]:
-        # No tool yet
+        llm_output = self._fix_chatgpt(llm_output)
+        cmd_idx = llm_output.rfind("Assistant,")
+        action = ""
+        if cmd_idx >= 0:
+            cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
+            search_idx = cmd.lower().find("bing search")
+            if search_idx >= 0:
+                 action_input = cmd[search_idx + len("bing serach") + 1:]
+                 return "Bing Search", action_input
+            action_input = cmd
+            if cmd.startswith("search ") or  " the name of " in cmd:
+                action = "Bing Search"
+            if not action:
+                if tries < 4:
+                    # Let the model rethink
+                    return
+                return self.finish_tool_name, llm_output
+            return action, action_input
         return self.finish_tool_name, llm_output
 
     @classmethod
