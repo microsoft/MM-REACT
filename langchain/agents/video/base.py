@@ -101,6 +101,10 @@ class VideoAssistantAgent(Agent):
             if search_idx >= 0:
                  action_input = cmd[search_idx + len("stream serach") + 1:]
                  return "Bing Search", action_input
+            search_idx = cmd.lower().find("bing search")
+            if search_idx >= 0:
+                 action_input = cmd[search_idx + len("bing serach") + 1:]
+                 return "Bing Search", action_input
             action_input = cmd
             if cmd.startswith("search ") or  " the name of " in cmd:
                 action = "Bing Search"
