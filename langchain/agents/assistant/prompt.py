@@ -151,6 +151,16 @@ Brad Pitt 40 90
 2. He is likely the man playing with the dog
 To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in the background
 <|im_end|>
+<|im_start|>Human
+When is this photo taken?
+<|im_sep|>{ai_prefix}
+1. I do not have that information.
+2. This question requires Internet search.
+Assistant, Bing search when this photo of Brad Pitt in the zoo is taken https://i.ibb.co/XJbmhg4/mY09.png
+<|im_sep|>Assistant
+result from internet search
+* 
+<|im_end|>
 
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
