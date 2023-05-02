@@ -1,4 +1,5 @@
 """Wrapper around OpenAI APIs."""
+import os
 import logging
 import sys
 from typing import (
@@ -145,16 +146,15 @@ class BaseOpenAI(BaseLLM, BaseModel):
         openai_api_key = get_from_dict_or_env(
             values, "openai_api_key", "OPENAI_API_KEY"
         )
-        openai_api_version = get_from_dict_or_env(
-            values, "openai_api_version", "OPENAI_API_VERSION"
-        )
+        openai_api_version = values.get("openai_api_version") or os.environ.get("OPENAI_API_VERSION") 
         chat_completion = values.get("chat_completion") or False
         values["chat_completion"] = chat_completion
         try:
             import openai
 
             openai.api_key = openai_api_key
-            openai.api_version = openai_api_version
+            if openai_api_version:
+                openai.api_version = openai_api_version
             if chat_completion:
                 values["client"] = openai.ChatCompletion
             else:
