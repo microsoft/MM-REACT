@@ -5,6 +5,7 @@ from typing import Any, List, Optional, Sequence, Tuple
 
 from langchain.agents.agent import Agent
 from langchain.agents.assistant.prompt import PREFIX, SUFFIX
+from langchain.agents.assistant.prompt_thoughts import PREFIX as PREFIX_THOUGHT, SUFFIX as SUFFIX_THOUGHT
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.chains import LLMChain
 from langchain.llms import BaseLLM
@@ -173,8 +174,6 @@ class MMAssistantAgent(Agent):
         llm: BaseLLM,
         tools: Sequence[BaseTool],
         callback_manager: Optional[BaseCallbackManager] = None,
-        prefix: str = PREFIX,
-        suffix: str = SUFFIX,
         ai_prefix: str = "AI",
         input_variables: Optional[List[str]] = None,
         **kwargs: Any,
@@ -183,8 +182,8 @@ class MMAssistantAgent(Agent):
         cls._validate_tools(tools)
         prompt = cls.create_prompt(
             ai_prefix=ai_prefix,
-            prefix=prefix,
-            suffix=suffix,
+            prefix=PREFIX,
+            suffix=SUFFIX,
             input_variables=input_variables,
         )
         llm_chain = LLMChain(
@@ -192,7 +191,18 @@ class MMAssistantAgent(Agent):
             prompt=prompt,
             callback_manager=callback_manager,
         )
+        prompt_thought = cls.create_prompt(
+            ai_prefix=ai_prefix,
+            prefix=PREFIX_THOUGHT,
+            suffix=SUFFIX_THOUGHT,
+            input_variables=input_variables,
+        )
+        llm_chain_thought = LLMChain(
+            llm=llm,
+            prompt=prompt_thought,
+            callback_manager=callback_manager,
+        )
         tool_names = [tool.name for tool in tools]
         return cls(
-            llm_chain=llm_chain, allowed_tools=tool_names, **kwargs
+            llm_chain=llm_chain, llm_chains=[llm_chain_thought], allowed_tools=tool_names, **kwargs
         )

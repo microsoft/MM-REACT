@@ -34,6 +34,7 @@ class Agent(BaseModel):
     """
 
     llm_chain: LLMChain
+    llm_chains: List[LLMChain] = None
     allowed_tools: Optional[List[str]] = None
     return_values: List[str] = ["output"]
 
@@ -60,6 +61,10 @@ class Agent(BaseModel):
         return thoughts
 
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
+        for llm_chain in self.llm_chains or []:
+            full_output = llm_chain.predict(**full_inputs)
+            full_inputs["agent_scratchpad"] += full_output
+            
         full_output = self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         tries = 0
