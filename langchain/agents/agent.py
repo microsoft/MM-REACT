@@ -61,11 +61,11 @@ class Agent(BaseModel):
         return thoughts
 
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
+        full_output = ""
         for llm_chain in self.llm_chains or []:
-            full_output = llm_chain.predict(**full_inputs)
-            full_inputs["agent_scratchpad"] += full_output
-            
-        full_output = self.llm_chain.predict(**full_inputs)
+            full_output += llm_chain.predict(**full_inputs) + "\n"
+        full_inputs["agent_scratchpad"] += full_output
+        full_output += self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         tries = 0
         while parsed_output is None:
