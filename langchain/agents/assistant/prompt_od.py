@@ -85,5 +85,5 @@ List your observations
 
 <|im_start|>Human
 {input}
-<|im_end|>
+<|im_sep|>AI
 {agent_scratchpad}"""

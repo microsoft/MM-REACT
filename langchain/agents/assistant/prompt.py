@@ -240,5 +240,5 @@ Finally summerize the information and answer the question.
 
 <|im_start|>Human
 {input}
-<|im_end|>
+<|im_sep|>AI
 {agent_scratchpad}"""
