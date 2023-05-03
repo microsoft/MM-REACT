@@ -5,10 +5,10 @@ Let me introduce you to Assistant. He is great at understanding what is going on
 Any time there is a new image in our conversation that you want to know about objects in the image you could ask Assistant by addressing him. 
 <|im_end|>
 
-Keep the last question and conversation in mind.
+Keep the last question and conversation in mind
 Detect if there is a new image in the input 
 If new image, ask Assistant to detect objects in the image
-List your observations
+List your thoughts and observations
 
 <|im_start|>Human
 My prescription https://i.ibb.co/tsQ0Myn/00.jpg
@@ -29,6 +29,8 @@ List of object tags seen in this image:
 pills
 text
 prescription instructions
+<|im_sep|>system
+In this image 50 61 is the x, y cartesian coordinate of detected heart
 <|im_sep|>{ai_prefix}
 1. There is no image in the input
 <|im_start|>Human
@@ -75,10 +77,10 @@ Image description is: a peaceful scene
 SUFFIX = """
 
 <|im_start|>system
-Keep the last question and conversation in mind.
-Detect if There is a new image in the input 
+Keep the last question and conversation in mind
+Detect if there is a new image in the input 
 If new image, ask Assistant to detect objects in the image
-List your observations
+List your thoughts and observations
 <|im_end|>
 
 {chat_history}

@@ -6,7 +6,7 @@ Any time there is an image in our conversation that you want to know about objec
 
 These are the tasks that Assistant can handle for an image: photo editing, celebrities, objects, OCR, Bing
 If there is text in the image, ask Assistant to do OCR
-Image types that may have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
+Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
 <|im_end|>
 
@@ -44,33 +44,6 @@ Assistant, Move the logo in this business card image to the right  https://i.ibb
 <|im_sep|>Assistant
 Here is the edited image https://localhost:80:/zsdvfwevf.jpg
 <|im_end|>
-
-<|im_start|>Human
-https://tinyurl.com/foo092001.jpeg
-<|im_sep|>{ai_prefix}
-1. There is an image in the input
-Assistant, what objects do you see in this image?  https://tinyurl.com/foo092001.jpeg
-<|im_sep|>Assistant
-Image description is: a group of men playing football.
-
-This image contains objects and their descriptions, object tags
-
-List of object descriptions, and their location in this image:
-soccer ball 90 83
-shoe 95 88
-
-List of object tags seen in this image:
-athletic game
-football
-soccer
-
-<|im_sep|>{ai_prefix}
-To summerize, This is a group of men playing football kicking a soccer ball
-<|im_end|>
-
-In this image 90, 83 is the x, y cartesian coordinate of soccer ball
-In this image 95, 88 is the x, y cartesian coordinate of shoe
-In this image the soccer ball is located to the left and bottom of the shoe
 
 Respond to non-image related inputs when you can. Use Bing search if needed.
 <|im_start|>Human
@@ -135,6 +108,11 @@ person
 Detected faces, and their location in this image:
 a man 40 90
 
+<|im_sep|>system
+In this image 11 50 is the x, y cartesian coordinate of detected dog
+In this image 40 65 is the x, y cartesian coordinate of detected happy person
+In this image 40 90 is the x, y cartesian coordinate of detected face of a man
+These objects could refer to the same entities
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
 2. There is a face of a man detected in this image.
@@ -204,26 +182,6 @@ Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how m
 <|im_sep|>Assistant
 result from internet search
 * 
-<|im_end|>
-
-
-<|im_start|>Human
-/a/c0%5/XX99096.jpg
-<|im_sep|>{ai_prefix}
-1. There is an image in the input
-Assistant, what objects do you see in this image? /a/c0%5/XX99096.jpg
-<|im_sep|>Assistant
-Image description is: black and white text on a receipt
-
-This image contains object tags
-
-List of object tags seen in this image:
-text
-<|im_sep|>{ai_prefix}
-1. This image is likely a receipt or ticket.
-2. There is text and numbers in the image
-3. Reading the text requires OCR
-Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 <|im_end|>
 """
 SUFFIX = """
