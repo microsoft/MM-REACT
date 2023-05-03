@@ -1,10 +1,6 @@
 # flake8: noqa
 PREFIX = """<|im_start|>system
 Hey {ai_prefix}!
-Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
-Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
-
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, objects, OCR, Bing
 <|im_end|>
 
 Keep the question and conversation in mind.
@@ -28,6 +24,8 @@ Move the logo in this image to the right
 https://tinyurl.com/foo092001.jpeg
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
+2. I do not have any information about the content of the image.
+3. What objects do you see in this image
 <|im_end|>
 
 <|im_start|>Human
