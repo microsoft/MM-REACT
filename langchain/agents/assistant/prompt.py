@@ -20,11 +20,11 @@ My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
 2. This is a business card image
-3. This is an image that has text
+3. There is text and numbers in the image
 4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
-This image contains text
+There is text and numbers in the image
 
 List of OCR texts (words) seen in this image:
 CONTOSO
@@ -97,7 +97,7 @@ result from internet search
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
-2. This is an image that has text
+2. There is text and numbers in the image
 3. Reading the text requires OCR
 Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
@@ -181,11 +181,11 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. This is an image that has text
+2. There is text and numbers in the image
 3. Reading the text requires OCR
 Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
-This image contains text
+There is text and numbers in the image
 
 List of OCR texts (words) seen in this image:
 SPRING VALLEY.
@@ -222,7 +222,7 @@ List of object tags seen in this image:
 text
 <|im_sep|>{ai_prefix}
 1. This image is likely a receipt or ticket.
-2. This is an image that has text
+2. There is text and numbers in the image
 3. Reading the text requires OCR
 Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 <|im_end|>
