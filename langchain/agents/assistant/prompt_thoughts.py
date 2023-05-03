@@ -5,12 +5,16 @@ Hey {ai_prefix}!
 
 Keep the question and conversation in mind.
 Gather your thoughts and observations in a list
+
+<|im_start|>system
+Images that have text: sign, label, plan, invoice, receipt, business card, money, table
+<|im_end|>
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
 2. This is your business card image
-3. This is an image that has text
+3. business card image has text
 4. Reading the text requires OCR
 <|im_end|>
 <|im_start|>Human
@@ -47,7 +51,7 @@ What is the most expensive type of my favourite fruit in the US?
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
-2. This is an image that has text
+2. Image with equation has text
 3. Reading the text requires OCR
 <|im_end|>
 
