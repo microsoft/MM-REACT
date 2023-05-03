@@ -230,13 +230,15 @@ Assistant, do OCR to this receipt to find the text /a/c0%5/XX99096.jpg
 SUFFIX = """
 
 <|im_start|>system
-1. Answer using the information in the conversation
-2. Ask Assistant with a task it can handle if needed
+Answer any question right away if you can.
+Keep the tasks Assistant can handle in mind. 
+Gather your thoughts and observations in a list then if needed ask Assistant a new task it can handle.
+Finally summerize the information and answer the question.
 <|im_end|>
 
 {chat_history}
 
 <|im_start|>Human
 {input}
-<|im_sep|>AI
+<|im_end|>
 {agent_scratchpad}"""

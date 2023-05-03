@@ -99,5 +99,5 @@ Gather your thoughts and observations in a list
 
 <|im_start|>Human
 {input}
-<|im_sep|>AI
+<|im_end|>
 {agent_scratchpad}"""

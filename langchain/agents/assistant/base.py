@@ -172,7 +172,7 @@ class MMAssistantAgent(Agent):
     
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
         full_output = self.llm_chain_od.predict(**full_inputs)
-        print(f"od: {full_output}")
+        # print(f"od: {full_output}")
         parsed_output = self._extract_tool_and_input(full_output)
         if parsed_output and parsed_output[0] != self.finish_tool_name:
             full_inputs["agent_scratchpad"] += full_output
