@@ -1,15 +1,17 @@
 """An agent designed to hold a conversation in addition to using tools."""
 from __future__ import annotations
 
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import Any, List, Optional, Sequence, Tuple, Dict
 
 from langchain.agents.agent import Agent
 from langchain.agents.assistant.prompt import PREFIX, SUFFIX
 from langchain.agents.assistant.prompt_thoughts import PREFIX as PREFIX_THOUGHT, SUFFIX as SUFFIX_THOUGHT
+from langchain.agents.assistant.prompt_od import PREFIX as PREFIX_OD, SUFFIX as SUFFIX_OD
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.chains import LLMChain
 from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
+from langchain.schema import AgentAction
 from langchain.tools.base import BaseTool
 from langchain.utils import get_url_path
 
@@ -167,6 +169,35 @@ class MMAssistantAgent(Agent):
                 # Let the model rethink
                 return
         return self.finish_tool_name, action_log
+    
+    def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
+        full_output = self.llm_chain_od.predict(**full_inputs)
+        print(f"od: {full_output}")
+        parsed_output = self._extract_tool_and_input(full_output)
+        if parsed_output and parsed_output[0] != self.finish_tool_name:
+            full_inputs["agent_scratchpad"] += full_output
+            return AgentAction(
+                tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
+            )
+        if full_output:
+            full_output +=  "\n\n"
+        # full_output = ""
+        # full_output += self.llm_chain_thought.predict(**full_inputs) + "\n"
+        # print(f"thought: {full_output}")
+        # full_inputs["agent_scratchpad"] += full_output
+        full_output += self.llm_chain.predict(**full_inputs)
+        parsed_output = self._extract_tool_and_input(full_output)
+        tries = 0
+        while parsed_output is None:
+            full_output = self._fix_text(full_output)
+            full_inputs["agent_scratchpad"] += full_output
+            output = self.llm_chain.predict(**full_inputs)
+            full_output += output
+            tries += 1
+            parsed_output = self._extract_tool_and_input(full_output, tries=tries)
+        return AgentAction(
+            tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
+        )
 
     @classmethod
     def from_llm_and_tools(
@@ -202,7 +233,18 @@ class MMAssistantAgent(Agent):
             prompt=prompt_thought,
             callback_manager=callback_manager,
         )
+        prompt_od = cls.create_prompt(
+            ai_prefix=ai_prefix,
+            prefix=PREFIX_OD,
+            suffix=SUFFIX_OD,
+            input_variables=input_variables,
+        )
+        llm_chain_od = LLMChain(
+            llm=llm,
+            prompt=prompt_od,
+            callback_manager=callback_manager,
+        )
         tool_names = [tool.name for tool in tools]
         return cls(
-            llm_chain=llm_chain, llm_chains=[llm_chain_thought], allowed_tools=tool_names, **kwargs
+            llm_chain=llm_chain, llm_chain_thought=llm_chain_thought, llm_chain_od=llm_chain_od, allowed_tools=tool_names, **kwargs
         )

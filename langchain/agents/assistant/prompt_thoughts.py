@@ -6,9 +6,6 @@ Hey {ai_prefix}!
 Keep the question and conversation in mind.
 Gather your thoughts and observations in a list
 
-<|im_start|>system
-Images that have text: sign, label, plan, invoice, receipt, business card, money, table
-<|im_end|>
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}

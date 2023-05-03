@@ -34,7 +34,8 @@ class Agent(BaseModel):
     """
 
     llm_chain: LLMChain
-    llm_chains: List[LLMChain] = None
+    llm_chain_thought: LLMChain
+    llm_chain_od: LLMChain
     allowed_tools: Optional[List[str]] = None
     return_values: List[str] = ["output"]
 
@@ -61,20 +62,15 @@ class Agent(BaseModel):
         return thoughts
 
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
-        full_output = ""
-        for llm_chain in self.llm_chains or []:
-            full_output += llm_chain.predict(**full_inputs) + "\n"
         full_inputs["agent_scratchpad"] += full_output
         full_output += self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
-        tries = 0
         while parsed_output is None:
             full_output = self._fix_text(full_output)
             full_inputs["agent_scratchpad"] += full_output
             output = self.llm_chain.predict(**full_inputs)
             full_output += output
-            tries += 1
-            parsed_output = self._extract_tool_and_input(full_output, tries=tries)
+            parsed_output = self._extract_tool_and_input(full_output)
         return AgentAction(
             tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
         )
@@ -82,14 +78,12 @@ class Agent(BaseModel):
     async def _aget_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
         full_output = await self.llm_chain.apredict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
-        tries = 0
         while parsed_output is None:
             full_output = self._fix_text(full_output)
             full_inputs["agent_scratchpad"] += full_output
             output = await self.llm_chain.apredict(**full_inputs)
             full_output += output
-            tries += 1
-            parsed_output = self._extract_tool_and_input(full_output, tries=tries)
+            parsed_output = self._extract_tool_and_input(full_output)
         return AgentAction(
             tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
         )
