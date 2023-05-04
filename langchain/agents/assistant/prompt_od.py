@@ -36,7 +36,8 @@ In this image 50 61 is the x, y cartesian coordinate of detected heart
 <|im_start|>Human
 Move the logo in this image to the right https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
-1. There is no image in the input
+1. There is an image in the input
+2. The image is not new in the conversation
 <|im_end|>
 
 <|im_start|>Human
