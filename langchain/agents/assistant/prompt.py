@@ -4,7 +4,7 @@ Hey {ai_prefix}!
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, objects, OCR, Bing
+These are the tasks that Assistant can handle for an image: photo editing, celebrities, OCR, Bing
 If there is text in the image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
@@ -23,6 +23,7 @@ My business card https://i.ibb.co/tsQ0Myn/00.jpg
 4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
+Assistant:
 There is text and numbers in the image
 
 List of OCR texts (words) seen in this image:
@@ -42,6 +43,7 @@ Move the logo in this image to the right
 2. This is a photo editing task
 Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
+Assistant:
 Here is the edited image https://localhost:80:/zsdvfwevf.jpg
 <|im_end|>
 
@@ -60,6 +62,7 @@ What is the most expensive type of my favourite fruit in the US?
 2. This question requires Internet search.
 Assistant, Bing search what is the most expensive apple in the US?
 <|im_sep|>Assistant
+Assistant:
 result from internet search
 * 
 <|im_end|>
@@ -73,6 +76,7 @@ What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4
 3. Reading the text requires OCR
 Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
+Assistant:
 This image contains handwritten text
 
 List of OCR texts (words) seen in this image:
@@ -91,6 +95,7 @@ https://i.ibb.co/XJbmhg4/mY09.png
 1. There is an image in the input
 Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
+Assistant:
 Image description is: a dog playing with a man.
 
 This image contains objects and their descriptions, object tags, faces
@@ -119,6 +124,7 @@ These objects could refer to the same entities
 3. Facial recognition can detect celebrity names for these faces
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
+Assistant:
 This image contains celebrities
 
 List of celebrities, and their location in this image:
@@ -135,17 +141,15 @@ When is this photo taken?
 2. This question requires Internet search.
 Assistant, Bing search when this photo of Brad Pitt in the zoo is taken https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
+Assistant:
 result from internet search
 * 
 <|im_end|>
 
 <|im_start|>Human
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
-<|im_sep|>{ai_prefix}
-1. There is an image in the input
-2. The image is new in the conversation
-Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
+Assistant:
 Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
@@ -163,6 +167,7 @@ prescription instructions
 3. Reading the text requires OCR
 Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
+Assistant:
 There is text and numbers in the image
 
 List of OCR texts (words) seen in this image:
@@ -181,6 +186,7 @@ where can I buy this medicine? and how much is the price in Euros?
 3. This question requires Internet search.
 Assistant, Bing search where can I buy SPRING VALLEY supplement pills? and how much is the price in Euros?
 <|im_sep|>Assistant
+Assistant:
 result from internet search
 * 
 <|im_end|>

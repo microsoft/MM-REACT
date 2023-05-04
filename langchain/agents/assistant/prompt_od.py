@@ -18,6 +18,7 @@ My prescription https://i.ibb.co/tsQ0Myn/00.jpg
 Assistant, what objects do you see in this prescription image? https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_end|>
 <|im_sep|>Assistant
+Assistant:
 Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
@@ -32,9 +33,8 @@ prescription instructions
 <|im_sep|>system
 In this image 50 61 is the x, y cartesian coordinate of detected heart
 <|im_sep|>{ai_prefix}
-1. There is no image in the input
-2. This is a pill bottle
-3. There is text in the image
+1. This is a pill bottle
+2. There is text in the image
 <|im_start|>Human
 Move the logo in this image to the right https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
@@ -49,9 +49,10 @@ https://tinyurl.com/foo092001.jpeg
 2. The image is new in the conversation
 Assistant, what objects do you see in this image? https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
+Assistant:
 Image description is: a peaceful scene
 <|im_sep|>{ai_prefix}
-1. There is no image in the input
+1. The image a peaceful sceneray
 <|im_end|>
 
 <|im_start|>Human
@@ -72,9 +73,10 @@ what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 2. The image is new in the conversation
 Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
-Image description is: a peaceful scene
+Assistant:
+Image description is: people playing in the sun
 <|im_sep|>{ai_prefix}
-1. There is no image in the input
+1. There are people in the image playing in a sunny day
 <|im_end|>
 """
 SUFFIX = """

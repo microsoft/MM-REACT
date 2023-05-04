@@ -64,6 +64,7 @@ what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
 <|im_sep|>Assistant
+Asistant:
 Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags

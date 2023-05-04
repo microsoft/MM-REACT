@@ -28,7 +28,7 @@ class MMAssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "<|im_sep|>Assistant\n"
+        return "<|im_sep|>Assistant\nAssistant:\n"
 
     @property
     def llm_prefix(self) -> str:
@@ -37,8 +37,7 @@ class MMAssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
-        # return ["<|im_start|>Human", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
+        return ["<|im_end|>"]
 
     @classmethod
     def create_prompt(
