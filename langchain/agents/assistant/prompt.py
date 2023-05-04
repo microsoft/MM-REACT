@@ -11,9 +11,10 @@ Image types that have text (sign, label, plan, invoice, receipt, business card, 
 <|im_end|>
 
 Answer any question right away if you can.
-Keep the tasks Assistant can handle in mind. 
-Gather your thoughts and observations in a list then if needed ask Assistant a new task it can handle.
-Finally summerize the information and answer the question.
+Keep the conversation in mind
+Gather your thoughts and observations in a list then ask Assistant a new task he missed
+Keep the conversation in mind
+Gather your thoughts and observations in a list then ask Assistant a new task he missed
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
@@ -195,9 +196,10 @@ SUFFIX = """
 
 <|im_start|>system
 Answer any question right away if you can.
-Keep the tasks Assistant can handle in mind. 
-Gather your thoughts and observations in a list then if needed ask Assistant a new task it can handle.
-Finally summerize the information and answer the question.
+Keep the conversation in mind
+Gather your thoughts and observations in a list then ask Assistant a new task he missed
+Keep the conversation in mind
+Gather your thoughts and observations in a list then ask Assistant a new task he missed
 <|im_end|>
 
 {chat_history}
