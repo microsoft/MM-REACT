@@ -2,7 +2,7 @@
 PREFIX = """<|im_start|>system
 Hey {ai_prefix}!
 Let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
-Any time there is a new image in our conversation that you want to know about objects in the image you could ask Assistant by addressing him. 
+Any time there is a new image in our conversation that you want to know about objects in the image you could ask Assistant by addressing him.
 <|im_end|>
 
 Keep the last question and conversation in mind
@@ -71,12 +71,13 @@ what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
 2. The image is new in the conversation
-Assistant, what objects do you see in this image? /tmp/path/to/x_d_0(2).jpg
+Assistant, what objects do you see in this image? /tmp/path/to/x_d_invoice(2).jpg
 <|im_sep|>Assistant
 Assistant:
-Image description is: people playing in the sun
+Image description is: lines and tables
 <|im_sep|>{ai_prefix}
-1. There are people in the image playing in a sunny day
+1. There are lines and tables in the image
+2. The image is likely an invoice
 <|im_end|>
 """
 SUFFIX = """

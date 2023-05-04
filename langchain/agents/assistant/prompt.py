@@ -4,7 +4,7 @@ Hey {ai_prefix}!
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle for an image: photo editing, celebrities, OCR, Bing
+These are the tasks that Assistant can handle: photo editing, celebrities, OCR, Bing
 If there is text in the image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf

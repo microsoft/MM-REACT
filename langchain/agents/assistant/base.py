@@ -110,6 +110,7 @@ class MMAssistantAgent(Agent):
                  action_input = cmd[search_idx + len("bing serach") + 1:]
                  return "Bing Search", action_input
             action_input_idx, action_input = get_url_path(cmd)
+            action_input_lower = action_input.lower()
             action = None
             if action_input_idx >= 0:
                 sub_cmd = cmd[:action_input_idx].strip().lower()
@@ -135,7 +136,7 @@ class MMAssistantAgent(Agent):
             elif "brand" in sub_cmd:
                 action = "Bing Search"
             elif "objects" in sub_cmd:
-                if action_input.lower().endswith(".pdf"):
+                if action_input_lower.endswith(".pdf"):
                     action = "OCR Understanding"
                 else:
                     action = "Image Understanding"
@@ -154,6 +155,15 @@ class MMAssistantAgent(Agent):
             # TODO: separate llm to decide the task
             if not action and ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
+            if action == "Receipt Understanding" and "invoice" in action_input_lower:
+                # Invoice is more specific
+                action = "Invoice Understanding"
+            if action == "OCR Understanding":
+                if "invoice" in action_input_lower:
+                    action = "Invoice Understanding"
+                elif "receipt" in action_input_lower:
+                    action = "Receipt Understanding"
+
             if not action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
                 action = "Bing Search"
             if not action:
