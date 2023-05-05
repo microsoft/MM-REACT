@@ -34,8 +34,6 @@ class Agent(BaseModel):
     """
 
     llm_chain: LLMChain
-    llm_chain_thought: LLMChain
-    llm_chain_od: LLMChain
     allowed_tools: Optional[List[str]] = None
     return_values: List[str] = ["output"]
 

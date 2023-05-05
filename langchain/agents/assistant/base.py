@@ -5,7 +5,6 @@ from typing import Any, List, Optional, Sequence, Tuple, Dict
 
 from langchain.agents.agent import Agent
 from langchain.agents.assistant.prompt import PREFIX, SUFFIX
-from langchain.agents.assistant.prompt_thoughts import PREFIX as PREFIX_THOUGHT, SUFFIX as SUFFIX_THOUGHT
 from langchain.agents.assistant.prompt_od import PREFIX as PREFIX_OD, SUFFIX as SUFFIX_OD
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.chains import LLMChain
@@ -19,6 +18,7 @@ class MMAssistantAgent(Agent):
     """An agent designed to hold a conversation in addition to an specialized assistant tool."""
 
     ai_prefix: str = "AI"
+    llm_chain_od: LLMChain
 
     @property
     def _agent_type(self) -> str:
@@ -190,10 +190,6 @@ class MMAssistantAgent(Agent):
             )
         if full_output:
             full_output +=  "\n\n"
-        # full_output = ""
-        # full_output += self.llm_chain_thought.predict(**full_inputs) + "\n"
-        # print(f"thought: {full_output}")
-        # full_inputs["agent_scratchpad"] += full_output
         full_output += self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         tries = 0
@@ -231,17 +227,6 @@ class MMAssistantAgent(Agent):
             prompt=prompt,
             callback_manager=callback_manager,
         )
-        prompt_thought = cls.create_prompt(
-            ai_prefix=ai_prefix,
-            prefix=PREFIX_THOUGHT,
-            suffix=SUFFIX_THOUGHT,
-            input_variables=input_variables,
-        )
-        llm_chain_thought = LLMChain(
-            llm=llm,
-            prompt=prompt_thought,
-            callback_manager=callback_manager,
-        )
         prompt_od = cls.create_prompt(
             ai_prefix=ai_prefix,
             prefix=PREFIX_OD,
@@ -255,5 +240,5 @@ class MMAssistantAgent(Agent):
         )
         tool_names = [tool.name for tool in tools]
         return cls(
-            llm_chain=llm_chain, llm_chain_thought=llm_chain_thought, llm_chain_od=llm_chain_od, allowed_tools=tool_names, **kwargs
+            llm_chain=llm_chain, llm_chain_od=llm_chain_od, allowed_tools=tool_names, **kwargs
         )
