@@ -16,7 +16,6 @@ My prescription https://i.ibb.co/tsQ0Myn/00.jpg
 1. There is an image in the input
 2. The image is new in the conversation
 Assistant, what objects do you see in this prescription image? https://i.ibb.co/tsQ0Myn/00.jpg
-<|im_end|>
 <|im_sep|>Assistant
 Assistant:
 Image description is: a bottle of medicine.
@@ -35,6 +34,7 @@ In this image 50 61 is the x, y cartesian coordinate of detected heart
 <|im_sep|>{ai_prefix}
 1. This is a pill bottle
 2. There is text in the image
+<|im_end|>
 <|im_start|>Human
 Move the logo in this image to the right https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
