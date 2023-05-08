@@ -10,10 +10,7 @@ Image types that have text (sign, label, plan, invoice, receipt, business card, 
 * Ask to do OCR if pdf
 <|im_end|>
 
-Keep the conversation in mind
-Answer any question right away if you can.
-Gather your thoughts and observations in a list then ask Assistant a new task he missed
-Gather your thoughts and observations in a list then ask Assistant a new task he missed
+{system_trigger}
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
@@ -190,19 +187,27 @@ Assistant:
 result from internet search
 * 
 <|im_end|>
-"""
-SUFFIX = """
+
 
 <|im_start|>system
-Keep the conversation in mind
-Answer any question right away if you can.
-Gather your thoughts and observations in a list then ask Assistant a new task he missed
-Gather your thoughts and observations in a list then ask Assistant a new task he missed
+{system_trigger}
 <|im_end|>
-
+"""
+SUFFIX = """
 {chat_history}
 
 <|im_start|>Human
 {input}
 <|im_sep|>AI
 {agent_scratchpad}"""
+
+SYSTEM_TRIGGER = """
+Keep the conversation in mind
+Answer any question right away if you can.
+Gather your thoughts and observations in a list then ask Assistant a new task he missed
+"""
+
+SYSTEM_TRIGGER_TASK = """
+Keep the conversation in mind
+Ask Assistant a new task he missed
+"""

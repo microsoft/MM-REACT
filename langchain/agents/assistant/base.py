@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any, List, Optional, Sequence, Tuple, Dict
 
 from langchain.agents.agent import Agent
-from langchain.agents.assistant.prompt import PREFIX, SUFFIX
+from langchain.agents.assistant.prompt import PREFIX, SUFFIX, SYSTEM_TRIGGER, SYSTEM_TRIGGER_TASK
 from langchain.agents.assistant.prompt_od import PREFIX as PREFIX_OD, SUFFIX as SUFFIX_OD
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.chains import LLMChain
@@ -19,6 +19,7 @@ class MMAssistantAgent(Agent):
 
     ai_prefix: str = "AI"
     llm_chain_od: LLMChain
+    llm_chain_task: LLMChain
 
     @property
     def _agent_type(self) -> str:
@@ -44,6 +45,7 @@ class MMAssistantAgent(Agent):
         cls,
         prefix: str = PREFIX,
         suffix: str = SUFFIX,
+        system_trigger: str = "",
         ai_prefix: str = "AI",
         input_variables: Optional[List[str]] = None,
     ) -> PromptTemplate:
@@ -57,7 +59,10 @@ class MMAssistantAgent(Agent):
         Returns:
             A PromptTemplate with the template assembled from the pieces here.
         """
-        template = "\n\n".join([prefix.format(ai_prefix=ai_prefix), suffix])
+        if system_trigger:
+            template = "\n\n".join([prefix.format(ai_prefix=ai_prefix, system_trigger=system_trigger), suffix])
+        else:
+            template = "\n\n".join([prefix.format(ai_prefix=ai_prefix), suffix])
         if input_variables is None:
             input_variables = ["input", "chat_history", "agent_scratchpad"]
         return PromptTemplate(template=template, input_variables=input_variables)
@@ -220,6 +225,7 @@ class MMAssistantAgent(Agent):
             ai_prefix=ai_prefix,
             prefix=PREFIX,
             suffix=SUFFIX,
+            system_trigger=SYSTEM_TRIGGER,
             input_variables=input_variables,
         )
         llm_chain = LLMChain(
@@ -238,7 +244,19 @@ class MMAssistantAgent(Agent):
             prompt=prompt_od,
             callback_manager=callback_manager,
         )
+        prompt_task = cls.create_prompt(
+            ai_prefix=ai_prefix,
+            prefix=PREFIX,
+            suffix=SUFFIX,
+            system_trigger=SYSTEM_TRIGGER_TASK,
+            input_variables=input_variables,
+        )
+        llm_chain_task = LLMChain(
+            llm=llm,
+            prompt=prompt_task,
+            callback_manager=callback_manager,
+        )
         tool_names = [tool.name for tool in tools]
         return cls(
-            llm_chain=llm_chain, llm_chain_od=llm_chain_od, allowed_tools=tool_names, **kwargs
+            llm_chain=llm_chain, llm_chain_od=llm_chain_od, llm_chain_task=llm_chain_task, allowed_tools=tool_names, **kwargs
         )
