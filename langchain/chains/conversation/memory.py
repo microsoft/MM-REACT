@@ -78,7 +78,7 @@ class ConversationBufferMemory(Memory, BaseModel):
 
     human_prefix: str = "<|im_start|>Human\n"
     ai_prefix: str = "<|im_sep|>AI\n"
-    assistant_prefix: str = "<|im_sep|>Assistant\n"
+    assistant_prefix: str = "<|im_sep|>Assistant\nAssistant:\n"
     """Prefix to use for AI generated responses."""
     buffer: str = ""
     output_key: Optional[str] = None
