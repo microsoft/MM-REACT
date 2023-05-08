@@ -10,8 +10,8 @@ Image types that have text (sign, label, plan, invoice, receipt, business card, 
 * Ask to do OCR if pdf
 <|im_end|>
 
-Answer any question right away if you can.
 Keep the conversation in mind
+Answer any question right away if you can.
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
 <|im_start|>Human
@@ -194,8 +194,8 @@ result from internet search
 SUFFIX = """
 
 <|im_start|>system
-Answer any question right away if you can.
 Keep the conversation in mind
+Answer any question right away if you can.
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
 <|im_end|>

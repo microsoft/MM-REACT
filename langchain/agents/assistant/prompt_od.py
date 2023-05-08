@@ -8,7 +8,7 @@ Any time there is a new image in our conversation that you want to know about ob
 Keep the last question and conversation in mind
 Detect if there is a new image in the input 
 If new image, ask Assistant to detect objects in the image
-List your thoughts and observations
+Keep the conversation in mind, List your thoughts and observations
 
 <|im_start|>Human
 My prescription https://i.ibb.co/tsQ0Myn/00.jpg
@@ -86,7 +86,7 @@ SUFFIX = """
 Keep the last question and conversation in mind
 Detect if there is a new image in the input 
 If new image, ask Assistant to detect objects in the image
-List your thoughts and observations
+Keep the conversation in mind, List your thoughts and observations
 <|im_end|>
 
 {chat_history}
