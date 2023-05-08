@@ -262,7 +262,9 @@ class Chain(BaseModel, ABC):
                     action = "\n".join(new_lines)
                 conversation.append(action)
                 if not keep_short or action_output.lstrip().startswith("Here is the edited image"):
-                    conversation.append(f"Assistant: {action_output}")
+                    if not action_output.startswith("Assistant:"):
+                        action_output = f"Assistant: {action_output}"
+                    conversation.append(action_output)
             conversation.append("AI: " + outputs["output"])
             return conversation
 
@@ -302,7 +304,8 @@ class Chain(BaseModel, ABC):
                 action: str = action.log.strip()
                 if not action.startswith(f"AI:"):
                     action = f"AI: {action}"
-                action_output = f"Assistant: {action_output}"
+                if not action_output.startswith("Assistant:"):
+                    action_output = f"Assistant: {action_output}"
                 assistant += "\n" + action + "\n" + action_output
             return assistant + "\n" + "AI: " + outputs["output"]
             

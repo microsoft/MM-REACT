@@ -1,14 +1,16 @@
 """An agent designed to hold a conversation in addition to using tools."""
 from __future__ import annotations
 
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import Any, List, Optional, Sequence, Tuple, Dict
 
 from langchain.agents.agent import Agent
 from langchain.agents.assistant.prompt import PREFIX, SUFFIX
+from langchain.agents.assistant.prompt_od import PREFIX as PREFIX_OD, SUFFIX as SUFFIX_OD
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.chains import LLMChain
 from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
+from langchain.schema import AgentAction
 from langchain.tools.base import BaseTool
 from langchain.utils import get_url_path
 
@@ -16,6 +18,7 @@ class MMAssistantAgent(Agent):
     """An agent designed to hold a conversation in addition to an specialized assistant tool."""
 
     ai_prefix: str = "AI"
+    llm_chain_od: LLMChain
 
     @property
     def _agent_type(self) -> str:
@@ -25,7 +28,7 @@ class MMAssistantAgent(Agent):
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "<|im_sep|>Assistant\n"
+        return "<|im_sep|>Assistant\nAssistant:\n"
 
     @property
     def llm_prefix(self) -> str:
@@ -34,8 +37,7 @@ class MMAssistantAgent(Agent):
 
     @property
     def _stop(self) -> List[str]:
-        return ["<|im_end|>", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
-        # return ["<|im_start|>Human", "\nEXAMPLE", "\nNEW INPUT", "<|im_sep|>Assistant"]
+        return ["<|im_end|>"]
 
     @classmethod
     def create_prompt(
@@ -108,6 +110,7 @@ class MMAssistantAgent(Agent):
                  action_input = cmd[search_idx + len("bing serach") + 1:]
                  return "Bing Search", action_input
             action_input_idx, action_input = get_url_path(cmd)
+            action_input_lower = action_input.lower()
             action = None
             if action_input_idx >= 0:
                 sub_cmd = cmd[:action_input_idx].strip().lower()
@@ -133,7 +136,7 @@ class MMAssistantAgent(Agent):
             elif "brand" in sub_cmd:
                 action = "Bing Search"
             elif "objects" in sub_cmd:
-                if action_input.lower().endswith(".pdf"):
+                if action_input_lower.endswith(".pdf"):
                     action = "OCR Understanding"
                 else:
                     action = "Image Understanding"
@@ -152,6 +155,15 @@ class MMAssistantAgent(Agent):
             # TODO: separate llm to decide the task
             if not action and ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
                 action = "OCR Understanding"
+            if action == "Receipt Understanding" and "invoice" in action_input_lower:
+                # Invoice is more specific
+                action = "Invoice Understanding"
+            if action == "OCR Understanding":
+                if "invoice" in action_input_lower:
+                    action = "Invoice Understanding"
+                elif "receipt" in action_input_lower:
+                    action = "Receipt Understanding"
+
             if not action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
                 action = "Bing Search"
             if not action:
@@ -166,6 +178,31 @@ class MMAssistantAgent(Agent):
                 # Let the model rethink
                 return
         return self.finish_tool_name, action_log
+    
+    def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
+        full_output = self.llm_chain_od.predict(**full_inputs)
+        # print(f"od: {full_output}")
+        parsed_output = self._extract_tool_and_input(full_output)
+        if parsed_output and parsed_output[0] != self.finish_tool_name:
+            full_inputs["agent_scratchpad"] += full_output
+            return AgentAction(
+                tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
+            )
+        if full_output:
+            full_output +=  "\n\n"
+        full_output += self.llm_chain.predict(**full_inputs)
+        parsed_output = self._extract_tool_and_input(full_output)
+        tries = 0
+        while parsed_output is None:
+            full_output = self._fix_text(full_output)
+            full_inputs["agent_scratchpad"] += full_output
+            output = self.llm_chain.predict(**full_inputs)
+            full_output += output
+            tries += 1
+            parsed_output = self._extract_tool_and_input(full_output, tries=tries)
+        return AgentAction(
+            tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
+        )
 
     @classmethod
     def from_llm_and_tools(
@@ -173,8 +210,6 @@ class MMAssistantAgent(Agent):
         llm: BaseLLM,
         tools: Sequence[BaseTool],
         callback_manager: Optional[BaseCallbackManager] = None,
-        prefix: str = PREFIX,
-        suffix: str = SUFFIX,
         ai_prefix: str = "AI",
         input_variables: Optional[List[str]] = None,
         **kwargs: Any,
@@ -183,8 +218,8 @@ class MMAssistantAgent(Agent):
         cls._validate_tools(tools)
         prompt = cls.create_prompt(
             ai_prefix=ai_prefix,
-            prefix=prefix,
-            suffix=suffix,
+            prefix=PREFIX,
+            suffix=SUFFIX,
             input_variables=input_variables,
         )
         llm_chain = LLMChain(
@@ -192,7 +227,18 @@ class MMAssistantAgent(Agent):
             prompt=prompt,
             callback_manager=callback_manager,
         )
+        prompt_od = cls.create_prompt(
+            ai_prefix=ai_prefix,
+            prefix=PREFIX_OD,
+            suffix=SUFFIX_OD,
+            input_variables=input_variables,
+        )
+        llm_chain_od = LLMChain(
+            llm=llm,
+            prompt=prompt_od,
+            callback_manager=callback_manager,
+        )
         tool_names = [tool.name for tool in tools]
         return cls(
-            llm_chain=llm_chain, allowed_tools=tool_names, **kwargs
+            llm_chain=llm_chain, llm_chain_od=llm_chain_od, allowed_tools=tool_names, **kwargs
         )
