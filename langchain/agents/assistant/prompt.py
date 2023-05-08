@@ -13,7 +13,6 @@ Image types that have text (sign, label, plan, invoice, receipt, business card, 
 Answer any question right away if you can.
 Keep the conversation in mind
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
-Keep the conversation in mind
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
@@ -198,7 +197,6 @@ SUFFIX = """
 Answer any question right away if you can.
 Keep the conversation in mind
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
-Keep the conversation in mind
 Gather your thoughts and observations in a list then ask Assistant a new task he missed
 <|im_end|>
 
