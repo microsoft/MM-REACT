@@ -205,6 +205,16 @@ class MMAssistantAgent(Agent):
             full_output += output
             tries += 1
             parsed_output = self._extract_tool_and_input(full_output, tries=tries)
+        # try to get more tasks
+        if parsed_output[0] == self.finish_tool_name and "Assistant," not in full_output:
+            output = self.llm_chain_task.predict(**full_inputs)
+            parsed_output_task = self._extract_tool_and_input(output)
+            if parsed_output_task and parsed_output_task[0] != self.finish_tool_name:
+                full_inputs["agent_scratchpad"] += full_output
+                full_output += "\n" + output
+                return AgentAction(
+                    tool=parsed_output_task[0], tool_input=parsed_output_task[1], log=full_output
+                )
         return AgentAction(
             tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
         )
