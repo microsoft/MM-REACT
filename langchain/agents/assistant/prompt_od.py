@@ -18,6 +18,7 @@ My prescription https://i.ibb.co/tsQ0Myn/00.jpg
 Assistant, what objects do you see in this prescription image? https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/tsQ0Myn/00.jpg
 Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
@@ -50,6 +51,7 @@ https://tinyurl.com/foo092001.jpeg
 Assistant, what objects do you see in this image? https://tinyurl.com/foo092001.jpeg
 <|im_sep|>Assistant
 Assistant:
+https://tinyurl.com/foo092001.jpeg
 Image description is: a peaceful scene
 <|im_sep|>{ai_prefix}
 1. The image a peaceful sceneray
@@ -74,6 +76,7 @@ what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 Assistant, what objects do you see in this image? /tmp/path/to/x_d_invoice(2).jpg
 <|im_sep|>Assistant
 Assistant:
+/tmp/path/to/x_d_invoice(2).jpg
 Image description is: lines and tables
 <|im_sep|>{ai_prefix}
 1. There are lines and tables in the image

@@ -35,9 +35,7 @@ class BingSearchAPIWrapper(BaseModel):
         extra = Extra.forbid
     
     @staticmethod
-    def _get_image(search_term):
-        search_term = search_term.strip()
-        _, img_url = get_url_path(search_term)
+    def _get_image(img_url):
         if not img_url:
             return
         try:
@@ -113,8 +111,11 @@ class BingSearchAPIWrapper(BaseModel):
 
     def _bing_search_results(self, search_term: str, count: int) -> List[dict]:
         visual_results = []
+        img_url = ""
         if self.bing_vis_search_url:
-            data = self._get_image(search_term)
+            search_term = search_term.strip()
+            _, img_url = get_url_path(search_term)
+            data = self._get_image(img_url)
             if data:
                 # if an image is being serached
                 headers = {"Ocp-Apim-Subscription-Key": self.bing_subscription_key_vis}
@@ -152,7 +153,9 @@ class BingSearchAPIWrapper(BaseModel):
         )
         response.raise_for_status()
         search_results = response.json()
-        return visual_results + search_results["webPages"]["value"]
+        if img_url:
+            img_url += "\n"
+        return img_url, visual_results + search_results["webPages"]["value"]
 
     @root_validator(pre=True)
     def validate_environment(cls, values: Dict) -> Dict:
@@ -183,9 +186,7 @@ class BingSearchAPIWrapper(BaseModel):
     def run(self, query: str) -> str:
         """Run query through BingSearch and parse result."""
         snippets = []
-        results = self._bing_search_results(query, count=self.k)
-        if len(results) == 0:
-            return "No good Bing Search Result was found"
+        img_url, results = self._bing_search_results(query, count=self.k)
         for result in results:
             snippet = result["snippet"]
             snippet = snippet.replace("<b>", "").replace("</b>", "")  # remove bold
@@ -193,8 +194,8 @@ class BingSearchAPIWrapper(BaseModel):
 
         snippets = "\n".join(snippets)
         if snippets:
-            return "results from internet search:\n" + snippets
-        return snippets
+            return img_url + "results from internet search:\n" + snippets
+        return img_url + "No good Bing Search Result was found"
 
     def results(self, query: str, num_results: int) -> List[Dict]:
         """Run query through BingSearch and return metadata.
@@ -210,9 +211,9 @@ class BingSearchAPIWrapper(BaseModel):
                 link - The link to the result.
         """
         metadata_results = []
-        results = self._bing_search_results(query, count=num_results)
+        img_url, results = self._bing_search_results(query, count=num_results)
         if len(results) == 0:
-            return [{"Result": "No good Bing Search Result was found"}]
+            return [{"Result": img_url + "No good Bing Search Result was found"}]
         for result in results:
             metadata_result = {
                 "snippet": result["snippet"],

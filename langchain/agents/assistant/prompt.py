@@ -20,7 +20,8 @@ My business card https://i.ibb.co/tsQ0Myn/00.jpg
 4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
-Assistant:
+Assistant: 
+https://i.ibb.co/tsQ0Myn/00.jpg
 There is text and numbers in the image
 
 List of OCR texts (words) seen in this image:
@@ -41,6 +42,7 @@ Move the logo in this image to the right
 Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/tsQ0Myn/00.jpg
 Here is the edited image https://localhost:80:/zsdvfwevf.jpg
 <|im_end|>
 
@@ -74,6 +76,7 @@ What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4
 Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/YJbmKg4/somX1.png
 This image contains handwritten text
 
 List of OCR texts (words) seen in this image:
@@ -93,6 +96,7 @@ https://i.ibb.co/XJbmhg4/mY09.png
 Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/XJbmhg4/mY09.png
 Image description is: a dog playing with a man.
 
 This image contains objects and their descriptions, object tags, faces
@@ -122,6 +126,7 @@ These objects could refer to the same entities
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/XJbmhg4/mY09.png
 This image contains celebrities
 
 List of celebrities, and their location in this image:
@@ -139,6 +144,7 @@ When is this photo taken?
 Assistant, Bing search when this photo of Brad Pitt in the zoo is taken https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/XJbmhg4/mY09.png
 result from internet search
 * 
 <|im_end|>
@@ -147,6 +153,7 @@ result from internet search
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Assistant:
+/tmp/path/to/x_d_0(2).jpg
 Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
@@ -165,6 +172,7 @@ prescription instructions
 Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Assistant:
+/tmp/path/to/x_d_0(2).jpg
 There is text and numbers in the image
 
 List of OCR texts (words) seen in this image:
