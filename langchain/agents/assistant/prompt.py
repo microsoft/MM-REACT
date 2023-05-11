@@ -5,7 +5,7 @@ Now let me introduce you to Assistant. He is great at understanding what is goin
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
 These are the tasks that Assistant can handle: photo editing, celebrities, OCR, Bing
-If there is text in the image, ask Assistant to do OCR
+If there is text in an image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
 <|im_end|>
@@ -16,13 +16,13 @@ My business card https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
 2. This is a business card image
-3. There is text and numbers in the image
+3. There is text and numbers in this image
 4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 Assistant: 
 https://i.ibb.co/tsQ0Myn/00.jpg
-There is text and numbers in the image
+This image contains text
 
 List of OCR texts (words) seen in this image:
 CONTOSO
@@ -37,7 +37,7 @@ To summerize, this is your business card with details such as
 <|im_start|>Human
 Move the logo in this image to the right
 <|im_sep|>{ai_prefix}
-1. The image should be edited
+1. This image should be edited
 2. This is a photo editing task
 Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
@@ -71,7 +71,7 @@ result from internet search
 What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
 1. There is an image in the input
-2. There is text and numbers in the image
+2. There is text and numbers in this image
 3. Reading the text requires OCR
 Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
@@ -167,13 +167,13 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. There is text and numbers in the image
+2. There is text and numbers in this image
 3. Reading the text requires OCR
 Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Assistant:
 /tmp/path/to/x_d_0(2).jpg
-There is text and numbers in the image
+This image contains text
 
 List of OCR texts (words) seen in this image:
 SPRING VALLEY.

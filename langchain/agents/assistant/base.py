@@ -203,7 +203,6 @@ class MMAssistantAgent(Agent):
             return
         if not tool_list:
             return self.finish_tool_name, llm_output.strip()
-        print(tool_list)
         if len(tool_list) == 1:
             action, action_input = tool_list[0]
             return action, action_input
