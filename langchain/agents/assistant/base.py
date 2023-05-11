@@ -103,6 +103,8 @@ class MMAssistantAgent(Agent):
 
     @staticmethod
     def _extract_tools(llm_output: str) -> List[List[str, str]]:
+        # TODO: separate llm to decide the task
+
         cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx < 0:
             return
@@ -158,13 +160,15 @@ class MMAssistantAgent(Agent):
                 return [[action, action_input]]
             return [[action, ""]]
         assert action_inputs
-        # TODO: separate llm to decide the task
         parsed_output = []
         for action_input in action_inputs:
             action_input_lower = action_input.lower()
             new_action = action
-            if not new_action and ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
-                new_action = "OCR Understanding"
+            if not new_action:
+                if ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
+                    new_action = "OCR Understanding"
+                elif sub_cmd.startswith("parse ") or sub_cmd.startswith("analyze "):
+                    new_action = "OCR Understanding"
             if new_action == "Image Understanding" and action_input_lower.endswith(".pdf"):
                 # Invoice is more specific
                 new_action = "OCR Understanding"
@@ -176,6 +180,8 @@ class MMAssistantAgent(Agent):
                     new_action = "Invoice Understanding"
                 elif "receipt" in action_input_lower:
                     new_action = "Receipt Understanding"
+                elif "table" in action_input_lower:
+                    new_action = "Layout Understanding"
 
             if not new_action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
                 new_action = "Bing Search"
