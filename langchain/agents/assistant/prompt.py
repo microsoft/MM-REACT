@@ -13,12 +13,15 @@ Image types that have text (sign, label, plan, invoice, receipt, business card, 
 {system_trigger}
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
+What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
-1. There is an image in the input
-2. This is a business card image
-3. There is text and numbers in this image
+1. There are two images in the input
+2. The first image is a business card image
+3. There is text and numbers in images
 4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
+
+Assistant, do OCR to this image to find the text  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
 Assistant: 
 https://i.ibb.co/tsQ0Myn/00.jpg
@@ -30,9 +33,20 @@ Cell: +1 (989) 123-4567
 Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
+<|im_sep|>Assistant
+Assistant:
+https://i.ibb.co/YJbmKg4/somX1.png
+This image contains handwritten text
+
+List of OCR texts (words) seen in this image:
+4x2+5=
+1/sqrt(9)=
+
 <|im_sep|>{ai_prefix}
-1. This is your business card belonging to Jake
-To summerize, this is your business card with details such as
+1. The first image is your business card belonging to Jake
+2. There are two simple equations hand written in the second image in the form of
+3. The result of the first equation in the second image is 13
+To summerize, first image your business card with details such as name. Second image is two equations
 <|im_end|>
 <|im_start|>Human
 Move the logo in this image to the right
@@ -65,29 +79,6 @@ Assistant:
 result from internet search
 * 
 <|im_end|>
-
-
-<|im_start|>Human
-What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
-<|im_sep|>{ai_prefix}
-1. There is an image in the input
-2. There is text and numbers in this image
-3. Reading the text requires OCR
-Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
-<|im_sep|>Assistant
-Assistant:
-https://i.ibb.co/YJbmKg4/somX1.png
-This image contains handwritten text
-
-List of OCR texts (words) seen in this image:
-4x2+5=
-1/sqrt(9)=
-
-<|im_sep|>{ai_prefix}
-1. There are two simple equations hand written in the image in the form of
-The result of the first equation is 13
-<|im_end|>
-
 
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
