@@ -102,17 +102,12 @@ class MMAssistantAgent(Agent):
 
     @staticmethod
     def _extract_tools(llm_output: str) -> List[List[str, str]]:
-        photo_editing = "photo edit" in llm_output or "image edit" in llm_output
         cmd_idx = llm_output.rfind("Assistant,")
         if cmd_idx < 0:
             return
         cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
-        if photo_editing:
+        if "photo edit" in llm_output or "image edit" in llm_output:
             return [["Photo Editing", cmd]]
-        search_idx = cmd.lower().find("bing search")
-        if search_idx >= 0:
-            action_input = cmd[search_idx + len("bing serach") + 1:]
-            return [["Bing Search", action_input]]
         action_inputs:List[str] = []
         action_input_idx, action_input_end_idx, action_input = get_url_path(cmd, return_end=True)
         action = None
@@ -142,13 +137,24 @@ class MMAssistantAgent(Agent):
             action = "Bing Search"
         elif "brand" in sub_cmd:
             action = "Bing Search"
+        elif "bing search" in sub_cmd:
+            action = "Bing Search"
         elif "objects" in sub_cmd:
             action = "Image Understanding"
         if not action_inputs:
             if not action:
+                # if no image and no action
                 if cmd.endswith("?") or sub_cmd.startswith("search "):
-                    # if no image and no action
-                    return [["Bing Search" , cmd]]
+                    action = "Bing Search"
+            if action == "Bing Search":
+                action_input = cmd
+                action_input_lower = action_input.lower()
+                for term in ["bing search for", "bing search", "search for", "search"]:
+                    search_idx = action_input_lower.find(term)
+                    if search_idx >= 0:
+                        action_input = cmd[search_idx + len(term):].strip()
+                        break
+                return [[action, action_input]]
             return [[action, ""]]
         assert action_inputs
         # TODO: separate llm to decide the task
