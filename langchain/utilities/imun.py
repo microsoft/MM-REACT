@@ -287,6 +287,7 @@ def _merge_objects(objects: List, captions: List) -> List:
 
 def create_prompt(results: Dict) -> str:
     """Create the final prompt output"""
+    img_url = results.get("img_url") or ""
     description = results.get("description") or ""
     captions: List = results.get("captions") or []
     tags = results.get("tags") or ""
@@ -297,7 +298,8 @@ def create_prompt(results: Dict) -> str:
     faces: List = results.get("faces") or []
     celebrities: List = results.get("celebrities") or []
 
-    answer = IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
+    answer = img_url + "\n" if img_url else ""
+    answer += IMUN_PROMPT_DESCRIPTION.format(description=description) if description else ""
 
     found = False
     if captions or objects:
@@ -394,14 +396,13 @@ class ImunAPIWrapper(BaseModel):
     def _imun_results(self, img_url: str) -> dict:
         param_str = '&'.join([f'{k}={v}' for k,v in self.params.items()])
         key = f"{self.imun_url}?{param_str}"
-        img_cache = self.cache.get(img_url)
-        if img_cache:
-            if key in img_cache:
-                return img_cache[key]
-        else:
-            img_cache = {}
-            self.cache.set(img_url, img_cache)
-        results = {"task": []}
+        img_cache = self.cache.get(img_url) or {}
+        results = img_cache.get(key) or {}
+        if results:
+            results["img_url"] = img_url
+            return results
+        self.cache.set(img_url, img_cache)
+        results = {"task": [], "img_url": img_url}
         if "celebrities" in self.imun_url:
             results["task"].append("celebrities")
         elif "Read" in "param_str":

@@ -1,6 +1,8 @@
 """An agent designed to hold a conversation in addition to using tools."""
 from __future__ import annotations
 
+import re
+import json
 from typing import Any, List, Optional, Sequence, Tuple, Dict
 
 from langchain.agents.agent import Agent
@@ -81,7 +83,7 @@ class MMAssistantAgent(Agent):
         new_lines = []
         for l in lines:
             l_lower = l.lower()
-            for term in ["is there anything else ", "or is there something else "]:
+            for term in ["thank you for letting me", "is there anything else ", "or is there something else "]:
                 idx = l_lower.find(term)
                 if idx >= 0:
                     l = l[:idx]
@@ -99,90 +101,113 @@ class MMAssistantAgent(Agent):
             return text
         return f"{text}\n{self.llm_prefix}"
 
+    @staticmethod
+    def _extract_tools(llm_output: str) -> List[List[str, str]]:
+        cmd_idx = llm_output.rfind("Assistant,")
+        if cmd_idx < 0:
+            return
+        cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
+        if "photo edit" in llm_output or "image edit" in llm_output:
+            return [["Photo Editing", cmd]]
+        action_inputs:List[str] = []
+        action_input_idx, action_input_end_idx, action_input = get_url_path(cmd, return_end=True)
+        action = None
+        if action_input_idx >= 0:
+            sub_cmd = cmd[:action_input_idx].strip().lower()
+            while action_input_idx >= 0:
+                action_inputs.append(action_input)
+                action_input_idx, action_input_end_idx, action_input = get_url_path(cmd[action_input_end_idx:], return_end=True)
+        else:
+            sub_cmd = ""
+        # TODO: need a separate chain to decide OCR specialization, 
+        #       perhaps we do genric OCR (or receipt) then if we see an invoice then we do invoice
+        if "invoice" in sub_cmd:
+            action = "Invoice Understanding"
+        elif "receipt" in sub_cmd:
+            action = "Receipt Understanding"
+        elif "business card" in sub_cmd:
+            action = "Business Card Understanding"
+        elif "ocr" in sub_cmd:
+            if "table" in sub_cmd:
+                action = "Layout Understanding"
+            else:
+                action = "OCR Understanding"
+        elif "celebrit" in sub_cmd:
+            action = "Celebrity Understanding"
+        elif "landmark" in sub_cmd:
+            action = "Bing Search"
+        elif "brand" in sub_cmd:
+            action = "Bing Search"
+        elif "bing search" in sub_cmd:
+            action = "Bing Search"
+        elif "objects" in sub_cmd:
+            action = "Image Understanding"
+        if not action_inputs:
+            if not action:
+                # if no image and no action
+                if cmd.endswith("?") or sub_cmd.startswith("search "):
+                    action = "Bing Search"
+            if action == "Bing Search":
+                action_input = cmd
+                action_input_lower = action_input.lower()
+                for term in ["bing search for", "bing search", "search for", "search"]:
+                    search_idx = action_input_lower.find(term)
+                    if search_idx >= 0:
+                        action_input = cmd[search_idx + len(term):].strip()
+                        break
+                return [[action, action_input]]
+            return [[action, ""]]
+        assert action_inputs
+        # TODO: separate llm to decide the task
+        parsed_output = []
+        for action_input in action_inputs:
+            action_input_lower = action_input.lower()
+            new_action = action
+            if not new_action and ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
+                new_action = "OCR Understanding"
+            if new_action == "Image Understanding" and action_input_lower.endswith(".pdf"):
+                # Invoice is more specific
+                new_action = "OCR Understanding"
+            if new_action == "Receipt Understanding" and "invoice" in action_input_lower:
+                # Invoice is more specific
+                new_action = "Invoice Understanding"
+            if new_action == "OCR Understanding":
+                if "invoice" in action_input_lower:
+                    new_action = "Invoice Understanding"
+                elif "receipt" in action_input_lower:
+                    new_action = "Receipt Understanding"
+
+            if not new_action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
+                new_action = "Bing Search"
+            parsed_output.append([new_action, action_input])
+        return parsed_output
+        
     def _extract_tool_and_input(self, llm_output: str, tries=0) -> Optional[Tuple[str, str]]:
         # TODO: this should be a separate llm as a tool to decide the correct tool(s) here
         llm_output = self._fix_chatgpt(llm_output)
-        photo_editing = "photo edit" in llm_output or "image edit" in llm_output
-        is_table = " table" in llm_output
-        is_face = "facial recognition" in llm_output
-        cmd_idx = llm_output.rfind("Assistant,")
-        if cmd_idx >= 0:
-            cmd = llm_output[cmd_idx + len("Assistant,"):].strip()
-            if photo_editing:
-                return "Photo Editing", cmd
-            search_idx = cmd.lower().find("bing search")
-            if search_idx >= 0:
-                 action_input = cmd[search_idx + len("bing serach") + 1:]
-                 return "Bing Search", action_input
-            action_input_idx, action_input = get_url_path(cmd)
-            action_input_lower = action_input.lower()
-            action = None
-            if action_input_idx >= 0:
-                sub_cmd = cmd[:action_input_idx].strip().lower()
-            else:
-                sub_cmd = ""
-            # TODO: need a separate chain to decide OCR specialization, 
-            #       perhaps we do genric OCR (or receipt) then if we see an invoice then we do invoice
-            if "invoice" in sub_cmd:
-                action = "Invoice Understanding"
-            elif "receipt" in sub_cmd:
-                action = "Receipt Understanding"
-            elif "business card" in sub_cmd:
-                action = "Business Card Understanding"
-            elif "ocr" in sub_cmd:
-                if is_table:
-                    action = "Layout Understanding"
-                else:
-                    action = "OCR Understanding"
-            elif "celebrit" in sub_cmd:
-                action = "Celebrity Understanding"
-            elif "landmark" in sub_cmd:
-                action = "Bing Search"
-            elif "brand" in sub_cmd:
-                action = "Bing Search"
-            elif "objects" in sub_cmd:
-                if action_input_lower.endswith(".pdf"):
-                    action = "OCR Understanding"
-                else:
-                    action = "Image Understanding"
-            if not action_input:
-                if not action:
-                    if cmd.endswith("?") or sub_cmd.startswith("search "):
-                        # if no image and no action
-                        return "Bing Search" , cmd
-                    if tries < 4:
-                        # Let the model rethink
-                        return
-                return self.finish_tool_name, llm_output
-            assert action_input
-            if not action and is_face:
-                action = "Celebrity Understanding"
-            # TODO: separate llm to decide the task
-            if not action and ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
-                action = "OCR Understanding"
-            if action == "Receipt Understanding" and "invoice" in action_input_lower:
-                # Invoice is more specific
-                action = "Invoice Understanding"
-            if action == "OCR Understanding":
-                if "invoice" in action_input_lower:
-                    action = "Invoice Understanding"
-                elif "receipt" in action_input_lower:
-                    action = "Receipt Understanding"
+        tool_list = []
+        retry = False
+        parsed_output = self._extract_tools(llm_output)
+        while parsed_output is not None:
+            for action, action_input in parsed_output:
+                if not action or not action_input:
+                    retry = True
+                    continue
+                tool_list.append([action, action_input])
+            cmd_idx = llm_output.rfind("Assistant,")
+            if cmd_idx >= 0:
+                llm_output = llm_output[:cmd_idx].strip()
+            parsed_output = self._extract_tools(llm_output)
 
-            if not action and (sub_cmd.startswith("search ") or  " the name of " in sub_cmd):
-                action = "Bing Search"
-            if not action:
-                if tries < 4:
-                    # Let the model rethink
-                    return
-                return self.finish_tool_name, llm_output
+        if retry and tries < 4 and not tool_list:
+            # Let the model rethink
+            return
+        if not tool_list:
+            return self.finish_tool_name, llm_output.strip()
+        if len(tool_list) == 1:
+            action, action_input = tool_list[0]
             return action, action_input
-        action_log = llm_output.strip()
-        if tries < 4:
-            if "do not have that information" in llm_output:
-                # Let the model rethink
-                return
-        return self.finish_tool_name, action_log
+        return "MultiAction", json.dumps(tool_list)
     
     def _get_next_action(self, full_inputs: Dict[str, str]) -> AgentAction:
         full_output = self.llm_chain_od.predict(**full_inputs)
@@ -193,8 +218,14 @@ class MMAssistantAgent(Agent):
             return AgentAction(
                 tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
             )
-        if full_output:
-            full_output +=  "\n\n"
+        # Keep the thoughts
+        output = ""
+        for line in full_output.split("\n"):
+            if re.match(r"^\s*\d+\.\s", line):
+                output += line + "\n"
+        full_output = ""
+        if output:
+            full_output =  output + f"\n{self.llm_prefix}"
         full_output += self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         tries = 0

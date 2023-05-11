@@ -72,17 +72,25 @@ def im_upscale(data, target_size):
     im.save(output, format="JPEG")
     return output.getvalue(), (w, h)
 
-def get_url_path(query:str)->Tuple[int,str]:
+def get_url_path(query:str, return_end=False)->Tuple[int,str]:
     match = re.search(r"https?://.+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)
     if match:
+        if return_end:
+            return match.start(), match.end(), match.group(0)
         return match.start(), match.group(0)
     match = re.search(r"https?://\S+", query, re.IGNORECASE)
     if match:
         url = match.group(0)
         if url.endswith((".", "?", '"')):
             url = url[:-1]
+        if return_end:
+            return match.start(), match.end(), url
         return match.start(), url
     match = re.search(r"/[\w/-]+\.(?:jpg|jpeg|png|bmp|pdf)", query, re.IGNORECASE)
     if match:
+        if return_end:
+            return match.start(), match.end(), match.group(0)
         return match.start(), match.group(0)
+    if return_end:
+        return -1, -1, ""
     return -1, ""

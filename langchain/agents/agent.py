@@ -411,29 +411,35 @@ class AgentExecutor(Chain, BaseModel):
         self.callback_manager.on_agent_action(
             output, verbose=self.verbose, color="green"
         )
-        # Otherwise we lookup the tool
-        if output.tool in name_to_tool_map:
-            tool = name_to_tool_map[output.tool]
-            return_direct = tool.return_direct
-            color = color_mapping[output.tool]
-            llm_prefix = "" if return_direct else self.agent.llm_prefix
-            # We then call the tool on the tool input to get an observation
-            observation = tool.run(
-                output.tool_input,
-                verbose=self.verbose,
-                color=color,
-                llm_prefix=llm_prefix,
-                observation_prefix=self.agent.observation_prefix,
-            )
-        else:
-            observation = InvalidTool().run(
-                output.tool_input,
-                verbose=self.verbose,
-                color=None,
-                llm_prefix="",
-                observation_prefix=self.agent.observation_prefix,
-            )
-            return_direct = False
+        tool_list = [[output.tool, output.tool_input]]
+        if output.tool == "MultiAction":
+            tool_list = json.loads(output.tool_input)
+        observation = []
+        for tool_name, tool_input in tool_list:
+            # Otherwise we lookup the tool
+            if tool_name in name_to_tool_map:
+                tool = name_to_tool_map[tool_name]
+                return_direct = tool.return_direct
+                color = color_mapping[tool_name]
+                llm_prefix = "" if return_direct else self.agent.llm_prefix
+                # We then call the tool on the tool input to get an observation
+                observation.append(tool.run(
+                    tool_input,
+                    verbose=self.verbose,
+                    color=color,
+                    llm_prefix=llm_prefix,
+                    observation_prefix=self.agent.observation_prefix,
+                ))
+            else:
+                observation.append(InvalidTool().run(
+                    tool_input,
+                    verbose=self.verbose,
+                    color=None,
+                    llm_prefix="",
+                    observation_prefix=self.agent.observation_prefix,
+                ))
+                return_direct = False
+        observation = "\n".join(observation)
         if return_direct:
             # Set the log to "" because we do not want to log it.
             return AgentFinish({self.agent.return_values[0]: observation}, "")

@@ -5,7 +5,7 @@ Now let me introduce you to Assistant. He is great at understanding what is goin
 Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
 
 These are the tasks that Assistant can handle: photo editing, celebrities, OCR, Bing
-If there is text in the image, ask Assistant to do OCR
+If there is text in an image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
 <|im_end|>
@@ -13,15 +13,19 @@ Image types that have text (sign, label, plan, invoice, receipt, business card, 
 {system_trigger}
 <|im_start|>Human
 My business card https://i.ibb.co/tsQ0Myn/00.jpg
+What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>{ai_prefix}
-1. There is an image in the input
-2. This is a business card image
-3. There is text and numbers in the image
+1. There are two images in the input
+2. The first image is a business card image
+3. There is text and numbers in images
 4. Reading the text requires OCR
 Assistant, do OCR to this business card image to find the text  https://i.ibb.co/tsQ0Myn/00.jpg
+
+Assistant, do OCR to this image to find the text  https://i.ibb.co/YJbmKg4/somX1.png
 <|im_sep|>Assistant
-Assistant:
-There is text and numbers in the image
+Assistant: 
+https://i.ibb.co/tsQ0Myn/00.jpg
+This image contains text
 
 List of OCR texts (words) seen in this image:
 CONTOSO
@@ -29,18 +33,30 @@ Cell: +1 (989) 123-4567
 Tel: +1 (989) 213-5674 Fax: +1 (989) 312-6745 4001 1st Ave NE Redmond, WA 98052
 Jake Smith Researcher Cloud & AI Department jake.smith@contoso.com https://www.contoso.com/
 
+<|im_sep|>Assistant
+Assistant:
+https://i.ibb.co/YJbmKg4/somX1.png
+This image contains handwritten text
+
+List of OCR texts (words) seen in this image:
+4x2+5=
+1/sqrt(9)=
+
 <|im_sep|>{ai_prefix}
-1. This is your business card belonging to Jake
-To summerize, this is your business card with details such as
+1. The first image is your business card belonging to Jake
+2. There are two simple equations hand written in the second image in the form of
+3. The result of the first equation in the second image is 13
+To summerize, first image your business card with details such as name. Second image is two equations
 <|im_end|>
 <|im_start|>Human
 Move the logo in this image to the right
 <|im_sep|>{ai_prefix}
-1. The image should be edited
+1. This image should be edited
 2. This is a photo editing task
 Assistant, Move the logo in this business card image to the right  https://i.ibb.co/tsQ0Myn/00.jpg
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/tsQ0Myn/00.jpg
 Here is the edited image https://localhost:80:/zsdvfwevf.jpg
 <|im_end|>
 
@@ -64,28 +80,6 @@ result from internet search
 * 
 <|im_end|>
 
-
-<|im_start|>Human
-What is the result of the first equation in this image: https://i.ibb.co/YJbmKg4/somX1.png
-<|im_sep|>{ai_prefix}
-1. There is an image in the input
-2. There is text and numbers in the image
-3. Reading the text requires OCR
-Assistant, do OCR to this image to find the text https://i.ibb.co/YJbmKg4/somX1.png
-<|im_sep|>Assistant
-Assistant:
-This image contains handwritten text
-
-List of OCR texts (words) seen in this image:
-4x2+5=
-1/sqrt(9)=
-
-<|im_sep|>{ai_prefix}
-1. There are two simple equations hand written in the image in the form of
-The result of the first equation is 13
-<|im_end|>
-
-
 <|im_start|>Human
 https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>{ai_prefix}
@@ -93,6 +87,7 @@ https://i.ibb.co/XJbmhg4/mY09.png
 Assistant, what objects do you see in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/XJbmhg4/mY09.png
 Image description is: a dog playing with a man.
 
 This image contains objects and their descriptions, object tags, faces
@@ -122,6 +117,7 @@ These objects could refer to the same entities
 Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/XJbmhg4/mY09.png
 This image contains celebrities
 
 List of celebrities, and their location in this image:
@@ -139,6 +135,7 @@ When is this photo taken?
 Assistant, Bing search when this photo of Brad Pitt in the zoo is taken https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
+https://i.ibb.co/XJbmhg4/mY09.png
 result from internet search
 * 
 <|im_end|>
@@ -147,6 +144,7 @@ result from internet search
 what do you know about this image? /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Assistant:
+/tmp/path/to/x_d_0(2).jpg
 Image description is: a bottle of medicine.
 
 This image contains objects and their descriptions, object tags
@@ -160,12 +158,13 @@ text
 prescription instructions
 <|im_sep|>{ai_prefix}
 1. This image is likely a pill bottle with labels and is related to heart
-2. There is text and numbers in the image
+2. There is text and numbers in this image
 3. Reading the text requires OCR
 Assistant, do OCR to this pill bottle image to find the text /tmp/path/to/x_d_0(2).jpg
 <|im_sep|>Assistant
 Assistant:
-There is text and numbers in the image
+/tmp/path/to/x_d_0(2).jpg
+This image contains text
 
 List of OCR texts (words) seen in this image:
 SPRING VALLEY.
