@@ -1,6 +1,7 @@
 """An agent designed to hold a conversation in addition to using tools."""
 from __future__ import annotations
 
+import re
 import json
 from typing import Any, List, Optional, Sequence, Tuple, Dict
 
@@ -217,8 +218,14 @@ class MMAssistantAgent(Agent):
             return AgentAction(
                 tool=parsed_output[0], tool_input=parsed_output[1], log=full_output
             )
-        if full_output:
-            full_output +=  "\n\n"
+        # Keep the thoughts
+        output = ""
+        for line in full_output.split("\n"):
+            if re.match(r"^\s*\d+\.\s", line):
+                output += line + "\n"
+        full_output = ""
+        if output:
+            full_output =  output + "\n"
         full_output += self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         tries = 0
