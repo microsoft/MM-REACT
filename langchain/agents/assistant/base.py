@@ -165,7 +165,9 @@ class MMAssistantAgent(Agent):
             action_input_lower = action_input.lower()
             new_action = action
             if not new_action:
-                if ((" is written" in sub_cmd) or (" text" in sub_cmd) or (" parse " in sub_cmd) or sub_cmd.endswith(" say?")):
+                if ((" is written" in sub_cmd) or (" text" in sub_cmd) or sub_cmd.endswith(" say?")):
+                    new_action = "OCR Understanding"
+                elif sub_cmd.startswith("parse ") or sub_cmd.startswith("analyze "):
                     new_action = "OCR Understanding"
             if new_action == "Image Understanding" and action_input_lower.endswith(".pdf"):
                 # Invoice is more specific
