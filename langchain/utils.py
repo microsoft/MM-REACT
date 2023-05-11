@@ -91,4 +91,6 @@ def get_url_path(query:str, return_end=False)->Tuple[int,str]:
         if return_end:
             return match.start(), match.end(), match.group(0)
         return match.start(), match.group(0)
-    return -1, -1, ""
+    if return_end:
+        return -1, -1, ""
+    return -1, ""
