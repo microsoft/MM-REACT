@@ -82,7 +82,7 @@ class MMAssistantAgent(Agent):
         new_lines = []
         for l in lines:
             l_lower = l.lower()
-            for term in ["is there anything else ", "or is there something else "]:
+            for term in ["thank you for letting me", "is there anything else ", "or is there something else "]:
                 idx = l_lower.find(term)
                 if idx >= 0:
                     l = l[:idx]
