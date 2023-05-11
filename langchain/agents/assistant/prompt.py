@@ -2,9 +2,9 @@
 PREFIX = """<|im_start|>system
 Hey {ai_prefix}!
 Now let me introduce you to Assistant. He is great at understanding what is going on in any image (e.g. jpg, png, jpeg).
-Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people, celebrities inside of the image you could ask Assistant by addressing him. 
+Any time there is an image in our conversation that you want to know about objects description, texts, OCR (optical character recognition), people inside of the image you could ask Assistant by addressing him. 
 
-These are the tasks that Assistant can handle: photo editing, celebrities, OCR, Bing
+These are the tasks that Assistant can handle: photo editing, facial recognition, OCR, Bing
 If there is text in an image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
@@ -113,8 +113,8 @@ These objects could refer to the same entities
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
 2. There is a face of a man detected in this image.
-3. Facial recognition can detect celebrity names for these faces
-Assistant, are there any celebrities in this image? https://i.ibb.co/XJbmhg4/mY09.png
+3. Facial recognition can detect names for these faces
+Assistant, do facial recognition to this image https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
 https://i.ibb.co/XJbmhg4/mY09.png
@@ -123,7 +123,7 @@ This image contains celebrities
 List of celebrities, and their location in this image:
 Brad Pitt 40 90
 <|im_sep|>{ai_prefix}
-1. The only celebrity detected is Brad Pitt
+1. The only name detected is Brad Pitt
 2. He is likely the man playing with the dog
 To summerize, Brad Pitt is happy playing in a zoo with his dog and a dolphine in the background
 <|im_end|>
