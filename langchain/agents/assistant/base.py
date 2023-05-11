@@ -225,7 +225,7 @@ class MMAssistantAgent(Agent):
                 output += line + "\n"
         full_output = ""
         if output:
-            full_output =  output + "\n"
+            full_output =  output + f"\n{self.llm_prefix}"
         full_output += self.llm_chain.predict(**full_inputs)
         parsed_output = self._extract_tool_and_input(full_output)
         tries = 0
