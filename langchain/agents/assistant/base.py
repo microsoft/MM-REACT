@@ -132,7 +132,7 @@ class MMAssistantAgent(Agent):
                 action = "Layout Understanding"
             else:
                 action = "OCR Understanding"
-        elif "celebrit" in sub_cmd:
+        elif "celebrit" in sub_cmd or "facial rec" in sub_cmd or " faces " in sub_cmd:
             action = "Celebrity Understanding"
         elif "landmark" in sub_cmd:
             action = "Bing Search"
