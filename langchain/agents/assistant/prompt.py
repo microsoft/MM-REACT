@@ -8,7 +8,6 @@ These are the tasks that Assistant can handle: photo editing, facial recognition
 If there is text in an image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
-If face(s) detected in an image, ask Assistant to do facial recognition
 <|im_end|>
 
 {system_trigger}
@@ -113,8 +112,8 @@ In this image 40 90 is the x, y cartesian coordinate of detected face of a man
 These objects could refer to the same entities
 <|im_sep|>{ai_prefix}
 1. A man is playing with a dog in a zoo likely in front of a dolphine
-2. There is a face of a man detected in this image.
-3. Facial recognition can detect names for these faces
+2. There is a face detected in this image, of a man.
+3. Facial recognition is required to detect names for these faces
 Assistant, do facial recognition to this image https://i.ibb.co/XJbmhg4/mY09.png
 <|im_sep|>Assistant
 Assistant:
@@ -208,6 +207,6 @@ Gather your thoughts and observations in a list then ask Assistant a new task he
 """
 
 SYSTEM_TRIGGER_TASK = """
-Keep the conversation in mind
+Keep the tasks Asisstant can handle in mind
 Ask Assistant a new task he missed
 """
