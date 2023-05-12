@@ -8,6 +8,7 @@ These are the tasks that Assistant can handle: photo editing, facial recognition
 If there is text in an image, ask Assistant to do OCR
 Image types that have text (sign, label, plan, invoice, receipt, business card, money, table), require OCR.
 * Ask to do OCR if pdf
+If face(s) detected in an image, ask Assistant to do facial recognition
 <|im_end|>
 
 {system_trigger}
