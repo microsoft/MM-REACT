@@ -460,7 +460,9 @@ class ImunAPIWrapper(BaseModel):
 
         if "denseCaptionsResult" in api_results:
             results["captions"] = []
-            for idx, o in enumerate(api_results["denseCaptionsResult"]["values"]):
+            values = api_results["denseCaptionsResult"]["values"]
+            values = sorted(values, key=lambda x: x['boundingBox']['w'] * x['boundingBox']['h'], reverse=True)
+            for idx, o in enumerate(values):
                 if idx == 0:
                     # fist one is the image description
                     results["description"] = o['text']
