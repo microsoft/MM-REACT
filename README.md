@@ -19,7 +19,7 @@ MM-REACT allocates specialized vision experts with ChatGPT to solve challenging 
 * If no external experts are needed, we directly return the response to the user.
 
 ## Getting Started
-MM-REACT code is bases on langchain.
+MM-REACT code is based on langchain.
 
 Please refer to [langchain](https://github.com/hwchase17/langchain) for [instructions on installation](https://github.com/hwchase17/langchain#quick-install) and [documentation](https://github.com/hwchase17/langchain#-documentation).
 
